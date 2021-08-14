@@ -1,3 +1,11 @@
+
+### Binar files ###
 src/obj
 webserver
+
+### IDEA directory/files ###
 .vscode
+.idea
+
+### Apple files ###
+.DS_Store
