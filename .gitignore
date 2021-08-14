@@ -2,6 +2,7 @@
 ### Binar files ###
 src/obj
 webserver
+unit_test/unit_test
 
 ### IDEA directory/files ###
 .vscode
