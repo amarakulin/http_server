@@ -6,6 +6,7 @@ webserver
 ### IDEA directory/files ###
 .vscode
 .idea
+webserver.dSYM
 
 ### Apple files ###
 .DS_Store
