@@ -15,6 +15,7 @@ class Host {
 	
 	public:
 		Host();
+		Host(std::string ip, size_t port);
 };
 
 #endif
