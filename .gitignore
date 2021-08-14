@@ -1,2 +1,3 @@
 src/obj
-server
+./server
+.vscode
