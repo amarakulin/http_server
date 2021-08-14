@@ -43,7 +43,7 @@ $(OBJDIR):
 clean:
 	@echo "$(TEXT_RESET)"
 	@rm -rf $(OBJDIR)
-	@echo "$(YELLOW)Delete 'o' files"
+	@echo "$(YELLOW)Delete 'o' files in '$(NAME)'"
 
 fclean: clean
 	@echo "$(TEXT_RESET)"

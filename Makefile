@@ -8,14 +8,17 @@ NAME = webserver
 CC = clang++
 FLAGS = -Wall -Wextra -Werror --std=c++98
 
-IGNORE_PATHS = ! -path "./test/*"
+TEST_DIR = ./unit_test
+IGNORE_PATHS = ! -path "$(TEST_DIR)/*"
 OBJDIR = ./src/obj
+
+
 OBJ = $(C_FILES:%.cpp=%.o)
 O_FILES = $(addprefix $(OBJDIR)/, $(OBJ))
 
-HPP_DIR = $(shell find ./src -type d -not -path ./.git -not -path ./src/obj -not -path ./test)
+HPP_DIR = $(shell find ./src -type d -not -path ./.git -not -path ./src/obj -not -path $(TEST_DIR))
 
-SRC_PATHS = $(shell find . -type d -not -path ./.git -not -path ./src/obj -not -path ./test)
+SRC_PATHS = $(shell find . -type d -not -path ./.git -not -path ./src/obj -not -path $(TEST_DIR))
 
 C_FILES = $(shell find . -name "*.cpp" $(IGNORE_PATHS) -execdir echo {} ';')
 
@@ -27,7 +30,7 @@ vpath %.hpp $(INCLUDE)
 
 .PHONY: all clean fclean re
 
-all: $(OBJDIR) $(NAME)
+all: test $(OBJDIR) $(NAME)
 
 $(NAME): $(OBJ)
 	@$(CC) $(FLAGS) $(INCLUDE) $(O_FILES) -o $@
@@ -43,12 +46,18 @@ $(OBJDIR):
 clean:
 	@echo "$(TEXT_RESET)"
 	@rm -rf $(OBJDIR)
-	@echo "$(YELLOW)Delete 'o' files"
+	@make clean -C $(TEST_DIR)
+	@echo "$(YELLOW)Delete 'o' files in '$(NAME)'"
 
 fclean: clean
 	@echo "$(TEXT_RESET)"
 	@rm -f $(NAME)
+	@make fclean -C $(TEST_DIR)
 	@echo "$(YELLOW)Delete the binary file '$(NAME)'"
 	@echo
+
+test:
+	@make -C $(TEST_DIR)
+	@$(TEST_DIR)/unit_test
 
 re: fclean all
