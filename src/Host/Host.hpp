@@ -11,11 +11,16 @@ class Host {
 	private:
 		std::string _ip;
 		size_t		_port;
+		std::string _hostName;
 		// и все необходимые поля
 	
 	public:
 		Host();
-		Host(std::string ip, size_t port);
+		Host(std::string ip, size_t port, std::string hostName);
+
+		std::string 	getIp() const;
+		size_t			getPort() const;
+		std::string		getHostName() const;
 };
 
 #endif
