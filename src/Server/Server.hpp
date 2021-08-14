@@ -25,7 +25,11 @@ class Server {
 	private:
 		void	processingRequest() const;
 		void	sendResponse() const;
-		void	startMainProcess() const;
+		void	startMainProcess();
+
+	private:
+		struct sockaddr_in	createSockaddrStruct(const Host& host);
+		int					createListenerSocket(struct sockaddr_in addr);
 	
 	public:
 		Server();
