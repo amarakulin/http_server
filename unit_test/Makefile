@@ -36,6 +36,7 @@ all: $(OBJ_DIR) $(NAME)
 $(NAME): $(OBJ)
 	@$(CC) $(FLAGS) $(INCLUDE) $(O_FILES) -o $@
 	@echo "$(GREEN)START TESTING\n"
+	@./$(NAME)
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
