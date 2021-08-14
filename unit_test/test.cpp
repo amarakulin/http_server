@@ -30,8 +30,7 @@ test_tutorial(void)
 }
 
 
-
 TEST_LIST = {
 		{ "tutorial", test_tutorial },
-		{ NULL, NULL }
+		{nullptr, nullptr }
 };
