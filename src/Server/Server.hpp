@@ -19,7 +19,7 @@ class Config;
 
 class Server {
 	private:
-		Config				_config;
+		const Config*		_config;
 		std::vector<Host>	_hosts;
 	
 	private:
@@ -29,7 +29,7 @@ class Server {
 	
 	public:
 		Server();
-		Server(const Config& config);
+		Server(const Config* config);
 
 		void	start();
 };

@@ -5,6 +5,7 @@ class Config {
 	public:
 		Config();
 		Config(const Config& config);
+		~Config();
 };
 
 #endif
