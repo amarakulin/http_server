@@ -9,3 +9,11 @@ Config::~Config() {}
 void	Config::setNewHost(const Host& host) {
 	_hosts.push_back(host);
 }
+
+/*
+** Getters
+*/
+
+std::vector<Host>	Config::getHosts() const {
+	return _hosts;
+}
