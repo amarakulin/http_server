@@ -6,7 +6,7 @@ Config::Config(const Config& other) : _hosts(other._hosts) {}
 
 Config::~Config() {}
 
-void	Config::setNewHost(const Host& host) {
+void	Config::addNewHost(const Host& host) {
 	_hosts.push_back(host);
 }
 

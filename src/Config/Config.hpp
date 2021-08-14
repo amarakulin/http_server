@@ -15,7 +15,7 @@ class Config {
 		Config(const Config& other);
 		~Config();
 
-		void				setNewHost(const Host& host);
+		void				addNewHost(const Host& host);
 		std::vector<Host>	getHosts() const;
 };
 
