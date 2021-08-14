@@ -8,14 +8,14 @@ NAME = webserver
 CC = clang++
 FLAGS = -Wall -Wextra -Werror --std=c++98
 
-IGNORE_PATHS = 
+IGNORE_PATHS = ! -path "./test/*"
 OBJDIR = ./src/obj
 OBJ = $(C_FILES:%.cpp=%.o)
 O_FILES = $(addprefix $(OBJDIR)/, $(OBJ))
 
-HPP_DIR = $(shell find ./src -type d -not -path ./.git -not -path ./src/obj)
+HPP_DIR = $(shell find ./src -type d -not -path ./.git -not -path ./src/obj -not -path ./test)
 
-SRC_PATHS = $(shell find . -type d -not -path ./.git -not -path ./src/obj)
+SRC_PATHS = $(shell find . -type d -not -path ./.git -not -path ./src/obj -not -path ./test)
 
 C_FILES = $(shell find . -name "*.cpp" $(IGNORE_PATHS) -execdir echo {} ';')
 
