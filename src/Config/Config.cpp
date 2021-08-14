@@ -1,9 +1,11 @@
 #include "Config.hpp"
 
-Config::Config() {}
+Config::Config() : _hosts() {}
 
-Config::Config(const Config& config) {
-	*this = config; //???
-}
+Config::Config(const Config& other) : _hosts(other._hosts) {}
 
 Config::~Config() {}
+
+void	Config::setNewHost(const Host& host) {
+	_hosts.push_back(host);
+}
