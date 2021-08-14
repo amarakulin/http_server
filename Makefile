@@ -65,5 +65,6 @@ fclean: clean
 test:
 	@make -C $(TEST_DIR)
 	@$(TEST_DIR)/unit_test
+	@echo "\n\n"
 
 re: fclean all

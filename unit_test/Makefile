@@ -35,13 +35,12 @@ all: $(OBJ_DIR) $(NAME)
 
 $(NAME): $(OBJ)
 	@$(CC) $(FLAGS) $(INCLUDE) $(O_FILES) -o $@
-	@echo "$(GREEN)Success!"
+	@echo "$(GREEN)START TESTING\n"
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 
 %.o: %.cpp
-	@echo "$(BLUE)Compiling $<"
 	@$(CC) $(FLAGS) $(INCLUDE) -c $< -o $(OBJ_DIR)/$@
 
 clean:
