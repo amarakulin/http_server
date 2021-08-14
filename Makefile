@@ -9,15 +9,13 @@ CC = clang++
 FLAGS = -Wall -Wextra -Werror --std=c++98
 
 IGNORE_PATHS = 
-
 OBJDIR = ./src/obj
 OBJ = $(C_FILES:%.cpp=%.o)
 O_FILES = $(addprefix $(OBJDIR)/, $(OBJ))
 
-HPP_DIR = ./src/
+HPP_DIR = $(shell find ./src -type d -not -path ./.git -not -path ./src/obj)
 
-SRC_PATHS = ./ \
-			src/
+SRC_PATHS = $(shell find . -type d -not -path ./.git -not -path ./src/obj)
 
 C_FILES = $(shell find . -name "*.cpp" $(IGNORE_PATHS) -execdir echo {} ';')
 
