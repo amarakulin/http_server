@@ -1780,6 +1780,7 @@ main(int argc, char** argv)
             printf("  Count of skipped unit tests: %4d\n", (int) acutest_list_size_ - acutest_stat_run_units_);
         }
 
+		printf("\n");
         if(acutest_stat_failed_units_ == 0) {
             acutest_colored_printf_(ACUTEST_COLOR_GREEN_INTENSIVE_, "SUCCESS:");
             printf(" All unit tests have passed.\n");
