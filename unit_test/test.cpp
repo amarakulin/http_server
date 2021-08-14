@@ -13,7 +13,7 @@
 /* **************************************************************************** */
 
 
-#include "acutest.h"
+#include "acutest.hpp"
 
 void
 test_tutorial(void)
