@@ -30,6 +30,7 @@ class Server {
 	public:
 		Server();
 		Server(const Config* config);
+		~Server();
 
 		void	start();
 };
