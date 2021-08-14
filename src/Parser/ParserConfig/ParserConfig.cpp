@@ -2,8 +2,8 @@
 
 ParserConfig::ParserConfig() {}
 
-Config* ParserConfig::parse(char** configFilePath) const {
+Config* ParserConfig::parse(char* configFilePath) const {
 	Config *config = new Config();
-	configFilePath += 1; //! DELETE ONLY FOR COMPILE
+	std::cout << configFilePath << std::endl;
 	return config;
 }

@@ -2,13 +2,14 @@
 # define PARSER_CONFIG
 
 # include "Config.hpp"
+# include <iostream>
 
 class Config;
 
 class ParserConfig {
 	public:
 		ParserConfig();
-		Config* parse(char** configFilePath) const;
+		Config* parse(char* configFilePath) const;
 };
 
 #endif
