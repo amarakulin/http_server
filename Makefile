@@ -4,7 +4,7 @@ YELLOW = \033[3;93m
 BLUE = \033[3;34m
 TEXT_RESET = \033[0;0m
 
-NAME = server
+NAME = webserver
 CC = clang++
 FLAGS = -Wall -Wextra -Werror --std=c++98
 
