@@ -1,7 +1,8 @@
 
 ### Binar files ###
-src/obj
+**/obj
 webserver
+unit_test/unit_test
 
 ### IDEA directory/files ###
 .vscode
