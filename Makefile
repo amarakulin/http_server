@@ -39,13 +39,13 @@ vpath %.hpp $(INCLUDE)
 
 all: $(OBJ_DIR) $(NAME) create_lib test
 
-create_lib: $(OBJ)
-	ar -rc $(NAME_LIB) $^
-	ranlib $(NAME_LIB)
+create_lib: $(O_FILES)
+	@ar -rc $(NAME_LIB) $^
+	@ranlib $(NAME_LIB)
 
 $(NAME): $(OBJ)
 	@$(CC) $(FLAGS) $(INCLUDE) $(O_FILES) -o $@
-	@echo "$(GREEN)Success!"
+	@echo "$(GREEN)Success!$(TEXT_RESET)"
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
@@ -58,13 +58,14 @@ clean:
 	@echo "$(TEXT_RESET)"
 	@rm -rf $(OBJ_DIR)
 	@make clean -C $(TEST_DIR)
-	@echo "$(YELLOW)Delete 'o' files in '$(NAME)'"
+	@echo "$(YELLOW)Delete 'o' files in '$(NAME)'$(TEXT_RESET)"
 
 fclean: clean
 	@echo "$(TEXT_RESET)"
 	@rm -f $(NAME)
+	@rm -f $(NAME_LIB)
 	@make fclean -C $(TEST_DIR)
-	@echo "$(YELLOW)Delete the binary file '$(NAME)'"
+	@echo "$(YELLOW)Delete the binary file '$(NAME)'$(TEXT_RESET)"
 	@echo
 
 test:

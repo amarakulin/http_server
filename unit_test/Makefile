@@ -14,7 +14,7 @@ NOT_PATH = -not -path
 ### DIRECTORY/PATH ###
 OBJ_DIR = ./src/obj
 IGNORE_PATHS = $(NOT_PATH) "$(OBJ_DIR)/*"
-WEBSERVER_LIB_PATH = ../http_server.a
+WEBSERVER_LIB_PATH = ../webserver.a
 
 ### SEARCH PATHS ###
 HPP_DIR = $(shell find ./src -type d $(IGNORE_PATHS))
