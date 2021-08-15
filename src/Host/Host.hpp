@@ -23,4 +23,6 @@ class Host {
 		std::string		getHostName() const;
 };
 
+bool operator==(const Host& lhs, const Host& rhs);
+
 #endif
