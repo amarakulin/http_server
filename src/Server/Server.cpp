@@ -34,6 +34,10 @@ int					Server::createListenerSocket(struct sockaddr_in addr) {
 	int	listener;
 
 	listener = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+	int opt = 1;
+	setsockopt(listener, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+
 	fcntl(listener, F_SETFL, O_NONBLOCK);//TODO
 
 	if (bind(listener, (struct sockaddr *)&addr, sizeof(addr)) < 0)
@@ -44,69 +48,127 @@ int					Server::createListenerSocket(struct sockaddr_in addr) {
 	return listener;
 }
 
-void	Server::startMainProcess() {
-	typedef std::vector<Host>::iterator					hostIterator;
-
+void				Server::startMainProcess() {
 	std::vector<int>				listeners;
-
-	hostIterator 				host = _hosts.begin();
+	std::vector<Host>::iterator		host = _hosts.begin();
 
 	int	size = _hosts.size();
 
 	for (int i = 0; i < size; i++, host++)
 		listeners.push_back(createListenerSocket(createSockaddrStruct(*host)));
 
-	// struct pollfd fds[size];// = new pollfd[listeners.size()];
-	// for (int i = 0; i < size; i++) {
-	// 	// if (i < size) {
-	// 		fds[i].fd = listeners[i];
-	// 		fds[i].events = POLLIN;
-	// 	// } else {
-	// 	// 	fds[i].fd = listeners[i - size];
-	// 	// 	fds[i].events = POLLOUT;
-	// 	// }
-	// }
+	std::vector<struct pollfd> client;
 
-	// while (true) {
-	// 	int ret = poll(fds, size, 1000);
-	// 	// проверяем успешность вызова
-	// 	if (ret == -1) {
+	client.reserve(size);
 
-	// 		// ошибка
-	// 		std::cout << "Error" << std::endl;
-	// 	}
-	// 	else if (ret == 0) {
+	for (int i = 0; i < size; i++) {
+		struct pollfd tmp;
+		tmp.fd = listeners[i];
+		tmp.events = POLLIN | POLLOUT;
+		client.push_back(tmp);
+	}
 
-	// 		// таймаут, событий не произошло
-	// 		std::cout << "Time out" << std::endl;
-	// 	}
-	// 	else {
-	// 		char buf[10];
+	while (true) {
+		int ret = poll(&(client.front()), size, 1000);
+		// проверяем успешность вызова
+		if (ret == -1) {
+			std::cout << "Error" << std::endl;
+		} else if (ret == 0) {
+			// std::cout << "Time out" << std::endl;
+		} else {
+			char buf[10];
 
-	// 		// обнаружили событие, обнулим revents чтобы можно было переиспользовать структуру
-	// 		for (int i = 0; i < size; i++) {
-	// 			if (fds[i].revents & POLLIN) {
-	// 				fds[i].revents = 0;
+			for (int i = 0; i < listeners.size(); i++) {
+				if (client[i].revents & POLLIN) {
+					client[i].revents = 0;
 
-	// 				int sock = accept(fds[i].fd, NULL, NULL);
-	// 				if (sock < 0)
-	// 					std::cout << "Accept error" << std::endl;
+					int sock = accept(client[i].fd, NULL, NULL);
+					if (sock < 0)
+						std::cout << "Accept error" << std::endl;
 					
-	// 				fcntl(sock, F_SETFL, O_NONBLOCK);
+					fcntl(sock, F_SETFL, O_NONBLOCK);
 
-	// 				ssize_t s = read(fds[i].fd, buf, sizeof(buf));
+					struct pollfd tmp;
+					tmp.fd = sock;
+					tmp.events = POLLIN | POLLOUT;
+					client.push_back(tmp);
 
-	// 				std::cout << s << std::endl;
-	// 				std::cout << "/* message */" << std::endl;
-	// 				// обработка входных данных от sock1
-	// 			} else if (fds[i].revents & POLLOUT) {
-	// 				fds[i].revents = 0;
-	// 				std::cout << "/* out */" << std::endl;
-	// 				// обработка исходящих данных от sock2
-	// 			}
-	// 		}
-	// 	}
-	// }
+					std::cout << "/* Listener in */" << std::endl;
+
+				} else if (client[i].revents & POLLOUT) {
+					client[i].revents = 0;
+					std::cout << "/* Listener out */" << std::endl;
+				}
+			}
+
+			for (int i = listeners.size(); i < client.size(); i++) {
+				std::cout << "FD: " << client[i].fd << " Events: " << client[i].events << " Revents: " << client[i].revents << std::endl;
+			}
+
+
+			for (std::vector<struct pollfd>::iterator it = client.begin() + listeners.size(); it != client.end(); it++) {
+				if ((*it).revents & POLLIN) {
+					(*it).revents = 0;
+
+					ssize_t s = read((*it).fd, buf, sizeof(buf));
+
+					std::cout << s << std::endl;
+
+					std::cout << "/* Client in */" << std::endl;
+					
+				} else if ((*it).revents & POLLOUT) {
+					(*it).revents = 0;
+					write((*it).fd, "HTTP/1.1 200 OK\r\nContent-length: 5\r\n\r\n12345", 43);
+					std::cout << "/* Client out */" << std::endl;
+
+					std::cout << "Close fd: " << (*it).fd << std::endl;
+					close((*it).fd);
+					// client.erase(it);
+				}
+			}
+
+			// for (int i = listeners.size(); i < client.size(); i++) {
+			// 	if (client[i].revents & POLLIN) {
+			// 		client[i].revents = 0;
+
+			// 		// int sock = accept(client[i].fd, NULL, NULL);
+			// 		// std::cout << sock << std::endl;
+			// 		// if (sock < 0)
+			// 		// 	std::cout << "Accept error" << std::endl;
+					
+			// 		// fcntl(sock, F_SETFL, O_NONBLOCK);
+
+			// 		// struct pollfd tmp;
+			// 		// tmp.fd = sock;
+			// 		// tmp.events = POLLIN | POLLOUT;
+			// 		// client.push_back(tmp);
+
+			// 		ssize_t s = read(client[i].fd, buf, sizeof(buf));
+
+			// 		std::cout << s << std::endl;
+
+			// 		std::cout << "/* Client in */" << std::endl;
+					
+			// 		// std::vector<struct pollfd>::iterator it = client.begin();
+			// 		// for (;&(*it) != &(client[i]) || it != client.end(); it++) ;
+			// 		// client.erase(it);
+			// 		// close(client[i].fd);
+			// 		// close(sock);
+
+			// 	} else if (client[i].revents & POLLOUT) {
+			// 		client[i].revents = 0;
+			// 		write(client[i].fd, "HTTP/1.1 200 OK\r\nContent-length: 5\r\n\r\n12345", 43);
+			// 		std::cout << "/* Client out */" << std::endl;
+
+			// 		// std::vector<struct pollfd>::iterator it = client.begin();
+			// 		// for (;&(*it) != &(client[i]) || it != client.end(); it++) ;
+			// 		// std::cout << "Close fd: " << (*it).fd << std::endl;
+			// 		// client.erase(it);
+			// 		// close(client[i].fd);
+			// 	}
+			// }
+		}
+	}
 }
 
 
