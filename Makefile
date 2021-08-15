@@ -6,6 +6,7 @@ BLUE = \033[3;34m
 TEXT_RESET = \033[0;0m
 
 NAME = webserver
+NAME_LIB = webserver.a
 
 ### COMPILE ###
 CC = clang++
@@ -36,7 +37,11 @@ vpath %.hpp $(INCLUDE)
 
 .PHONY: all clean fclean re
 
-all: test $(OBJ_DIR) $(NAME)
+all: $(OBJ_DIR) $(NAME) create_lib test
+
+create_lib: $(OBJ)
+	ar -rc $(NAME_LIB) $^
+	ranlib $(NAME_LIB)
 
 $(NAME): $(OBJ)
 	@$(CC) $(FLAGS) $(INCLUDE) $(O_FILES) -o $@

@@ -14,6 +14,7 @@ NOT_PATH = -not -path
 ### DIRECTORY/PATH ###
 OBJ_DIR = ./src/obj
 IGNORE_PATHS = $(NOT_PATH) "$(OBJ_DIR)/*"
+WEBSERVER_LIB_PATH = ../http_server.a
 
 ### SEARCH PATHS ###
 HPP_DIR = $(shell find ./src -type d $(IGNORE_PATHS))
@@ -37,7 +38,7 @@ $(NAME): $(OBJ)
 	@echo "$(GREEN)START TESTING\n$(TEXT_RESET)"
 	@for i in $(O_FILES); do \
 		echo "$(GREEN)$$i $(TEXT_RESET)" ; \
-		$(CC) $(FLAGS) $(INCLUDE) $$i -o $@ && ./$(NAME) ; \
+		$(CC) $(FLAGS) $(INCLUDE) $(WEBSERVER_LIB_PATH) $$i -o $@ && ./$(NAME) ; \
 	done
 
 
