@@ -17,9 +17,11 @@ NOT_PATH = -not -path
 TEST_DIR = ./unit_test
 OBJ_DIR = ./src/obj
 GIT_DIR = ./.git
+CMAKE_DIR = ./cmake-build-debug
 IGNORE_PATHS = $(NOT_PATH) "$(GIT_DIR)/*" \
                $(NOT_PATH) "$(OBJ_DIR)/*" \
-               $(NOT_PATH) "$(TEST_DIR)/*"
+               $(NOT_PATH) "$(TEST_DIR)/*" \
+               $(NOT_PATH) "$(CMAKE_DIR)/*"
 
 ### SEARCH FILES/PATHS ###
 HPP_DIR = $(shell find ./src -type d $(IGNORE_PATHS))

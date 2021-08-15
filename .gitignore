@@ -10,6 +10,8 @@ unit_test/unit_test
 .vscode
 .idea
 webserver.dSYM
+CMakeLists.txt
+cmake-build-debug
 
 ### Apple files ###
 .DS_Store
