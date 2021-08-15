@@ -34,9 +34,12 @@ vpath %.hpp $(INCLUDE)
 all: $(OBJ_DIR) $(NAME)
 
 $(NAME): $(OBJ)
-	@$(CC) $(FLAGS) $(INCLUDE) $(O_FILES) -o $@
-	@echo "$(GREEN)START TESTING\n"
-	@./$(NAME)
+	@echo "$(GREEN)START TESTING\n$(TEXT_RESET)"
+	@for i in $(O_FILES); do \
+		echo "$(GREEN)$$i $(TEXT_RESET)" ; \
+		$(CC) $(FLAGS) $(INCLUDE) $$i -o $@ && ./$(NAME) ; \
+	done
+
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
@@ -47,12 +50,12 @@ $(OBJ_DIR):
 clean:
 	@echo "$(TEXT_RESET)"
 	@rm -rf $(OBJ_DIR)
-	@echo "$(YELLOW)Delete 'o' files in '$(NAME)'"
+	@echo "$(YELLOW)Delete 'o' files in '$(NAME)'$(TEXT_RESET)"
 
 fclean: clean
 	@echo "$(TEXT_RESET)"
 	@rm -f $(NAME)
-	@echo "$(YELLOW)Delete the binary file '$(NAME)'"
+	@echo "$(YELLOW)Delete the binary file '$(NAME)'$(TEXT_RESET)"
 	@echo
 
 re: fclean all
