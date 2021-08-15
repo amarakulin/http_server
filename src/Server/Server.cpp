@@ -69,18 +69,18 @@ void				Server::startMainProcess() {
 	}
 
 	while (true) {
-		int ret = poll(&(client.front()), size, 1000);
+		int ret = poll(&(client[0]), client. size(), 1000);
 		// проверяем успешность вызова
 		if (ret == -1) {
 			std::cout << "Error" << std::endl;
 		} else if (ret == 0) {
-			// std::cout << "Time out" << std::endl;
+			std::cout << "Time out" << std::endl;
 		} else {
-			char buf[10];
+			char buf[1000];
 
 			for (int i = 0; i < listeners.size(); i++) {
 				if (client[i].revents & POLLIN) {
-					client[i].revents = 0;
+					// client[i].revents = 0;
 
 					int sock = accept(client[i].fd, NULL, NULL);
 					if (sock < 0)
@@ -96,33 +96,43 @@ void				Server::startMainProcess() {
 					std::cout << "/* Listener in */" << std::endl;
 
 				} else if (client[i].revents & POLLOUT) {
-					client[i].revents = 0;
+					// client[i].revents = 0;
 					std::cout << "/* Listener out */" << std::endl;
 				}
 			}
 
-			for (int i = listeners.size(); i < client.size(); i++) {
-				std::cout << "FD: " << client[i].fd << " Events: " << client[i].events << " Revents: " << client[i].revents << std::endl;
-			}
+			// for (std::vector<struct pollfd>::iterator it = client.begin() + listeners.size(); it != client.end(); it++) {
+			// 	std::cout << "FD: " << (*it).fd << " Events: " << (*it).events << " Revents: " << (*it).revents << std::endl;
+			// }
+			// usleep(1000);
 
 
 			for (std::vector<struct pollfd>::iterator it = client.begin() + listeners.size(); it != client.end(); it++) {
 				if ((*it).revents & POLLIN) {
-					(*it).revents = 0;
+					// (*it).revents = 0;
 
-					ssize_t s = read((*it).fd, buf, sizeof(buf));
+					ssize_t s = recv((*it).fd, buf, sizeof(buf), 0);
 
-					std::cout << s << std::endl;
+					// // std::cout << "Readed " << s << " bytes" << std::endl;
+					// // std::cout << buf << std::endl;
+
+					// std::string request = "HTTP/1.1 200 OK\r\nContent-length: 662\r\n\r\n";
+					// request += std::string(buf);
+					// send((*it).fd, request.c_str(), request.length(), 0);
+
 
 					std::cout << "/* Client in */" << std::endl;
 					
 				} else if ((*it).revents & POLLOUT) {
-					(*it).revents = 0;
-					write((*it).fd, "HTTP/1.1 200 OK\r\nContent-length: 5\r\n\r\n12345", 43);
+					// (*it).revents = 0;
+					// std::string request = "HTTP/1.1 200 OK\r\nContent-length: 5\r\n\r\n12345";
+					// // request += std::string(buf);
+					// // std::cout << buf << std::endl;
+					// send((*it).fd, request.c_str(), request.length(), 0);
 					std::cout << "/* Client out */" << std::endl;
 
-					std::cout << "Close fd: " << (*it).fd << std::endl;
-					close((*it).fd);
+					// std::cout << "Close fd: " << (*it).fd << std::endl;
+					// close((*it).fd);
 					// client.erase(it);
 				}
 			}
