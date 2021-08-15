@@ -1790,6 +1790,7 @@ main(int argc, char** argv)
                     acutest_stat_failed_units_, acutest_stat_run_units_,
                     (acutest_stat_failed_units_ == 1) ? "has" : "have");
         }
+        printf("\n");
 
         if(acutest_verbose_level_ >= 3)
             printf("\n");
