@@ -69,7 +69,7 @@ void				Server::startMainProcess() {
 	}
 
 	while (true) {
-		int ret = poll(&(client[0]), client. size(), 1000);
+		int ret = poll(&(client.front()), client. size(), 1000);
 		// проверяем успешность вызова
 		if (ret == -1) {
 			std::cout << "Error" << std::endl;
@@ -80,8 +80,6 @@ void				Server::startMainProcess() {
 
 			for (int i = 0; i < listeners.size(); i++) {
 				if (client[i].revents & POLLIN) {
-					// client[i].revents = 0;
-
 					int sock = accept(client[i].fd, NULL, NULL);
 					if (sock < 0)
 						std::cout << "Accept error" << std::endl;
@@ -93,7 +91,7 @@ void				Server::startMainProcess() {
 					tmp.events = POLLIN | POLLOUT;
 					client.push_back(tmp);
 
-					std::cout << "/* Listener in */" << std::endl;
+					std::cout << "/* Listener in */ " << sock << std::endl;
 
 				} else if (client[i].revents & POLLOUT) {
 					// client[i].revents = 0;
@@ -109,31 +107,34 @@ void				Server::startMainProcess() {
 
 			for (std::vector<struct pollfd>::iterator it = client.begin() + listeners.size(); it != client.end(); it++) {
 				if ((*it).revents & POLLIN) {
-					// (*it).revents = 0;
-
 					ssize_t s = recv((*it).fd, buf, sizeof(buf), 0);
 
-					// // std::cout << "Readed " << s << " bytes" << std::endl;
-					// // std::cout << buf << std::endl;
+					if (s <= 0) {
+						if (s == -1)
+							std::cout << "Read error: " << errno << std::endl;
+
+						std::cout << "Close connection" << std::endl;
+						close((*it).fd);
+						// client.erase(it);
+						continue ;
+					}
 
 					// std::string request = "HTTP/1.1 200 OK\r\nContent-length: 662\r\n\r\n";
 					// request += std::string(buf);
 					// send((*it).fd, request.c_str(), request.length(), 0);
 
 
-					std::cout << "/* Client in */" << std::endl;
+					std::cout << "/* Client in */ " << s << std::endl;
 					
 				} else if ((*it).revents & POLLOUT) {
-					// (*it).revents = 0;
-					// std::string request = "HTTP/1.1 200 OK\r\nContent-length: 5\r\n\r\n12345";
-					// // request += std::string(buf);
-					// // std::cout << buf << std::endl;
-					// send((*it).fd, request.c_str(), request.length(), 0);
-					std::cout << "/* Client out */" << std::endl;
-
-					// std::cout << "Close fd: " << (*it).fd << std::endl;
-					// close((*it).fd);
-					// client.erase(it);
+					std::string response = "HTTP/1.1 200 OK\r\nContent-length: 5\r\n\r\n12345";
+					ssize_t s = send((*it).fd, response.c_str(), response.length(), 0);
+					// response += std::string(buf);
+					// std::cout << buf << std::endl;
+					// if (s < 0)
+					// 	std::cout << "Send error" << std::endl;
+					// send((*it).fd, response.c_str(), response.length(), 0);
+					std::cout << "/* Client out */ " << std::endl;
 				}
 			}
 
