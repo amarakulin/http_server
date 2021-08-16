@@ -58,6 +58,8 @@ void				Server::startMainProcess() {
 		sockets.addListenerSocket(listeners[i]);
 	}
 
+	std::string request;
+
 	while (true) {
 		int ret = poll(sockets.getAllSockets(), sockets.size(), 1000);
 		
@@ -66,7 +68,7 @@ void				Server::startMainProcess() {
 		} else if (ret == 0) {
 			std::cout << "Time out" << std::endl;
 		} else {
-			char buf[1024];
+			char buf[10];
 
 			for (int i = listeners.size(); i < sockets.size(); i++) {
 				struct pollfd client = *(sockets.getAllSockets() + i);
@@ -84,18 +86,23 @@ void				Server::startMainProcess() {
 						continue ;
 					}
 
-					std::cout << "/* Client in */ " << s << std::endl;
+					// request += buf;
+					// if (request.rfind("\r\n\r\n") != std::string::npos) {
+					// 	std::cout << request << std::endl;
+					// }
+
+					std::cout << "/* Client in */ " << std::endl;
 				}
-			// 	//  else if ((*it).revents & POLLOUT) {
-			// 	// 	std::string response = "HTTP/1.1 200 OK\r\nContent-length: 5\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n12345";
-			// 	// 	ssize_t s = send((*it).fd, response.c_str(), response.length(), 0);
-			// 	// 	// response += std::string(buf);
-			// 	// 	// std::cout << s << std::endl;
-			// 	// 	if (s < 0)
-			// 	// 		std::cout << "Send error" << std::endl;
-			// 	// 	// send((*it).fd, response.c_str(), response.length(), 0);
-			// 	// 	std::cout << "/* Client out */ " << std::endl;
-			// 	// }
+				if (client.revents & POLLOUT) {
+					std::string response = "HTTP/1.1 200 OK\r\nContent-length: 5\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n12345";
+					ssize_t s = send(client.fd, response.c_str(), response.length(), 0);
+					// response += std::string(buf);
+					// std::cout << s << std::endl;
+					if (s < 0)
+						std::cout << "Send error" << std::endl;
+					// send(client.fd, response.c_str(), response.length(), 0);
+					std::cout << "/* Client out */ " << s << std::endl;
+				}
 			}
 
 			for (int i = 0; i < listeners.size(); i++) {
