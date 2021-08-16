@@ -14,6 +14,8 @@
 # include "Config.hpp"
 # include "Request.hpp"
 # include "Host.hpp"
+# include "Sockets.hpp"
+
 
 class Config;
 
