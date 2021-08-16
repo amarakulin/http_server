@@ -16,6 +16,7 @@ class Host {
 	
 	public:
 		Host();
+		Host(const Host& other);
 		Host(std::string ip, size_t port, std::string hostName);
 
 		std::string 	getIp() const;
