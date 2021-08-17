@@ -11,8 +11,8 @@ class Request {
 		std::string _body;
 		std::string _method;
 		size_t		_contentLength;
-		std::string	_data;
 
+		std::string	_data;
 		int			_status;//! DELETE
 
 	public:
@@ -25,10 +25,9 @@ class Request {
 		// int		getStatus() const;
 		bool	isDone();
 
-		// std::string getData() const {
-		// 	std::cout << "_Data: " << _data << std::endl;
-		// 	return _data;
-		// }
+		std::string getData() const {
+			return _data;
+		}
 };
 
 #endif

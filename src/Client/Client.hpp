@@ -8,8 +8,8 @@
 
 class Client {
 	private:
-		int		_clientSocket;
-		Request	_request;
+		int			_clientSocket;
+		Request*	_request;
 
 		Client();
 
@@ -18,7 +18,8 @@ class Client {
 		Client(const Client& other);
 		~Client();
 
-		Request&	getRequest();
+		Request*	getRequest();
+		// Request* 	getRequest() const;
 		int			getSocket() const;
 };
 
