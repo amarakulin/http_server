@@ -2,7 +2,7 @@
 
 Client::Client(int socket) : _clientSocket(socket), _request(new Request) {}
 
-Client::Client(const Client& other) : _clientSocket(other._clientSocket), _request(other._request) {
+Client::Client(const Client& other) : _clientSocket(other._clientSocket), _request(other._request){
 //	_request = other.getRequest()->clone();
 }
 
