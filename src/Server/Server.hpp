@@ -10,11 +10,15 @@
 # include <functional>
 
 # include <vector>
+# include <map>
 
 # include "Config.hpp"
 # include "Request.hpp"
 # include "Host.hpp"
+# include "Client.hpp"
 # include "Sockets.hpp"
+
+# include "utils.hpp"
 
 
 class Config;

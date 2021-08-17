@@ -51,14 +51,14 @@ int					Server::createListenerSocket(struct sockaddr_in addr) {
 void				Server::startMainProcess() {
 	std::vector<int>				listeners;
 	std::vector<Host>::iterator		host = _hosts.begin();
-	Sockets	sockets;
+	Sockets							sockets;
+
+	std::vector<Client>				clients;
 
 	for (int i = 0; i < _hosts.size(); i++, host++) {
 		listeners.push_back(createListenerSocket(createSockaddrStruct(*host)));
 		sockets.addListenerSocket(listeners[i]);
 	}
-
-	std::string request;
 
 	while (true) {
 		int ret = poll(sockets.getAllSockets(), sockets.size(), 1000);
@@ -68,53 +68,62 @@ void				Server::startMainProcess() {
 		} else if (ret == 0) {
 			std::cout << "Time out" << std::endl;
 		} else {
-			char buf[10];
+			char buf[1024];
 
 			for (int i = listeners.size(); i < sockets.size(); i++) {
-				struct pollfd client = *(sockets.getAllSockets() + i);
-				if (client.revents & POLLIN) {
-					ssize_t s = recv(client.fd, buf, sizeof(buf), 0);
+				
+				struct pollfd clientPollStruct = *(sockets.getAllSockets() + i);
+				Client client = findClientByFD(clients, clientPollStruct.fd);
 
-					if (s <= 0) {
-						if (s == -1)
-							std::cout << "Read error: " << errno << std::endl;
+				if (clientPollStruct.revents & POLLIN) { // проверяем пришел ли запрос
+					int s = recv(clientPollStruct.fd, buf, sizeof(buf), 0);
 
-						std::cout << "Close connection" << std::endl;
-						// std::cout << buf << std::endl;
-						close(client.fd);
-						// sockets.erase(it);
-						continue ;
-					}
 
-					// request += buf;
-					// if (request.rfind("\r\n\r\n") != std::string::npos) {
-					// 	std::cout << request << std::endl;
+
+					client.getRequest().addRequestChunk(buf);
+					
+					// if (s == -1)
+					// 	std::cout << "Read error: " << s << std::endl;
+
+					// if (s == 0) {
+					// 	std::cout << "Close connection: " << s <<  std::endl;
+					// 	close(client.fd);
+					// 	sockets.removeClientSocket(client.fd);
+					// 	continue ;
 					// }
 
-					std::cout << "/* Client in */ " << std::endl;
+					std::cout << "/* Client in */ " << client.getSocket() << std::endl;
+					std::cout << "/* Client in */ " <<  std::endl << buf << std::endl;
 				}
-				if (client.revents & POLLOUT) {
-					std::string response = "HTTP/1.1 200 OK\r\nContent-length: 5\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n12345";
-					ssize_t s = send(client.fd, response.c_str(), response.length(), 0);
-					// response += std::string(buf);
-					// std::cout << s << std::endl;
+
+
+				if ((clientPollStruct.revents & POLLOUT)
+					&& clients.size()
+					&& client.getRequest().isDone()) { // проверяем можем ли мы отпраивть ответ
+					std::string response = "HTTP/1.1 200 OK\r\nContent-length: 318\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta http-equiv='X-UA-Compatible' content='IE=edge'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>Document</title><link rel='stylesheet' href='index.css'></head><body><h2>Hello</h2><script src='index.js'></script></body></html>";
+					// std::string response = "HTTP/1.1 200 OK\r\nContent-length: 5\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n12345";
+					int s = send(clientPollStruct.fd, response.c_str(), response.length(), 0);
+
 					if (s < 0)
 						std::cout << "Send error" << std::endl;
-					// send(client.fd, response.c_str(), response.length(), 0);
-					std::cout << "/* Client out */ " << s << std::endl;
+
+					std::cout << "/* Client out */ " << clientPollStruct.fd << std::endl;
 				}
 			}
 
 			for (int i = 0; i < listeners.size(); i++) {
 				struct pollfd host = sockets.getSocketByFD(listeners[i]); //TODO optimize!!!!!!!!!!!
 				if (host.revents & POLLIN) {
-					int sock = accept(host.fd, NULL, NULL);
+					int sock = accept(host.fd, NULL, NULL); // создаем нового клиента
 					if (sock < 0)
 						std::cout << "Accept error" << std::endl;//TODO
 					
 					fcntl(sock, F_SETFL, O_NONBLOCK);
 
+					Client client(sock);
+
 					sockets.addClientSocket(sock);
+					clients.push_back(client); //TODO add method addClient
 
 					std::cout << "/* Listener in */ " << sock << std::endl;
 				}
