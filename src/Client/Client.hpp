@@ -18,7 +18,7 @@ class Client {
 		Client(const Client& other);
 		~Client();
 
-		Request*	getRequest();
+		Request*	getRequest() const;
 		// Request* 	getRequest() const;
 		int			getSocket() const;
 };

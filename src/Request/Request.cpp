@@ -4,7 +4,8 @@ Request::Request() : _data() {
 	// std::cout << "			REQUEST			" << std::endl;	
 }
 
-Request::Request(const Request& other) : _data(other._data) {}
+Request::Request(const Request& other) : _data(other._data) {
+}
 
 Request::~Request() {}
 
@@ -21,6 +22,10 @@ bool	Request::isDone() {
 
 	// _status = DONE;
 	return true;
+}
+
+Request *Request::clone() const{
+	return (new Request(*this));
 }
 
 // int		Request::getStatus() const {

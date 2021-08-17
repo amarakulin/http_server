@@ -10,15 +10,16 @@ class Request {
 		std::string _head;
 		std::string _body;
 		std::string _method;
-		size_t		_contentLength;
+//		size_t		_contentLength;
 
 		std::string	_data;
-		int			_status;//! DELETE
+//		int			_status;//! DELETE
 
 	public:
 		Request();
 		Request(const Request& other);
 		~Request();
+		Request* clone() const;
 
 		void	addRequestChunk(std::string chunk);
 
