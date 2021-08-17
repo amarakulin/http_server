@@ -18,8 +18,8 @@ class Client {
 		Client(const Client& other);
 		~Client();
 
-		Request& getRequest();
-		int		getSocket() const;
+		Request&	getRequest();
+		int			getSocket() const;
 };
 
 #endif

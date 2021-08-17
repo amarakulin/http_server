@@ -70,10 +70,28 @@ void				Server::startMainProcess() {
 		} else {
 			char buf[1024];
 
+			for (int i = 0; i < listeners.size(); i++) {
+				struct pollfd host = sockets.getSocketByFD(listeners[i]); //TODO optimize!!!!!!!!!!!
+				if (host.revents & POLLIN) {
+					int sock = accept(host.fd, NULL, NULL); // создаем нового клиента
+					if (sock < 0)
+						std::cout << "Accept error" << std::endl;//TODO
+					
+					fcntl(sock, F_SETFL, O_NONBLOCK);
+
+					Client client(sock);
+
+					sockets.addClientSocket(sock);
+					clients.push_back(client); //TODO add method addClient
+
+					std::cout << "/* Listener in */ " << sock << std::endl;
+				}
+			}
+
 			for (int i = listeners.size(); i < sockets.size(); i++) {
 				
 				struct pollfd clientPollStruct = *(sockets.getAllSockets() + i);
-				Client client = findClientByFD(clients, clientPollStruct.fd);
+				Client client = getClientByFD(clients, clientPollStruct.fd);
 
 				if (clientPollStruct.revents & POLLIN) { // проверяем пришел ли запрос
 					int s = recv(clientPollStruct.fd, buf, sizeof(buf), 0);
@@ -92,8 +110,7 @@ void				Server::startMainProcess() {
 					// 	continue ;
 					// }
 
-					std::cout << "/* Client in */ " << client.getSocket() << std::endl;
-					std::cout << "/* Client in */ " <<  std::endl << buf << std::endl;
+					std::cout << "/* Client in */ " << clientPollStruct.fd << std::endl;
 				}
 
 
@@ -108,24 +125,6 @@ void				Server::startMainProcess() {
 						std::cout << "Send error" << std::endl;
 
 					std::cout << "/* Client out */ " << clientPollStruct.fd << std::endl;
-				}
-			}
-
-			for (int i = 0; i < listeners.size(); i++) {
-				struct pollfd host = sockets.getSocketByFD(listeners[i]); //TODO optimize!!!!!!!!!!!
-				if (host.revents & POLLIN) {
-					int sock = accept(host.fd, NULL, NULL); // создаем нового клиента
-					if (sock < 0)
-						std::cout << "Accept error" << std::endl;//TODO
-					
-					fcntl(sock, F_SETFL, O_NONBLOCK);
-
-					Client client(sock);
-
-					sockets.addClientSocket(sock);
-					clients.push_back(client); //TODO add method addClient
-
-					std::cout << "/* Listener in */ " << sock << std::endl;
 				}
 			}
 		}

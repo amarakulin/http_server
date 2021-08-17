@@ -1,8 +1,11 @@
 #include "utils.hpp"
 
-Client findClientByFD(std::vector<Client> clients, int fd) {
+Client getClientByFD(std::vector<Client> clients, int fd) {
 	std::vector<Client>::iterator it = clients.begin();
 
-	for (; (*it).getSocket() == fd && it != clients.end(); it++) ;	
+	for (; it != clients.end(); it++) {
+		if ((*it).getSocket() == fd)
+			return *it;
+	}	
 	return *it;
 }
