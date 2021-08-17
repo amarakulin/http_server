@@ -22,6 +22,16 @@ void	Sockets::addClientSocket(int socket) {
 	_pollFD.push_back(tmpClient);
 }
 
+void	Sockets::removeClientSocket(int socket) {
+	pollIter it = _pollFD.begin();
+	for (;it != _pollFD.end(); it++) {
+		if ((*it).fd == socket) {
+			_pollFD.erase(it);
+			return ;
+		}
+	}
+}
+
 struct pollfd 	Sockets::getSocketByFD(int fd) {
 	pollIter it = _pollFD.begin();
 	for (; (*it).fd != fd && it != _pollFD.end(); it++) ;

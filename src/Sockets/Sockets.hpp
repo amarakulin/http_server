@@ -19,6 +19,7 @@ class Sockets {
 
 		void	addListenerSocket(int socket);
 		void	addClientSocket(int socket);
+		void	removeClientSocket(int socket);
 
 		struct pollfd 	getSocketByFD(int fd);
 		struct pollfd* 	getAllSockets();
