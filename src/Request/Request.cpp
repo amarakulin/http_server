@@ -14,7 +14,7 @@ void	Request::addRequestChunk(std::string chunk) {
 }
 
 bool	Request::isDone() {
-	if (_data.find("\r\n\r\n") != std::string::npos)
+	if (_data.find("\r\n\r\n") == std::string::npos)
 		return false;
 
 	// _status = DONE;
