@@ -3,7 +3,7 @@
 
 # include <iostream>
 
-typedef enum { READING, DONE } requestStatus; //! DELETE
+typedef enum { NO_REQUEST, READING, DONE } requestStatus;
 
 class Request {
 	private:
@@ -13,7 +13,7 @@ class Request {
 //		size_t		_contentLength;
 
 		std::string	_data;
-//		int			_status;//! DELETE
+		int			_status;
 
 	public:
 		Request();
@@ -31,6 +31,8 @@ class Request {
 		std::string getData() const {
 			return _data;
 		}
+		
+		int		getStatus() const;
 };
 
 #endif

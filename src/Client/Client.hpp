@@ -19,10 +19,11 @@ class Client {
 		~Client();
 
 		Request*	getRequest() const;
-		// Request* 	getRequest() const;
 		int			getSocket() const;
+		int			getRequsetStatus() const;
 
 		void		resetRequest();
+
 };
 
 #endif

@@ -1,6 +1,6 @@
 #include "Request.hpp"
 
-Request::Request() : _data() {
+Request::Request() : _status(READING), _data() {
 	// std::cout << "			REQUEST			" << std::endl;	
 }
 
@@ -25,6 +25,7 @@ bool	Request::isDone() {
 }
 
 void	Request::resetRequest() {
+	_status = NO_REQUEST;
 	_data = "";
 }
 
@@ -32,6 +33,6 @@ Request *Request::clone() const{
 	return (new Request(*this));
 }
 
-// int		Request::getStatus() const {
-// 	return _status;
-// }
+int		Request::getStatus() const {
+	return _status;
+}

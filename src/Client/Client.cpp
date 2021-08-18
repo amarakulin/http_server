@@ -10,19 +10,20 @@ Client::~Client() {
 //	delete _request;
 }
 
+void		Client::resetRequest() {
+	_request->resetRequest();
+}
+
 Request* Client::getRequest() const{
 	return _request;
 }
 
-// Request* Client::getRequest() const {
-// 	return _request;
-// }
-
-void		Client::resetRequest() {
-	_request->resetRequest();
+int			Client::getRequsetStatus() const {
+	return _request->getStatus();
 }
 
 int	Client::getSocket() const {
 	return _clientSocket;
 }
+
 
