@@ -126,11 +126,9 @@ void				Server::startMainProcess() {
 					std::cout << "/* Client in */ " << std::endl;
 				}
 				
-				// if (client.getRequestStatus() == DONE) {
-				// 	Response* response = _responseCreator.createResponse(client.getRequest());
-				// 	_responses.insert(std::make_pair(client, response));
-				// 	client.resetRequest();
-				// }
+				if (client.getRequestStatus() == DONE) {
+					client.setResponse(_responseCreator.createResponse(client.getRequest()));
+				}
 
 
 				if ((clientPollStruct.revents & POLLOUT) && client.getRequestStatus() == DONE) { // проверяем можем ли мы отпраивть ответ

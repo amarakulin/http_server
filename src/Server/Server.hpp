@@ -18,6 +18,7 @@
 # include "Client.hpp"
 # include "Listener.hpp"
 # include "Sockets.hpp"
+# include "ResponseCreator.hpp"
 
 # include "utils.hpp"
 
@@ -33,6 +34,8 @@ class Server {
 		std::vector<Client>		_clients;
 		std::vector<Listener>	_listeners;
 		Sockets					_sockets;
+		ResponseCreator			_responseCreator;
+
 	
 	private:
 		void	processingRequest() const;
