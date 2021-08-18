@@ -26,6 +26,8 @@ class Request {
 		// int		getStatus() const;
 		bool	isDone();
 
+		void	resetRequest();
+
 		std::string getData() const {
 			return _data;
 		}

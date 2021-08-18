@@ -12,7 +12,7 @@ Request::~Request() {}
 void	Request::addRequestChunk(std::string chunk) {
 	// _data += chunk;
 	_data.insert(_data.length(), chunk);
-	std::cout << "|" << _data << "|" << std::endl;
+	// std::cout << "|" << _data << "|" << std::endl;
 	// isDone();
 }
 
@@ -22,6 +22,10 @@ bool	Request::isDone() {
 
 	// _status = DONE;
 	return true;
+}
+
+void	Request::resetRequest() {
+	_data = "";
 }
 
 Request *Request::clone() const{

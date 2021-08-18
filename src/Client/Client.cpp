@@ -18,6 +18,10 @@ Request* Client::getRequest() const{
 // 	return _request;
 // }
 
+void		Client::resetRequest() {
+	_request->resetRequest();
+}
+
 int	Client::getSocket() const {
 	return _clientSocket;
 }

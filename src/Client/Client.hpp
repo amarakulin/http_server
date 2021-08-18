@@ -21,6 +21,8 @@ class Client {
 		Request*	getRequest() const;
 		// Request* 	getRequest() const;
 		int			getSocket() const;
+
+		void		resetRequest();
 };
 
 #endif
