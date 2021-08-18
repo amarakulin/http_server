@@ -5,26 +5,29 @@
 
 # include "Host.hpp"
 # include "Request.hpp"
-# include "Response.hpp"
+#include "../ResponseAPI/Response/Response.hpp"
+#include "../ResponseAPI/Response/Response.hpp"
 
 class Client {
-	private:
-		int			_clientSocket;
-		Request*	_request;
-		Response*	_response;
+private:
+	int				_clientSocket;
+	Request*		_request;
+	Response*		_response;
 
-		Client();
+	Client();
 
-	public:
-		Client(int host);
-		Client(const Client& other);
-		~Client();
+public:
+	Client(int host);
+	Client(const Client& other);
+	~Client();
 
-		Request*	getRequest() const;
-		int			getSocket() const;
-		int			getRequestStatus() const;
+	Request*	getRequest() const;
+	int			getSocket() const;
+	int			getRequestStatus() const;
 
-		void		resetRequest();
+	void		setResponse(Response *response);
+
+	void		resetRequest();
 
 };
 

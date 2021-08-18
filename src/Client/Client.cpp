@@ -7,7 +7,12 @@ Client::Client(const Client& other) : _clientSocket(other._clientSocket), _reque
 }
 
 Client::~Client() {
-//	delete _request;
+	if (_request != nullptr){
+		delete _request;
+	}
+	if (_response != nullptr){
+		delete _response;
+	}
 }
 
 void		Client::resetRequest() {
@@ -24,6 +29,13 @@ int			Client::getRequestStatus() const {
 
 int	Client::getSocket() const {
 	return _clientSocket;
+}
+
+void Client::setResponse(Response *response){
+	if (_response != nullptr){
+		delete _response;
+	}
+	_response = response;
 }
 
 
