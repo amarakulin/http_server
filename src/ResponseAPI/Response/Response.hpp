@@ -16,6 +16,7 @@ class Response {
 
 		virtual std::string createBody();
 		std::string 		createHead();
+		bool				isResponseSended();
 };
 
 #endif

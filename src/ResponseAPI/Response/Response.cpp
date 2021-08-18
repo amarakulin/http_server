@@ -11,3 +11,7 @@ std::string Response::createBody() {
 std::string Response::createHead() {
 	return "";
 }
+
+bool Response::isResponseSended(){
+	return false;//TODO realization
+}
