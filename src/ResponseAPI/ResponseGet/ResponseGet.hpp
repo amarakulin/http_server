@@ -1,9 +1,9 @@
 #ifndef RESPONSE_GET
 # define RESPONSE_GET
 
-# include "AResponse.hpp"
+# include "Response.hpp"
 
-class ResponseGet : public AResponse {
+class ResponseGet : public Response {
 	public:
 		ResponseGet();
 

@@ -1,9 +1,9 @@
 #ifndef RESPONSE_Post
 # define RESPONSE_Post
 
-# include "AResponse.hpp"
+# include "Response.hpp"
 
-class ResponsePost : public AResponse {
+class ResponsePost : public Response {
 	public:
 		ResponsePost();
 
