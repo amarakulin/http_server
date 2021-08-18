@@ -2,9 +2,7 @@
 
 Client::Client(int socket) : _clientSocket(socket), _request(new Request), _response(nullptr) {}
 
-Client::Client(const Client& other) : _clientSocket(other._clientSocket), _request(other._request){
-//	_request = other.getRequest()->clone();
-}
+Client::Client(const Client& other) : _clientSocket(other._clientSocket), _request(other._request){}
 
 Client::~Client() {
 	if (_request != nullptr){
@@ -32,10 +30,26 @@ int	Client::getSocket() const {
 }
 
 void Client::setResponse(Response *response){
+	resetResponse();
+	_response = response;
+}
+
+void Client::resetResponse(){
 	if (_response != nullptr){
 		delete _response;
 	}
-	_response = response;
+}
+
+bool Client::isResponseSended(){
+	return _response->isResponseSended();
+}
+
+bool Client::isResponseEmpty(){
+	return _response == nullptr;
+}
+
+int Client::sendResponse(){
+	return 0; // TODO realization //TODO pichkasik
 }
 
 

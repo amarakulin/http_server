@@ -28,7 +28,11 @@ public:
 	void		setResponse(Response *response);
 
 	void		resetRequest();
+	void		resetResponse();
+	int			sendResponse();
 
+	bool		isResponseSended();
+	bool		isResponseEmpty();
 };
 
 #endif
