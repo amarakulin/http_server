@@ -1,5 +1,4 @@
 #include "Server.hpp"
-#include "../utils/utils.hpp"
 
 /*
 ** Constructors
@@ -82,7 +81,7 @@ void				Server::closeClientConnection(int clientSocket) {
 	std::cout << "Close connection with: " << clientSocket <<  std::endl;
 	close(clientSocket);
 	_sockets.removeClientSocket(clientSocket);
-	std::cout << "Removed from _sockets socket: " << clientSocket << std::endl;
+	std::cout << "Removed socket from _sockets: " << clientSocket << std::endl;
 	for (; client != _clients.end(); client++) {
 		if ((*client).getSocket() == clientSocket) {
 			std::cout << "Erased socket: " << (*client).getSocket() << " Old size: " << _clients.size() << std::endl;
@@ -126,11 +125,8 @@ void				Server::startMainProcess() {
 					}
 
 					client.getRequest()->addRequestChunk(buf);
-					// bzero(buf, strlen(buf));
-
 
 					std::cout << "/* Client in */ " << clientPollStruct.fd << " bufSize: " << s << std::endl;
-					// std::cout << "/* Client in */ " << clientPollStruct.fd << " bufSize: " << s << " Data: |" << buf << "|" << std::endl;
 				}
 
 
@@ -142,7 +138,7 @@ void				Server::startMainProcess() {
 					if (s < 0)
 						std::cout << "Send error" << std::endl;
 
-					std::cout << "/* Client out */ " << clientPollStruct.fd << std::endl;
+					std::cout << "/* Client out */ " << clientPollStruct.fd << " Sended: " << s << std::endl;
 					client.resetRequest();
 				}
 			}
