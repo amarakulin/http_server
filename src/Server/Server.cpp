@@ -76,20 +76,35 @@ void				Server::createNewClient(int hostSocket) {
 	std::cout << "/* Listener in */ " << sock << std::endl;
 }
 
+void				Server::closeClientConnection(int clientSocket) {
+	std::vector<Client>::iterator client = _clients.begin();
+	
+	std::cout << "Close connection with: " << clientSocket <<  std::endl;
+	close(clientSocket);
+	_sockets.removeClientSocket(clientSocket);
+	std::cout << "Removed from _sockets socket: " << clientSocket << std::endl;
+	for (; client != _clients.end(); client++) {
+		if ((*client).getSocket() == clientSocket) {
+			std::cout << "Erased socket: " << (*client).getSocket() << " Old size: " << _clients.size() << std::endl;
+			_clients.erase(client);
+			std::cout << "Size: " << _clients.size() << std::endl;
+			break ;
+		}
+	}
+}
+
 void				Server::startMainProcess() {
 	while (true) {
-		int ret = poll(_sockets.getAllSockets(), _sockets.size(), 1000);
+		int ret = poll(_sockets.getAllSockets(), _sockets.size(), -1);
 		
 		if (ret == -1) {
 			std::cout << "Poll error" << std::endl;
-		} else if (ret == 0) {
-			std::cout << "Time out" << std::endl;
-		} else {
+		} else if (ret > 0) {
 			char buf[MB]; //TODO обработать случаи, когда за один раз не получается считать/отправить
 
 			for (size_t i = 0; i < _listeners.size(); i++) {
 				struct pollfd host = _sockets.getSocketByFD(_listeners[i].getSocket()); //TODO optimize!!!!!!!!!!!
-				
+
 				if (host.revents & POLLIN)
 					createNewClient(host.fd);
 			}
@@ -99,31 +114,29 @@ void				Server::startMainProcess() {
 				Client client = getClientByFD(_clients, clientPollStruct.fd);
 
 				if (clientPollStruct.revents & POLLIN) { // проверяем пришел ли запрос
+					char buf[MB];
 					int s = recv(clientPollStruct.fd, buf, sizeof(buf), 0);
 
-					// if (s == -1)
-					// 	std::cout << "Read error: " << s << std::endl;
+					if (s == -1)
+						std::cout << "Read error: " << s << std::endl;
 
-					// if (s == 0) {
-					//  	std::cout << "Close connection: " << s <<  std::endl;
-					//  	close(clientPollStruct.fd);
-					//  	sockets.removeClientSocket(clientPollStruct.fd);
-					// 	// _clients.erase(client);
-					//  	continue ;
-					// }
+					if (s == 0) {
+						closeClientConnection(clientPollStruct.fd);
+					 	continue ;
+					}
 
 					client.getRequest()->addRequestChunk(buf);
-					bzero(buf, strlen(buf));
+					// bzero(buf, strlen(buf));
 
 
-					std::cout << "/* Client in */ " << clientPollStruct.fd << " bufSize: " << s << " Data: |" << client.getRequest()->getData() << "|" << std::endl;
+					std::cout << "/* Client in */ " << clientPollStruct.fd << " bufSize: " << s << std::endl;
 					// std::cout << "/* Client in */ " << clientPollStruct.fd << " bufSize: " << s << " Data: |" << buf << "|" << std::endl;
 				}
 
 
 				if ((clientPollStruct.revents & POLLOUT) && client.getRequestStatus() == DONE) { // проверяем можем ли мы отпраивть ответ
-					std::string response = "HTTP/1.1 200 OK\r\nContent-length: 318\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta http-equiv='X-UA-Compatible' content='IE=edge'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>Document</title><link rel='stylesheet' href='index.css'></head><body><h2>Hello</h2><script src='index.js'></script></body></html>";
-					// std::string response = "HTTP/1.1 200 OK\r\nContent-length: 5\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n12345";
+					// std::string response = "HTTP/1.1 200 OK\r\nContent-length: 318\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta http-equiv='X-UA-Compatible' content='IE=edge'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>Document</title><link rel='stylesheet' href='index.css'></head><body><h2>Hello</h2><script src='index.js'></script></body></html>";
+					std::string response = "HTTP/1.1 200 OK\r\nContent-length: 5\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n12345";
 					int s = send(clientPollStruct.fd, response.c_str(), response.length(), 0);
 
 					if (s < 0)

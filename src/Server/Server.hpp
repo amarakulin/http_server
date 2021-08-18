@@ -42,6 +42,7 @@ class Server {
 		void				startMainProcess();
 
 		void				createNewClient(int hostSocket);
+		void				closeClientConnection(int clientSocket);
 
 		void				createListeners();
 		struct sockaddr_in	createSockaddrStruct(const Host& host);
