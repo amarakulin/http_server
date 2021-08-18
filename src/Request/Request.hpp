@@ -19,11 +19,9 @@ class Request {
 		Request();
 		Request(const Request& other);
 		~Request();
-		Request* clone() const;
 
 		void	addRequestChunk(std::string chunk);
 
-		// int		getStatus() const;
 		bool	isDone();
 
 		void	resetRequest();

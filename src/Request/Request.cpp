@@ -26,10 +26,6 @@ void	Request::resetRequest() {
 	_data = "";
 }
 
-Request *Request::clone() const{
-	return (new Request(*this));
-}
-
 int		Request::getStatus() const {
 	return _status;
 }
