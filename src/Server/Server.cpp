@@ -81,12 +81,9 @@ void				Server::closeClientConnection(int clientSocket) {
 	std::cout << "Close connection with: " << clientSocket <<  std::endl;
 	close(clientSocket);
 	_sockets.removeClientSocket(clientSocket);
-	std::cout << "Removed socket from _sockets: " << clientSocket << std::endl;
 	for (; client != _clients.end(); client++) {
 		if ((*client).getSocket() == clientSocket) {
-			std::cout << "Erased socket: " << (*client).getSocket() << " Old size: " << _clients.size() << std::endl;
 			_clients.erase(client);
-			std::cout << "Size: " << _clients.size() << std::endl;
 			break ;
 		}
 	}
@@ -99,7 +96,7 @@ void				Server::startMainProcess() {
 		if (ret == -1) {
 			std::cout << "Poll error" << std::endl;
 		} else if (ret > 0) {
-			char buf[MB]; //TODO обработать случаи, когда за один раз не получается считать/отправить
+			char buf[MB]; //TODO обработать случаи, когда за один раз не получается считать
 
 			for (size_t i = 0; i < _listeners.size(); i++) {
 				struct pollfd host = _sockets.getSocketByFD(_listeners[i].getSocket()); //TODO optimize!!!!!!!!!!!
@@ -112,7 +109,7 @@ void				Server::startMainProcess() {
 				struct pollfd clientPollStruct = *(_sockets.getAllSockets() + i);
 				Client client = getClientByFD(_clients, clientPollStruct.fd);
 
-				if (clientPollStruct.revents & POLLIN) { // проверяем пришел ли запрос
+				if (clientPollStruct.revents & POLLIN) { // проверяем пришел ли запрос //TODO && !client.hasRequest()
 					char buf[MB];
 					int s = recv(clientPollStruct.fd, buf, sizeof(buf), 0);
 
@@ -126,13 +123,19 @@ void				Server::startMainProcess() {
 
 					client.getRequest()->addRequestChunk(buf);
 
-					std::cout << "/* Client in */ " << clientPollStruct.fd << " bufSize: " << s << std::endl;
+					std::cout << "/* Client in */ " << std::endl;
 				}
+				
+				// if (client.getRequestStatus() == DONE) {
+				// 	Response* response = _responseCreator.createResponse(client.getRequest());
+				// 	_responses.insert(std::make_pair(client, response));
+				// 	client.resetRequest();
+				// }
 
 
 				if ((clientPollStruct.revents & POLLOUT) && client.getRequestStatus() == DONE) { // проверяем можем ли мы отпраивть ответ
-					// std::string response = "HTTP/1.1 200 OK\r\nContent-length: 318\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta http-equiv='X-UA-Compatible' content='IE=edge'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>Document</title><link rel='stylesheet' href='index.css'></head><body><h2>Hello</h2><script src='index.js'></script></body></html>";
-					std::string response = "HTTP/1.1 200 OK\r\nContent-length: 5\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n12345";
+					std::string response = "HTTP/1.1 200 OK\r\nContent-length: 318\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta http-equiv='X-UA-Compatible' content='IE=edge'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>Document</title><link rel='stylesheet' href='index.css'></head><body><h2>Hello</h2><script src='index.js'></script></body></html>";
+					// std::string response = "HTTP/1.1 200 OK\r\nContent-length: 5\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n12345";
 					int s = send(clientPollStruct.fd, response.c_str(), response.length(), 0);
 
 					if (s < 0)
