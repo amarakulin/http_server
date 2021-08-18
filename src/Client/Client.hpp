@@ -5,11 +5,13 @@
 
 # include "Host.hpp"
 # include "Request.hpp"
+# include "Response.hpp"
 
 class Client {
 	private:
 		int			_clientSocket;
 		Request*	_request;
+		Response*	_response;
 
 		Client();
 
