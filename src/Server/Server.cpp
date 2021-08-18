@@ -7,7 +7,9 @@
 
 Server::Server() {}
 
-Server::Server(const Config* config) : _config(config), _hosts(config->getHosts()) {}
+Server::Server(const Config* config) : _config(config) {
+	createListeners();
+}
 
 /*
 ** Destructor
@@ -49,20 +51,19 @@ int					Server::createListenerSocket(struct sockaddr_in addr) {
 	return listener;
 }
 
-void				Server::startMainProcess() {
-	std::vector<int>				listeners;
-	std::vector<Host>::iterator		host = _hosts.begin();
-	Sockets							sockets;
+void				Server::createListeners() {
+	std::vector<Host>			hosts = _config->getHosts();
+	std::vector<Host>::iterator host = hosts.begin();
 
-	std::vector<Client>				clients;
-
-	for (size_t i = 0; i < _hosts.size(); i++, host++) {
-		listeners.push_back(createListenerSocket(createSockaddrStruct(*host)));
-		sockets.addListenerSocket(listeners[i]);
+	for (size_t i = 0; i < hosts.size(); i++, host++) {
+		_listeners.push_back(Listener(createListenerSocket(createSockaddrStruct(*host))));
+		_sockets.addListenerSocket(_listeners[i].getSocket()); // TODO вынести??
 	}
+}
 
+void				Server::startMainProcess() {
 	while (true) {
-		int ret = poll(sockets.getAllSockets(), sockets.size(), 1000);
+		int ret = poll(_sockets.getAllSockets(), _sockets.size(), 1000);
 		
 		if (ret == -1) {
 			std::cout << "Poll error" << std::endl;
@@ -71,8 +72,8 @@ void				Server::startMainProcess() {
 		} else {
 			char buf[1024]; //TODO обработать случаи, когда за один раз не получается считать/отправить
 
-			for (size_t i = 0; i < listeners.size(); i++) {
-				struct pollfd host = sockets.getSocketByFD(listeners[i]); //TODO optimize!!!!!!!!!!!
+			for (size_t i = 0; i < _listeners.size(); i++) {
+				struct pollfd host = _sockets.getSocketByFD(_listeners[i].getSocket()); //TODO optimize!!!!!!!!!!!
 				if (host.revents & POLLIN) {
 					int sock = accept(host.fd, NULL, NULL); // создаем нового клиента
 					if (sock < 0)
@@ -82,16 +83,16 @@ void				Server::startMainProcess() {
 
 					Client client(sock);
 
-					sockets.addClientSocket(sock);
-					clients.push_back(client); //TODO add method addClient
+					_sockets.addClientSocket(sock);
+					_clients.push_back(client); //TODO add method addClient
 
 					std::cout << "/* Listener in */ " << sock << std::endl;
 				}
 			}
 
-			for (size_t i = listeners.size(); i < sockets.size(); i++) {
-				struct pollfd clientPollStruct = *(sockets.getAllSockets() + i);
-				Client client = getClientByFD(clients, clientPollStruct.fd);
+			for (size_t i = _listeners.size(); i < _sockets.size(); i++) {
+				struct pollfd clientPollStruct = *(_sockets.getAllSockets() + i);
+				Client client = getClientByFD(_clients, clientPollStruct.fd);
 				// std::cout << "/* Revents */: " << clientPollStruct.revents << std::endl;
 
 				if (clientPollStruct.revents & POLLIN) { // проверяем пришел ли запрос
@@ -104,7 +105,7 @@ void				Server::startMainProcess() {
 					//  	std::cout << "Close connection: " << s <<  std::endl;
 					//  	close(clientPollStruct.fd);
 					//  	sockets.removeClientSocket(clientPollStruct.fd);
-					// 	// clients.erase(client);
+					// 	// _clients.erase(client);
 					//  	continue ;
 					// }
 
