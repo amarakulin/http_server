@@ -1,6 +1,6 @@
 #include "utils.hpp"
 
-Client& getClientByFD(std::vector<Client> clients, int fd) {
+Client& getClientByFD(std::vector<Client>& clients, int fd) {
 	std::vector<Client>::iterator it = clients.begin();
 
 	for (; it != clients.end(); it++) {
