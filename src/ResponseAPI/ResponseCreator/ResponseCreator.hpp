@@ -1,7 +1,7 @@
 #ifndef RESPONSE_CREATOR
 # define RESPONSE_CREATOR
 
-# include "AResponse.hpp"
+# include "Response.hpp"
 # include "ResponseGet.hpp"
 # include "ResponsePost.hpp"
 # include "ResponseDelete.hpp"
@@ -15,7 +15,7 @@ class ResponseCreator {
 	
 	public:
 		ResponseCreator();
-		AResponse* createResponse(Request& request);
+		Response* createResponse(Request& request);
 };
 
 #endif

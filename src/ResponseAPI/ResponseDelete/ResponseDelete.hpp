@@ -1,9 +1,9 @@
 #ifndef RESPONSE_DELETE
 # define RESPONSE_DELETE
 
-# include "AResponse.hpp"
+# include "Response.hpp"
 
-class ResponseDelete : public AResponse {
+class ResponseDelete : public Response {
 	public:
 		ResponseDelete();
 
