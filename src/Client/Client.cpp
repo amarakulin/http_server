@@ -18,7 +18,7 @@ Request* Client::getRequest() const{
 	return _request;
 }
 
-int			Client::getRequsetStatus() const {
+int			Client::getRequestStatus() const {
 	return _request->getStatus();
 }
 

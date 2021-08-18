@@ -21,6 +21,8 @@
 
 # include "utils.hpp"
 
+# define MB 1048576
+
 
 class Config;
 
@@ -37,12 +39,16 @@ class Server {
 		void	sendResponse() const;
 
 	private:
-		void	startMainProcess();
+		void				startMainProcess();
+
+		void				createNewClient(int hostSocket);
+
 		void				createListeners();
 		struct sockaddr_in	createSockaddrStruct(const Host& host);
 		int					createListenerSocket(struct sockaddr_in addr);
 	
 		Server();
+
 	public:
 		Server(const Config* config);
 		~Server();

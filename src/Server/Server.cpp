@@ -61,6 +61,21 @@ void				Server::createListeners() {
 	}
 }
 
+void				Server::createNewClient(int hostSocket) {
+	int sock = accept(hostSocket, NULL, NULL); // создаем нового клиента
+	if (sock < 0)
+		std::cout << "Accept error" << std::endl;//TODO
+	
+	fcntl(sock, F_SETFL, O_NONBLOCK);
+
+	Client client(sock);
+
+	_sockets.addClientSocket(sock);
+	_clients.push_back(client); //TODO add method addClient
+
+	std::cout << "/* Listener in */ " << sock << std::endl;
+}
+
 void				Server::startMainProcess() {
 	while (true) {
 		int ret = poll(_sockets.getAllSockets(), _sockets.size(), 1000);
@@ -70,30 +85,18 @@ void				Server::startMainProcess() {
 		} else if (ret == 0) {
 			std::cout << "Time out" << std::endl;
 		} else {
-			char buf[1024]; //TODO обработать случаи, когда за один раз не получается считать/отправить
+			char buf[MB]; //TODO обработать случаи, когда за один раз не получается считать/отправить
 
 			for (size_t i = 0; i < _listeners.size(); i++) {
 				struct pollfd host = _sockets.getSocketByFD(_listeners[i].getSocket()); //TODO optimize!!!!!!!!!!!
-				if (host.revents & POLLIN) {
-					int sock = accept(host.fd, NULL, NULL); // создаем нового клиента
-					if (sock < 0)
-						std::cout << "Accept error" << std::endl;//TODO
-					
-					fcntl(sock, F_SETFL, O_NONBLOCK);
-
-					Client client(sock);
-
-					_sockets.addClientSocket(sock);
-					_clients.push_back(client); //TODO add method addClient
-
-					std::cout << "/* Listener in */ " << sock << std::endl;
-				}
+				
+				if (host.revents & POLLIN)
+					createNewClient(host.fd);
 			}
 
 			for (size_t i = _listeners.size(); i < _sockets.size(); i++) {
 				struct pollfd clientPollStruct = *(_sockets.getAllSockets() + i);
 				Client client = getClientByFD(_clients, clientPollStruct.fd);
-				// std::cout << "/* Revents */: " << clientPollStruct.revents << std::endl;
 
 				if (clientPollStruct.revents & POLLIN) { // проверяем пришел ли запрос
 					int s = recv(clientPollStruct.fd, buf, sizeof(buf), 0);
@@ -109,17 +112,18 @@ void				Server::startMainProcess() {
 					//  	continue ;
 					// }
 
-					client.getRequest()->addRequestChunk(std::string(buf));
+					client.getRequest()->addRequestChunk(buf);
 					bzero(buf, strlen(buf));
 
 
-					std::cout << "/* Client in */ " << clientPollStruct.fd << " bufSize: " << s << std::endl;
+					std::cout << "/* Client in */ " << clientPollStruct.fd << " bufSize: " << s << " Data: |" << client.getRequest()->getData() << "|" << std::endl;
+					// std::cout << "/* Client in */ " << clientPollStruct.fd << " bufSize: " << s << " Data: |" << buf << "|" << std::endl;
 				}
 
 
-				if ((clientPollStruct.revents & POLLOUT) && client.getRequsetStatus() == DONE) { // проверяем можем ли мы отпраивть ответ
-					// std::string response = "HTTP/1.1 200 OK\r\nContent-length: 318\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta http-equiv='X-UA-Compatible' content='IE=edge'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>Document</title><link rel='stylesheet' href='index.css'></head><body><h2>Hello</h2><script src='index.js'></script></body></html>";
-					std::string response = "HTTP/1.1 200 OK\r\nContent-length: 5\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n12345";
+				if ((clientPollStruct.revents & POLLOUT) && client.getRequestStatus() == DONE) { // проверяем можем ли мы отпраивть ответ
+					std::string response = "HTTP/1.1 200 OK\r\nContent-length: 318\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta http-equiv='X-UA-Compatible' content='IE=edge'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>Document</title><link rel='stylesheet' href='index.css'></head><body><h2>Hello</h2><script src='index.js'></script></body></html>";
+					// std::string response = "HTTP/1.1 200 OK\r\nContent-length: 5\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n12345";
 					int s = send(clientPollStruct.fd, response.c_str(), response.length(), 0);
 
 					if (s < 0)

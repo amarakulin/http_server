@@ -20,7 +20,7 @@ class Client {
 
 		Request*	getRequest() const;
 		int			getSocket() const;
-		int			getRequsetStatus() const;
+		int			getRequestStatus() const;
 
 		void		resetRequest();
 
