@@ -10,7 +10,7 @@ void	Request::addRequestChunk(std::string chunk) {
 	_data += chunk;
 	
 	if (isDone())
-		_status = DONE;
+		_status = READED;
 	else
 		_status = READING;
 }

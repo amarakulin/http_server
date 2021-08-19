@@ -3,7 +3,7 @@
 
 # include <iostream>
 
-typedef enum { NO_REQUEST, READING, DONE } requestStatus;
+typedef enum { NO_REQUEST, READING, READED } requestStatus;
 
 class Request {
 	private:

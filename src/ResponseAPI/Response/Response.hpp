@@ -5,10 +5,14 @@
 
 // Здесь понадобиться fork и excve???
 
+typedef enum { NO_RESPONSE, SENDING, SENDED } responseStatus;
+
 class Response {
 	protected:
 		std::string _head;
 		std::string _body;
+
+		int			_status;
 	
 	public:
 		Response();

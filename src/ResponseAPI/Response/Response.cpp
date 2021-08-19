@@ -1,6 +1,6 @@
 #include "Response.hpp"
 
-Response::Response() {}
+Response::Response() : _status(NO_RESPONSE) {}
 
 Response::~Response() {}
 

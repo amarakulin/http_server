@@ -1,16 +1,12 @@
 #include "Client.hpp"
 
-Client::Client(int socket) : _clientSocket(socket), _request(new Request), _response(nullptr) {}
+Client::Client(int socket) : _clientSocket(socket), _request(new Request), _response(new Response) {}
 
 Client::Client(const Client& other) : _clientSocket(other._clientSocket), _request(other._request){}
 
 Client::~Client() {
-	if (_request != nullptr){
-		delete _request;
-	}
-	if (_response != nullptr){
-		delete _response;
-	}
+	// delete _request; //TODO
+	// delete _response;
 }
 
 void		Client::resetRequest() {
@@ -29,26 +25,24 @@ int	Client::getSocket() const {
 	return _clientSocket;
 }
 
-void Client::setResponse(Response *response){
+void Client::setResponse(Response *response) {
 	resetResponse();
 	_response = response;
 }
 
-void Client::resetResponse(){
-	if (_response != nullptr){
-		delete _response;
-	}
+void Client::resetResponse() {
+	delete _response;
 }
 
-bool Client::isResponseSended(){
+bool Client::isResponseSended() {
 	return _response->isResponseSended();
 }
 
-bool Client::isResponseEmpty(){
+bool Client::isResponseEmpty() {
 	return _response == nullptr;
 }
 
-int Client::sendResponse(){
+int Client::sendResponse() {
 	return 0; // TODO realization //TODO pichkasik
 }
 
