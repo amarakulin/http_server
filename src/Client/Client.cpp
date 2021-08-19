@@ -46,4 +46,8 @@ int Client::sendResponse() {
 	return 0; // TODO realization //TODO pichkasik
 }
 
+int	Client::getResponseStatus() const {
+	return _response->getStatus();
+}
+
 

@@ -12,6 +12,14 @@ std::string Response::createHead() {
 	return "";
 }
 
-bool Response::isResponseSended(){
+bool 		Response::isResponseSended() {
 	return false;//TODO realization
+}
+
+/*
+** Getters
+*/
+
+int			Response::getStatus() const {
+	return _status;
 }

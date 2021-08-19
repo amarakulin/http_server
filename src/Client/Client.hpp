@@ -24,6 +24,7 @@ public:
 	Request*	getRequest() const;
 	int			getSocket() const;
 	int			getRequestStatus() const;
+	int			getResponseStatus() const;
 
 	void		setResponse(Response *response);
 
