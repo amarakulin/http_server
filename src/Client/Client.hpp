@@ -22,6 +22,7 @@ public:
 	~Client();
 
 	Request*	getRequest() const;
+	Response*	getResponse() const;
 	int			getSocket() const;
 	int			getRequestStatus() const;
 	int			getResponseStatus() const;

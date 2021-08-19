@@ -13,23 +13,6 @@ void		Client::resetRequest() {
 	_request->resetRequest();
 }
 
-Request* Client::getRequest() const{
-	return _request;
-}
-
-int			Client::getRequestStatus() const {
-	return _request->getStatus();
-}
-
-int	Client::getSocket() const {
-	return _clientSocket;
-}
-
-void Client::setResponse(Response *response) {
-	resetResponse();
-	_response = response;
-}
-
 void Client::resetResponse() {
 	delete _response;
 }
@@ -46,8 +29,35 @@ int Client::sendResponse() {
 	return 0; // TODO realization //TODO pichkasik
 }
 
-int	Client::getResponseStatus() const {
+/*
+** Getters
+*/
+
+int			Client::getResponseStatus() const {
 	return _response->getStatus();
 }
 
+int			Client::getRequestStatus() const {
+	return _request->getStatus();
+}
 
+Request* 	Client::getRequest() const{
+	return _request;
+}
+
+Response*	Client::getResponse() const {
+	return _response;
+}
+
+int			Client::getSocket() const {
+	return _clientSocket;
+}
+
+/*
+** Setters
+*/
+
+void Client::setResponse(Response *response) {
+	resetResponse();
+	_response = response;
+}
