@@ -17,7 +17,7 @@ private:
 	Client();
 
 public:
-	Client(int host);
+	Client(int socket);
 	Client(const Client& other);
 	~Client();
 

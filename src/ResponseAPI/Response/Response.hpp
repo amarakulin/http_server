@@ -16,6 +16,7 @@ class Response {
 	
 	public:
 		Response();
+		Response(const Response& other);
 		virtual ~Response();
 
 		virtual std::string createBody();

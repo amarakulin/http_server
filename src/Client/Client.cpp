@@ -2,7 +2,7 @@
 
 Client::Client(int socket) : _clientSocket(socket), _request(new Request), _response(new Response) {}
 
-Client::Client(const Client& other) : _clientSocket(other._clientSocket), _request(other._request){}
+Client::Client(const Client& other) : _clientSocket(other._clientSocket), _request(other._request), _response(other._response) {}
 
 Client::~Client() {
 	// delete _request; //TODO
@@ -25,7 +25,7 @@ bool Client::isResponseEmpty() {
 	return _response == nullptr;
 }
 
-int Client::sendResponse() {
+int Client::sendResponse() { //! клиент не отправляет response!! это делает сервер!! BITCH
 	return 0; // TODO realization //TODO pichkasik
 }
 

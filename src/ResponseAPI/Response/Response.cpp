@@ -2,6 +2,8 @@
 
 Response::Response() : _status(NO_RESPONSE) {}
 
+Response::Response(const Response& other) : _status(other._status) {}
+
 Response::~Response() {}
 
 std::string Response::createBody() {
