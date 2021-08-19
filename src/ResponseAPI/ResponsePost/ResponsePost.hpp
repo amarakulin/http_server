@@ -6,6 +6,8 @@
 class ResponsePost : public Response {
 	public:
 		ResponsePost();
+		ResponsePost(const ResponsePost& other);
+		~ResponsePost();
 
 		std::string createBody();
 };

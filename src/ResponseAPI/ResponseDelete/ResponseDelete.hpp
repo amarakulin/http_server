@@ -6,6 +6,8 @@
 class ResponseDelete : public Response {
 	public:
 		ResponseDelete();
+		ResponseDelete(const ResponseDelete& other);
+		~ResponseDelete();
 
 		std::string createBody();
 };
