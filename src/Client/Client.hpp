@@ -29,14 +29,13 @@ public:
 	int			getRequestStatus() const;
 	int			getResponseStatus() const;
 
+	bool		hasResponse() const;
+
 	void		setResponse(Response *response);
 
 	void		resetRequest();
 	void		resetResponse();
 	int			sendResponse();
-
-	bool		isResponseSended();
-	bool		isResponseEmpty();
 };
 
 #endif
