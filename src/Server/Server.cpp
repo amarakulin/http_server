@@ -89,6 +89,16 @@ void				Server::closeClientConnection(int clientSocket) {
 	}
 }
 
+
+void				Server::handleListenerEvent() {
+	for (size_t i = 0; i < _listeners.size(); i++) {
+		struct pollfd host = _sockets.getSocketByFD(_listeners[i].getSocket()); //TODO optimize!!!!!!!!!!!
+
+		if (host.revents & POLLIN)
+			createNewClient(host.fd);
+	}
+}
+
 void				Server::startMainProcess() {
 	while (true) {
 		int ret = poll(_sockets.getAllSockets(), _sockets.size(), -1);
@@ -96,21 +106,14 @@ void				Server::startMainProcess() {
 		if (ret == -1) {
 			std::cout << "Poll error" << std::endl;
 		} else if (ret > 0) {
-			char buf[MB]; //TODO обработать случаи, когда за один раз не получается считать
-
-			for (size_t i = 0; i < _listeners.size(); i++) {
-				struct pollfd host = _sockets.getSocketByFD(_listeners[i].getSocket()); //TODO optimize!!!!!!!!!!!
-
-				if (host.revents & POLLIN)
-					createNewClient(host.fd);
-			}
-
+			
+			handleListenerEvent();
 			for (size_t i = _listeners.size(); i < _sockets.size(); i++) {
 				struct pollfd clientPollStruct = *(_sockets.getAllSockets() + i);
 				Client client = getClientByFD(_clients, clientPollStruct.fd);
 
 				if ((clientPollStruct.revents & POLLIN) && !client.hasResponse()) { // проверяем пришел ли запрос //TODO && !client.hasRequest()
-					char buf[MB];
+					char buf[MB]; //TODO обработать случаи, когда за один раз не получается считать
 					int s = recv(clientPollStruct.fd, buf, sizeof(buf), 0);
 
 					if (s == -1)
