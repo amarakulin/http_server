@@ -4,6 +4,8 @@ Response::Response() {}
 
 Response::Response(const Response& other) {}
 
+Response::Response(const Request* request) {}
+
 Response::~Response() {}
 
 std::string Response::createBody() {

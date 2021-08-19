@@ -2,6 +2,7 @@
 # define RESPONSE
 
 # include <iostream>
+# include "Request.hpp"
 
 // Здесь понадобиться fork и excve???
 
@@ -20,6 +21,7 @@ class Response {
 	public:
 		Response();
 		Response(const Response& other);
+		Response(const Request* request);
 		virtual ~Response();
 
 		virtual std::string createBody();
