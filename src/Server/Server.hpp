@@ -38,8 +38,9 @@ class Server {
 
 	
 	private:
-		void	processingRequest() const;
-		void	sendResponse() const;
+		void	processingRequest(int listenerSocket, Client client);
+		void	sendResponse();
+		void	createResponse();
 
 	private:
 		void				startMainProcess();

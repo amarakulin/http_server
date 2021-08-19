@@ -89,7 +89,6 @@ void				Server::closeClientConnection(int clientSocket) {
 	}
 }
 
-
 void				Server::handleListenerEvents() {
 	for (size_t i = 0; i < _listeners.size(); i++) {
 		struct pollfd host = _sockets.getSocketByFD(_listeners[i].getSocket()); //TODO optimize!!!!!!!!!!!
@@ -99,27 +98,30 @@ void				Server::handleListenerEvents() {
 	}
 }
 
+void				Server::processingRequest(int listenerSocket, Client client) {
+	char buf[MB]; //TODO обработать случаи, когда за один раз не получается считать
+	int s = recv(listenerSocket, buf, sizeof(buf), 0);
+
+	if (s == -1)
+		std::cout << "Read error: " << s << std::endl;
+
+	if (s == 0) {
+		closeClientConnection(listenerSocket);
+		return ;
+	}
+
+	client.getRequest()->addRequestChunk(buf);
+
+	std::cout << "/* Client in */ " << std::endl;
+}
+
 void				Server::handleClientEvents() {
 	for (size_t i = _listeners.size(); i < _sockets.size(); i++) {
 		struct pollfd clientPollStruct = *(_sockets.getAllSockets() + i);
 		Client client = getClientByFD(_clients, clientPollStruct.fd);
 
-		if ((clientPollStruct.revents & POLLIN) && !client.hasResponse()) { // проверяем пришел ли запрос //TODO && !client.hasRequest()
-			char buf[MB]; //TODO обработать случаи, когда за один раз не получается считать
-			int s = recv(clientPollStruct.fd, buf, sizeof(buf), 0);
-
-			if (s == -1)
-				std::cout << "Read error: " << s << std::endl;
-
-			if (s == 0) {
-				closeClientConnection(clientPollStruct.fd);
-				continue ;
-			}
-
-			client.getRequest()->addRequestChunk(buf);
-
-			std::cout << "/* Client in */ " << std::endl;
-		}
+		if ((clientPollStruct.revents & POLLIN) && !client.hasResponse()) // проверяем пришел ли запрос
+			processingRequest(clientPollStruct.fd, client);
 		
 		if (client.hasRequest() && !client.hasResponse()) {// создание response //TODO pichkasik
 			// client.setResponse(_responseCreator.createResponse(client.getRequest()));
