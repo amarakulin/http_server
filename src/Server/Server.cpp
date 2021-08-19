@@ -98,7 +98,7 @@ void				Server::handleListenerEvents() {
 	}
 }
 
-void				Server::processingRequest(int listenerSocket, Client client) {
+void				Server::processingRequest(int listenerSocket, Client& client) {
 	char buf[MB]; //TODO обработать случаи, когда за один раз не получается считать
 	int s = recv(listenerSocket, buf, sizeof(buf), 0);
 
@@ -115,6 +115,12 @@ void				Server::processingRequest(int listenerSocket, Client client) {
 	std::cout << "/* Client in */ " << std::endl;
 }
 
+void				Server::createResponse(Client& client) {
+	// client.setResponse(_responseCreator.createResponse(client.getRequest()));
+	client.setResponse(new ResponseGet);
+	client.resetRequest();
+}
+
 void				Server::handleClientEvents() {
 	for (size_t i = _listeners.size(); i < _sockets.size(); i++) {
 		struct pollfd clientPollStruct = *(_sockets.getAllSockets() + i);
@@ -123,11 +129,8 @@ void				Server::handleClientEvents() {
 		if ((clientPollStruct.revents & POLLIN) && !client.hasResponse()) // проверяем пришел ли запрос
 			processingRequest(clientPollStruct.fd, client);
 		
-		if (client.hasRequest() && !client.hasResponse()) {// создание response //TODO pichkasik
-			// client.setResponse(_responseCreator.createResponse(client.getRequest()));
-			client.setResponse(new ResponseGet);
-			client.resetRequest();
-		}
+		if (client.hasRequest() && !client.hasResponse()) //TODO pichkasik
+			createResponse(client);
 
 
 		if ((clientPollStruct.revents & POLLOUT) && client.hasResponse()) { // проверяем можем ли мы отпраивть ответ
