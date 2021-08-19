@@ -19,8 +19,18 @@ Server::~Server() {
 }
 
 /*
-** Private methods
+** Creating listenters
 */
+
+void				Server::createListeners() {
+	std::vector<Host>			hosts = _config->getHosts();
+	std::vector<Host>::iterator host = hosts.begin();
+
+	for (size_t i = 0; i < hosts.size(); i++, host++) {
+		_listeners.push_back(Listener(createListenerSocket(createSockaddrStruct(*host))));
+		_sockets.addListenerSocket(_listeners[i].getSocket()); // TODO вынести??
+	}
+}
 
 struct sockaddr_in Server::createSockaddrStruct(const Host& host) {
 	struct sockaddr_in 	tmp;
@@ -50,15 +60,9 @@ int					Server::createListenerSocket(struct sockaddr_in addr) {
 	return listener;
 }
 
-void				Server::createListeners() {
-	std::vector<Host>			hosts = _config->getHosts();
-	std::vector<Host>::iterator host = hosts.begin();
-
-	for (size_t i = 0; i < hosts.size(); i++, host++) {
-		_listeners.push_back(Listener(createListenerSocket(createSockaddrStruct(*host))));
-		_sockets.addListenerSocket(_listeners[i].getSocket()); // TODO вынести??
-	}
-}
+/*
+** Processing client connection
+*/
 
 void				Server::createNewClient(int hostSocket) {
 	int sock = accept(hostSocket, NULL, NULL); // создаем нового клиента
@@ -89,6 +93,27 @@ void				Server::closeClientConnection(int clientSocket) {
 	}
 }
 
+/*
+** Main Process
+*/
+
+void				Server::startMainProcess() {
+	while (true) {
+		int ret = poll(_sockets.getAllSockets(), _sockets.size(), -1);
+		
+		if (ret == -1) {
+			std::cout << "Poll error" << std::endl;
+		} else if (ret > 0) {
+			handleListenerEvents();
+			handleClientEvents();
+		}
+	}
+}
+
+/*
+** Event handlers
+*/
+
 void				Server::handleListenerEvents() {
 	for (size_t i = 0; i < _listeners.size(); i++) {
 		struct pollfd host = _sockets.getSocketByFD(_listeners[i].getSocket()); //TODO optimize!!!!!!!!!!!
@@ -97,6 +122,26 @@ void				Server::handleListenerEvents() {
 			createNewClient(host.fd);
 	}
 }
+
+void				Server::handleClientEvents() {
+	for (size_t i = _listeners.size(); i < _sockets.size(); i++) {
+		struct pollfd clientPollStruct = *(_sockets.getAllSockets() + i);
+		Client client = getClientByFD(_clients, clientPollStruct.fd);
+
+		if ((clientPollStruct.revents & POLLIN) && !client.hasResponse()) // проверяем пришел ли запрос
+			processingRequest(clientPollStruct.fd, client);
+		
+		if (client.hasRequest() && !client.hasResponse()) //TODO pichkasik
+			createResponse(client);
+
+		if ((clientPollStruct.revents & POLLOUT) && client.hasResponse())// проверяем можем ли мы отпраивть ответ
+			sendResponse(clientPollStruct.fd, client);
+	}
+}
+
+/*
+** Processing request/response
+*/
 
 void				Server::processingRequest(int clientSocket, Client& client) {
 	char buf[MB]; //TODO обработать случаи, когда за один раз не получается считать
@@ -136,36 +181,6 @@ void				Server::sendResponse(int clientSocket, Client& client) {
 
 	std::cout << "/* Client out */ " << clientSocket << " Sended: " << s << std::endl;
 }
-
-void				Server::handleClientEvents() {
-	for (size_t i = _listeners.size(); i < _sockets.size(); i++) {
-		struct pollfd clientPollStruct = *(_sockets.getAllSockets() + i);
-		Client client = getClientByFD(_clients, clientPollStruct.fd);
-
-		if ((clientPollStruct.revents & POLLIN) && !client.hasResponse()) // проверяем пришел ли запрос
-			processingRequest(clientPollStruct.fd, client);
-		
-		if (client.hasRequest() && !client.hasResponse()) //TODO pichkasik
-			createResponse(client);
-
-		if ((clientPollStruct.revents & POLLOUT) && client.hasResponse())// проверяем можем ли мы отпраивть ответ
-			sendResponse(clientPollStruct.fd, client);
-	}
-}
-
-void				Server::startMainProcess() {
-	while (true) {
-		int ret = poll(_sockets.getAllSockets(), _sockets.size(), -1);
-		
-		if (ret == -1) {
-			std::cout << "Poll error" << std::endl;
-		} else if (ret > 0) {
-			handleListenerEvents();
-			handleClientEvents();
-		}
-	}
-}
-
 
 /*
 ** Public methods
