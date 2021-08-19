@@ -161,8 +161,7 @@ void				Server::processingRequest(int clientSocket, Client& client) {
 }
 
 void				Server::createResponse(Client& client) {
-	// client.setResponse(_responseCreator.createResponse(client.getRequest()));
-	client.setResponse(new ResponseGet);
+	client.setResponse(_responseCreator.createResponse(client.getRequest()));
 	client.resetRequest();
 }
 
