@@ -126,7 +126,7 @@ void				Server::startMainProcess() {
 					std::cout << "/* Client in */ " << std::endl;
 				}
 				
-				if (client.getRequestStatus() == READED && !client.hasResponse()) {// создание response //TODO pichkasik
+				if (client.hasRequest() && !client.hasResponse()) {// создание response //TODO pichkasik
 					// client.setResponse(_responseCreator.createResponse(client.getRequest()));
 					client.setResponse(new ResponseGet);
 					client.resetRequest();
@@ -144,7 +144,7 @@ void				Server::startMainProcess() {
 
 //					if (client.isResponseSended()){ // отчистка  //TODO pichkasik
 //						client.resetRequest();
-						// client.resetResponse();
+						client.resetResponse();
 //					}
 					std::cout << "/* Client out */ " << clientPollStruct.fd << " Sended: " << s << std::endl;
 					// client.resetRequest();

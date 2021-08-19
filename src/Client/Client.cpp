@@ -30,6 +30,12 @@ bool	Client::hasResponse() const {
 	return false;
 }
 
+bool	Client::hasRequest() const {
+	if (_request->getStatus() == READED)
+		return true;
+	return false;
+}
+
 /*
 ** Getters
 */

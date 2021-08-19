@@ -30,6 +30,7 @@ public:
 	int			getResponseStatus() const;
 
 	bool		hasResponse() const;
+	bool		hasRequest() const;
 
 	void		setResponse(Response *response);
 
