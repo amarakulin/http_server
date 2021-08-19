@@ -7,11 +7,7 @@ typedef enum { NO_REQUEST, READING, READED } requestStatus;
 
 class Request {
 	private:
-		std::string _head;
-		std::string _body;
 		std::string _method;
-//		size_t		_contentLength;
-
 		std::string	_data;
 		int			_status;
 
@@ -21,6 +17,7 @@ class Request {
 		~Request();
 
 		void	addRequestChunk(std::string chunk);
+		void	parseMethod();
 
 		bool	isDone();
 
@@ -30,7 +27,8 @@ class Request {
 			return _data;
 		}
 		
-		int		getStatus() const;
+		int			getStatus() const;
+		std::string	getMethod() const;
 };
 
 #endif
