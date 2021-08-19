@@ -2,6 +2,7 @@
 # define REQUEST
 
 # include <iostream>
+# include <sstream>
 
 typedef enum { NO_REQUEST, READING, READED } requestStatus;
 
@@ -26,6 +27,7 @@ class Request {
 
 		void	addRequestChunk(std::string chunk);
 		void	parseMethod();
+		void	parseContentLength();
 
 		bool	isDone();
 
@@ -37,6 +39,7 @@ class Request {
 		
 		int			getStatus() const;
 		std::string	getMethod() const;
+		RequestReadingData getReadingData() const;
 };
 
 #endif

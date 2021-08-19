@@ -10,9 +10,14 @@ Request::~Request() {}
 
 void		Request::addRequestChunk(std::string chunk) {
 	_data += chunk;
+
+	std::transform(_data.begin(), _data.end(), _data.begin(), ::tolower);
 	
 	if (!_sup.method.length())
 		parseMethod();
+
+	if (!_sup.contentLenght)
+		parseContentLength();
 
 	if (isDone()) {
 		_status = READED;
@@ -21,12 +26,23 @@ void		Request::addRequestChunk(std::string chunk) {
 	}
 }
 
+void		Request::parseContentLength() {
+	std::stringstream 	ss;  
+	std::string			searchString = "content-length: ";
+	size_t 				index = _data.find(searchString);
+
+	if (index != std::string::npos) {
+		ss << _data.c_str() + (index + searchString.length());
+		ss >> _sup.contentLenght;
+	}
+}
+
 void		Request::parseMethod() {
-	if (_data.find("GET") != std::string::npos)
+	if (_data.find("get") != std::string::npos)
 		_sup.method = "GET";
-	else if (_data.find("POST") != std::string::npos)
+	else if (_data.find("post") != std::string::npos)
 		_sup.method = "POST";
-	else if (_data.find("DELETE") != std::string::npos)
+	else if (_data.find("delete") != std::string::npos)
 		_sup.method = "DELETE";
 }
 
@@ -46,10 +62,18 @@ void		Request::resetRequest() {
 	_sup.method = "";
 }
 
+/*
+** Getters
+*/
+
 int			Request::getStatus() const {
 	return _status;
 }
 
 std::string	Request::getMethod() const {
 	return _sup.method;
+}
+
+RequestReadingData Request::getReadingData() const {
+	return _sup;
 }
