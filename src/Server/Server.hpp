@@ -38,9 +38,9 @@ class Server {
 
 	
 	private:
-		void	processingRequest(int listenerSocket, Client& client);
+		void	processingRequest(int clientSocket, Client& client);
 		void	createResponse(Client& client);
-		void	sendResponse();
+		void	sendResponse(int clientSocket, Client& client);
 
 	private:
 		void				startMainProcess();
