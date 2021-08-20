@@ -3,22 +3,21 @@
 
 # include <iostream>
 # include <sstream>
+# include <map>
 
 typedef enum { NO_REQUEST, READING, READED } requestStatus;
 
 typedef struct {
-	std::string method;
-	std::string boundary;
-	size_t		contentLenght;
-	bool		isChunked;
-} RequestReadingData;
+	std::map<std::string, std::string> 	header;
+	std::string							body;
+}	RequestData;
 
 class Request {
 	private:
 		int			_status;
-		std::string	_data;
+		std::string	_buffer;
 
-		RequestReadingData _sup;
+		RequestData	_data;
 
 	public:
 		Request();
@@ -26,20 +25,14 @@ class Request {
 		~Request();
 
 		void	addRequestChunk(std::string chunk);
-		void	parseMethod();
-		void	parseContentLength();
 
 		bool	isDone();
 
 		void	resetRequest();
 
-		std::string getData() const {
-			return _data;
-		}
-		
 		int			getStatus() const;
-		std::string	getMethod() const;
-		RequestReadingData getReadingData() const;
+		RequestData& getData();
+		std::string	getMethod();
 };
 
 #endif

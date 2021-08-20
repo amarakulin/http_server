@@ -1,24 +1,18 @@
 #include "Request.hpp"
 
 Request::Request()
-	: _status(NO_REQUEST), _data(), _sup() {}
+	: _status(NO_REQUEST), _buffer() {}
 
 Request::Request(const Request& other)
-	: _status(other._status), _data(other._data), _sup() {}
+	: _status(other._status), _buffer(other._buffer) {}
 
 Request::~Request() {}
 
 void		Request::addRequestChunk(std::string chunk) {
-	_data += chunk;
+	_buffer += chunk;
 
-	std::transform(_data.begin(), _data.end(), _data.begin(), ::tolower);
+	std::transform(_buffer.begin(), _buffer.end(), _buffer.begin(), ::tolower);
 	
-	if (!_sup.method.length())
-		parseMethod();
-
-	if (!_sup.contentLenght)
-		parseContentLength();
-
 	if (isDone()) {
 		_status = READED;
 	} else {
@@ -26,40 +20,21 @@ void		Request::addRequestChunk(std::string chunk) {
 	}
 }
 
-void		Request::parseContentLength() {
-	std::stringstream 	ss;  
-	std::string			searchString = "content-length: ";
-	size_t 				index = _data.find(searchString);
-
-	if (index != std::string::npos) {
-		ss << _data.c_str() + (index + searchString.length());
-		ss >> _sup.contentLenght;
-	}
-}
-
-void		Request::parseMethod() {
-	if (_data.find("get") != std::string::npos)
-		_sup.method = "GET";
-	else if (_data.find("post") != std::string::npos)
-		_sup.method = "POST";
-	else if (_data.find("delete") != std::string::npos)
-		_sup.method = "DELETE";
-}
-
 bool		Request::isDone() {
-	if (_sup.method == "GET" || _sup.method == "DELETE") {
-		if (_data.find("\r\n\r\n") == std::string::npos)
-			return false;
-	} else if (_sup.method == "POST") {
+	// if (_sup.method == "GET" || _sup.method == "DELETE") {
+	if (_buffer.find("\r\n\r\n") == std::string::npos)
+		return false;
+	// } else if (_sup.method == "POST") {
 		
-	}
+	// }
 	return true;
 }
 
 void		Request::resetRequest() {
 	_status = NO_REQUEST;
-	_data = "";
-	_sup.method = "";
+	_buffer = "";
+	_data.header.empty();
+	_data.body = "";
 }
 
 /*
@@ -70,10 +45,10 @@ int			Request::getStatus() const {
 	return _status;
 }
 
-std::string	Request::getMethod() const {
-	return _sup.method;
+std::string	Request::getMethod() {
+	return _data.header["method"];
 }
 
-RequestReadingData Request::getReadingData() const {
-	return _sup;
+RequestData& Request::getData() {
+	return _data;
 }
