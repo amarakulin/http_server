@@ -6,4 +6,6 @@
 
 Client& getClientByFD(std::vector<Client>& clients, int fd);
 
+void	toLowerCase(std::string& str);
+
 #endif

@@ -9,3 +9,7 @@ Client& getClientByFD(std::vector<Client>& clients, int fd) {
 	}	
 	return *it;
 }
+
+void	toLowerCase(std::string& str) {
+	std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+}
