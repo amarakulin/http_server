@@ -1,6 +1,9 @@
 #ifndef REQUEST
 # define REQUEST
 
+# include "typedef.hpp"
+# include "ParserRequest.hpp"
+
 # include <iostream>
 # include <sstream>
 # include <map>
@@ -8,9 +11,11 @@
 typedef enum { NO_REQUEST, READING, READED } requestStatus;
 
 typedef struct {
-	std::map<std::string, std::string> 	header;
-	std::string							body;
+	requestHeaderStruct header;
+	std::string			body;
 }	RequestData;
+
+static const std::string END_OF_HEADER = "\r\n\r\n";
 
 class Request {
 	private:
@@ -27,6 +32,8 @@ class Request {
 		void	addRequestChunk(std::string chunk);
 
 		bool	isDone();
+
+		void	handleEndOfHeader();
 
 		void	resetRequest();
 

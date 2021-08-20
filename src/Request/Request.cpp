@@ -11,7 +11,7 @@ Request::~Request() {}
 void		Request::addRequestChunk(std::string chunk) {
 	_buffer += chunk;
 
-	std::transform(_buffer.begin(), _buffer.end(), _buffer.begin(), ::tolower);
+	handleEndOfHeader();
 	
 	if (isDone()) {
 		_status = READED;
@@ -20,9 +20,25 @@ void		Request::addRequestChunk(std::string chunk) {
 	}
 }
 
+
+/*
+** Checking request state
+*/
+
+void		Request::handleEndOfHeader() {
+	size_t index = _buffer.find(END_OF_HEADER);
+
+	if (index == std::string::npos) {
+		return ;
+	}
+
+	_data.header = ParserRequest().parseHeader(_buffer.substr(0, index));
+	_buffer.erase(0, index + END_OF_HEADER.length());
+}
+
 bool		Request::isDone() {
 	// if (_sup.method == "GET" || _sup.method == "DELETE") {
-	if (_buffer.find("\r\n\r\n") == std::string::npos)
+	if (_buffer.find(END_OF_HEADER) == std::string::npos)
 		return false;
 	// } else if (_sup.method == "POST") {
 		
@@ -32,9 +48,9 @@ bool		Request::isDone() {
 
 void		Request::resetRequest() {
 	_status = NO_REQUEST;
-	_buffer = "";
+	// _buffer = "";
 	_data.header.empty();
-	_data.body = "";
+	_data.body.empty();
 }
 
 /*
