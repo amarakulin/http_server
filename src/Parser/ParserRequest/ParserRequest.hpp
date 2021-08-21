@@ -18,6 +18,7 @@ static const std::string COMMON_HEADE_DATA[] = {
 
 static const std::string SEPORATOR = ": ";
 static const std::string END_OF_LINE = "\r\n";
+static const std::string END_OF_HEADER = "\r\n\r\n";
 
 class ParserRequest {
 	private:
@@ -42,7 +43,7 @@ class ParserRequest {
 
 		static std::string			parseBody(std::string& data); // Cunked
 		static std::string			parseBody(std::string& data, int contentLengt); // With content-length
-		static std::string			parseBody(std::string& data, std::string boundary); // Boundary
+		static std::string			parseBody(std::string& data, int contentLengt, std::string boundary); // Boundary
 		// Request& parse();
 };
 

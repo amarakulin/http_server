@@ -8,8 +8,6 @@
 # include <sstream>
 # include <map>
 
-static const std::string END_OF_HEADER = "\r\n\r\n";
-
 class Request {
 	private:
 		int			_status;

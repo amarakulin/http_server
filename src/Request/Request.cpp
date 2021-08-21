@@ -20,7 +20,7 @@ void		Request::addRequestChunk(std::string chunk) {
 	// std::cout << "Before parsing body: " << _buffer << std::endl;
 
 
-	// std::cout << "Buffer: " << _buffer << std::endl;
+	// std::cout << "Buffer:" << std::endl << _buffer << std::endl;
 	// std::cout << "Body: " << _data.body << std::endl;
 	// std::cout << "After parsing: " << _buffer << std::endl;
 	
@@ -56,12 +56,12 @@ void		Request::handleEndOfBody() {
 
 		if (_data.header.find("content-type") != end && _data.header.find("content-length") != end) {
 
-			size_t contentLength = std::stoi(_data.header["content-length"]);
+			size_t		contentLength = std::stoi(_data.header["content-length"]);
+			std::string contentType = _data.header["content-type"];
 
-			if (_data.header["content-type"].find("boundary") != std::string::npos) {
+			if (contentType.find("boundary") != std::string::npos) {
 				std::cout << "<--- Boundary --->" << std::endl;
 
-				std::string contentType = _data.header["content-type"];
 				std::string boundary = contentType.substr(contentType.find("=") + 1, contentType.length());
 
 				if (_buffer.length() >= contentLength) {

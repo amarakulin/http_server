@@ -34,35 +34,66 @@ std::string			ParserRequest::parseBody(std::string& data, int contentLengt) {
 
 	body = data.substr(0, contentLengt);
 	data.erase(0, contentLengt);
-	
+	std::cout << "/* message */" << std::endl;
+
 	return body;
 }
 
-std::string			ParserRequest::parseBody(std::string& data, std::string boundary) {
+std::string			ParserRequest::parseBody(std::string& data, int contentLengt, std::string boundary) {
 	std::string body;
+	std::string firstKeySeporator = "name=\"";
+	std::string secondKeySeporator = "\"";
+
+	size_t		start = 0;
+	size_t		end = 0;
+
+	std::cout << "Body: " << std::endl << data << std::endl;
+	// std::cout << "Boundary:" << std::endl << boundary << std::endl;
+	size_t boundaryCount = 0;
+
+	do  {
+		start = data.find(boundary, start) + boundary.length();
+		// std::cout << data.c_str() + start << std::endl;
+		boundaryCount++;
+	} while ((*(data.c_str() + start) != '-' && *(data.c_str() + start + 1) != '-'));
+
+	start = 0;
+	std::cout << "count" << boundaryCount << std::endl;
+
+	for (int i = 0; i < boundaryCount - 1; i++) {
+
+		start = data.find(firstKeySeporator, end) + firstKeySeporator.length();
+		end = data.find(secondKeySeporator, start);
+
+		// std::cout << "Start: " << start << std::endl;
+		// std::cout << "End: " << end << std::endl;
+
+		body += data.substr(start, end - start) + "=";
+		// std::cout << "Key: |" << body << "|" << std::endl;
+
+		start = data.find(END_OF_HEADER, end) + END_OF_HEADER.length();
+		end = data.find("\r\n", start);
+
+		if (end == std::string::npos) {
+			std::cout << "/* message */" << std::endl;
+			// break ;
+		}
+
+		body += data.substr(start, end - start) + " ";
+
+
+		// std::cout << "Start: " << data[start] << std::endl;
+		// std::cout << "End: " << data[end - 1] << std::endl;
+
+
+		// std::cout << "Value: " << data.substr(start, end - start) << std::endl;
+	}
+
+		std::cout << "-<<<" << body << std::endl;
+
+	data.erase(0, contentLengt);
 	return body;
 }
-
-
-// std::string ParserRequest::parseBody(std::string& data, int type) {
-// 	std::string body;
-
-// 	switch (type) {
-// 		case WITH_CONTENT_LEN:
-// 			parseBodyWithContentLength(data, body);
-// 			break ;
-// 		case BOUNDARY:
-// 			parseBodyBoundary(data, body);
-// 			std::cout << "/* Boundary */" << std::endl;
-// 			break ;
-// 		case CHUNKED:
-// 			parseBodyChunked(data, body);
-// 			std::cout << "/* Chunked */" << std::endl;
-// 			break ; 
-// 	}
-
-// 	return body;
-// }
 
 /*
 ** Parse header
