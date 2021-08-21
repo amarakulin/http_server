@@ -22,7 +22,8 @@ class ParserRequest {
 		** Парсит первую строчку header'а, в которой
 		** содержится method, locatian и protocol
 		*/
-		void	parseCommonHeaderData(std::string& data, requestHeaderStruct& header); // 
+		void	parseCommonHeaderData(std::string& data, requestHeaderStruct& header);
+		void	parseHeaderData(std::string& data, requestHeaderStruct& header);
 	
 	public:
 		ParserRequest();

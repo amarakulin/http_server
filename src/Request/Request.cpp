@@ -33,7 +33,7 @@ void		Request::handleEndOfHeader() {
 	}
 
 	_data.header = ParserRequest().parseHeader(_buffer.substr(0, index));
-	_buffer.erase(0, index + END_OF_HEADER.length());
+	// _buffer.erase(0, index + END_OF_HEADER.length());
 	_buffer.erase(0, index);
 
 	_isParsed = true;
