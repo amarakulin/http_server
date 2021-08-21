@@ -14,6 +14,25 @@ ParserRequest::~ParserRequest() {}
 
 std::string ParserRequest::parseBody(std::string &data) {
 	std::string body;
+	std::string chunk;
+
+	size_t pos = 0;
+	size_t len = 0;
+
+	while (data != END_OF_BOUNDARY_BODY) {
+		len = std::stoi(data, 0, 16);
+		pos = data.find("\r\n") + 2;
+
+		chunk = data.substr(pos, len);
+
+		if (!chunk.length())
+			break ;
+
+		body += chunk + " ";
+
+		data.erase(0, data.substr(0, pos + 2).length() + len); //TODO Оптимизировать
+	}
+
 	return body;
 }
 
@@ -37,8 +56,7 @@ std::string ParserRequest::parseBody(std::string &data, int contentLengt, std::s
 	std::string chunk;
 	size_t pos = 0;
 
-	while ((pos = data.find(boundary)) != std::string::npos)
-	{
+	while ((pos = data.find(boundary)) != std::string::npos) {
 		chunk = data.substr(0, pos);
 
 		if ((start = chunk.find(firstKeySeporator, end)) != std::string::npos)
