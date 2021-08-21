@@ -12,6 +12,7 @@ void		Request::addRequestChunk(std::string chunk) {
 	_buffer += chunk;
 
 	handleEndOfHeader();
+	handleEndOfBody();
 	
 	if (isDone()) {
 		_status = READED;
@@ -22,7 +23,7 @@ void		Request::addRequestChunk(std::string chunk) {
 
 
 /*
-** Checking request state
+** Handling request parts
 */
 
 void		Request::handleEndOfHeader() {
@@ -32,10 +33,32 @@ void		Request::handleEndOfHeader() {
 		return ;
 	}
 
-	_data.header = ParserRequest().parseHeader(_buffer.substr(0, index));
+	_data.header = ParserRequest::parseHeader(_buffer.substr(0, index));
 	_buffer.erase(0, index + END_OF_HEADER.length());
 	_isParsed = true;
 }
+
+void		Request::handleEndOfBody() {
+	std::string method = _data.header["method"];
+	
+
+	// if (method == "post") {
+	// 	try {
+	// 		size_t len = std::stoi(_data.header["content-length"]);
+	// 		_data.body = ParserRequest::parseBody(_buffer, WITH_CONTENT_LEN);
+	// 	} catch (std::exception e) {
+	// 		std::cout << "Error: " << e.what() << std::endl;
+	// 	}
+	// }
+
+
+	// std::cout << "Content-length: " << contenLength << std::endl;
+
+}
+
+/*
+** Checking request state
+*/
 
 bool		Request::isDone() {
 	if (!_isParsed)

@@ -2,9 +2,19 @@
 
 ParserRequest::ParserRequest() {}
 
-ParserRequest::ParserRequest(const ParserRequest& other) {}
+ParserRequest::ParserRequest(const ParserRequest& other) {
+	*this = other;
+}
 
 ParserRequest::~ParserRequest() {}
+
+/*
+** Parse body
+*/
+
+std::string ParserRequest::parseBody(std::string data, int type) {
+	return "";
+}
 
 /*
 ** Parse header
@@ -47,10 +57,6 @@ void	ParserRequest::parseHeaderData(std::string& data, requestHeaderStruct& head
 
 		header.insert(headerParam);
 	}
-
-
-	for (requestHeaderStruct::iterator it = header.begin(); it != header.end(); it++)
-		std::cout << (*it).first << ": " << (*it).second << std::endl;
 }
 
 

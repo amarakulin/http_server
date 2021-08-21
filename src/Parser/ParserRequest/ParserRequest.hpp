@@ -7,7 +7,7 @@
 # include <iostream>
 # include <map>
 
-// class Request;
+typedef enum { WITH_CONTENT_LEN, CHUNKED, BOUNDARY } BodyParseType;
 
 static const std::string COMMON_HEADE_DATA[] = {
 	"method",
@@ -25,15 +25,16 @@ class ParserRequest {
 		** Парсит первую строчку header'а, в которой
 		** содержится method, locatian и protocol
 		*/
-		void	parseCommonHeaderData(std::string& data, requestHeaderStruct& header);
-		void	parseHeaderData(std::string& data, requestHeaderStruct& header);
+		static void	parseCommonHeaderData(std::string& data, requestHeaderStruct& header);
+		static void	parseHeaderData(std::string& data, requestHeaderStruct& header);
 	
 	public:
 		ParserRequest();
 		ParserRequest(const ParserRequest& other);
 		~ParserRequest();
 
-		requestHeaderStruct	parseHeader(std::string data);
+		static requestHeaderStruct	parseHeader(std::string data);
+		static std::string			parseBody(std::string data, int type);
 		// Request& parse();
 };
 

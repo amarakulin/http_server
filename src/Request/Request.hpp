@@ -28,6 +28,7 @@ class Request {
 		bool	isDone();
 
 		void	handleEndOfHeader();
+		void	handleEndOfBody();
 
 		void	resetRequest();
 
