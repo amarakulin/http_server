@@ -39,20 +39,24 @@ void		Request::handleEndOfHeader() {
 }
 
 void		Request::handleEndOfBody() {
-	std::string method = _data.header["method"];
+	std::string param;
+	requestHeaderStruct::iterator end = _data.header.end();
 	
+	if ( _data.header["method"] == "post") {
 
-	// if (method == "post") {
-	// 	try {
-	// 		size_t len = std::stoi(_data.header["content-length"]);
-	// 		_data.body = ParserRequest::parseBody(_buffer, WITH_CONTENT_LEN);
-	// 	} catch (std::exception e) {
-	// 		std::cout << "Error: " << e.what() << std::endl;
-	// 	}
-	// }
+		if (_data.header.find("content-length") != end) {
+			ParserRequest::parseBody(_buffer, WITH_CONTENT_LEN);
+		} else if (_data.header.find("content-type") != end) {
+			if (_data.header["content-type"].find("boundary") != std::string::npos)
+				ParserRequest::parseBody(_buffer, BOUNDARY);
+		} else if (_data.header.find("transfer-encoding") != end) {
+			if (_data.header["transfer-encoding"].find("chunked") != std::string::npos)
+				ParserRequest::parseBody(_buffer, CHUNKED);
+		}
+		
+	}
 
 
-	// std::cout << "Content-length: " << contenLength << std::endl;
 
 }
 

@@ -27,6 +27,11 @@ class ParserRequest {
 		*/
 		static void	parseCommonHeaderData(std::string& data, requestHeaderStruct& header);
 		static void	parseHeaderData(std::string& data, requestHeaderStruct& header);
+
+	private:
+		static void	parseBodyWithContentLength(std::string& data, std::string& body);
+		static void	parseBodyBoundary(std::string& data, std::string& body);
+		static void	parseBodyChunked(std::string& data, std::string& body);
 	
 	public:
 		ParserRequest();
@@ -34,7 +39,7 @@ class ParserRequest {
 		~ParserRequest();
 
 		static requestHeaderStruct	parseHeader(std::string data);
-		static std::string			parseBody(std::string data, int type);
+		static std::string			parseBody(std::string& data, int type);
 		// Request& parse();
 };
 
