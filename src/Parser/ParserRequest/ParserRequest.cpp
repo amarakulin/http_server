@@ -12,37 +12,57 @@ ParserRequest::~ParserRequest() {}
 ** Parse body
 */
 
-void	ParserRequest::parseBodyWithContentLength(std::string& data, std::string& body) {
-	body = data;
-}
+// void	ParserRequest::parseBodyWithContentLength(std::string& data, std::string& body) {
+// 	body = data;
+// }
 
-void	ParserRequest::parseBodyBoundary(std::string& data, std::string& body) {
+// void	ParserRequest::parseBodyBoundary(std::string& data, int contentLengt) {
 
-}
+// }
 
-void	ParserRequest::parseBodyChunked(std::string& data, std::string& body) {
+// void	ParserRequest::parseBodyChunked(std::string& data, std::string& body) {
 
-}
+// }
 
-std::string ParserRequest::parseBody(std::string& data, int type) {
+std::string			ParserRequest::parseBody(std::string& data) {
 	std::string body;
-
-	switch (type) {
-		case WITH_CONTENT_LEN:
-			parseBodyWithContentLength(data, body);
-			break ;
-		case BOUNDARY:
-			parseBodyBoundary(data, body);
-			std::cout << "/* Boundary */" << std::endl;
-			break ;
-		case CHUNKED:
-			parseBodyChunked(data, body);
-			std::cout << "/* Chunked */" << std::endl;
-			break ; 
-	}
-
 	return body;
 }
+
+std::string			ParserRequest::parseBody(std::string& data, int contentLengt) {
+	std::string body;
+
+	body = data.substr(0, contentLengt);
+	data.erase(0, contentLengt);
+	
+	return body;
+}
+
+std::string			ParserRequest::parseBody(std::string& data, std::string boundary) {
+	std::string body;
+	return body;
+}
+
+
+// std::string ParserRequest::parseBody(std::string& data, int type) {
+// 	std::string body;
+
+// 	switch (type) {
+// 		case WITH_CONTENT_LEN:
+// 			parseBodyWithContentLength(data, body);
+// 			break ;
+// 		case BOUNDARY:
+// 			parseBodyBoundary(data, body);
+// 			std::cout << "/* Boundary */" << std::endl;
+// 			break ;
+// 		case CHUNKED:
+// 			parseBodyChunked(data, body);
+// 			std::cout << "/* Chunked */" << std::endl;
+// 			break ; 
+// 	}
+
+// 	return body;
+// }
 
 /*
 ** Parse header

@@ -50,18 +50,15 @@ void		Request::handleEndOfBody() {
 	
 	if ( _data.header["method"] == "post") {
 
-		if (_data.header.find("content-length") != end) {
-			std::string sub = _buffer.substr(0, std::stoi(_data.header["content-length"]));
-
-			_data.body = ParserRequest::parseBody(sub, WITH_CONTENT_LEN);
-			_buffer.erase(0, sub.length());
-		} else if (_data.header.find("content-type") != end) {
-			if (_data.header["content-type"].find("boundary") != std::string::npos)
-				_data.body = ParserRequest::parseBody(_buffer, BOUNDARY);
-		} else if (_data.header.find("transfer-encoding") != end) {
-			if (_data.header["transfer-encoding"].find("chunked") != std::string::npos)
-				_data.body = ParserRequest::parseBody(_buffer, CHUNKED);
-		}
+		if (_data.header.find("content-length") != end)
+			_data.body = ParserRequest::parseBody(_buffer, std::stoi(_data.header["content-length"]));
+		// else if (_data.header.find("content-type") != end) {
+		// 	if (_data.header["content-type"].find("boundary") != std::string::npos)
+		// 		_data.body = ParserRequest::parseBody(_buffer, BOUNDARY);
+		// } else if (_data.header.find("transfer-encoding") != end) {
+		// 	if (_data.header["transfer-encoding"].find("chunked") != std::string::npos)
+		// 		_data.body = ParserRequest::parseBody(_buffer, CHUNKED);
+		// }
 
 	}
 
