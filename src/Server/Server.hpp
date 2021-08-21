@@ -57,6 +57,8 @@ class Server {
 	
 		Server();
 
+		Client& getClientByFD(std::vector<Client>& clients, int fd);
+
 	public:
 		Server(const Config* config);
 		~Server();
