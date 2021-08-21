@@ -2,14 +2,28 @@
 # define PARSER_REQUEST
 
 # include "RequestTypes.hpp"
-// # include "utils.hpp"
+# include "utils.hpp"
 
 # include <iostream>
 # include <map>
 
 // class Request;
 
+static const std::string COMMON_HEADE_DATA[] = {
+	"method",
+	"location",
+	"protocol",
+	""
+};
+
 class ParserRequest {
+	private:
+		/*
+		** Парсит первую строчку header'а, в которой
+		** содержится method, locatian и protocol
+		*/
+		void	parseCommonHeaderData(std::string& data, requestHeaderStruct& header); // 
+	
 	public:
 		ParserRequest();
 		ParserRequest(const ParserRequest& other);
