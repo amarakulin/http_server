@@ -33,28 +33,19 @@ void		Request::handleEndOfHeader() {
 	}
 
 	_data.header = ParserRequest().parseHeader(_buffer.substr(0, index));
-	// _buffer.erase(0, index + END_OF_HEADER.length());
-	_buffer.erase(0, index);
-
+	_buffer.erase(0, index + END_OF_HEADER.length());
 	_isParsed = true;
 }
 
 bool		Request::isDone() {
-	if (!_isParsed) //TODO очень важно написать правильные условия!!!
+	if (!_isParsed)
 		return false;
-	// if (_sup.method == "GET" || _sup.method == "DELETE") {
-	// if (_buffer.find(END_OF_HEADER) == std::string::npos)
-	// 	return false;
-	// } else if (_sup.method == "POST") {
-		
-	// }
 	_isParsed = false;
 	return true;
 }
 
 void		Request::resetRequest() {
 	_status = NO_REQUEST;
-	// _buffer = "";
 	_data.header.empty();
 	_data.body.empty();
 }
