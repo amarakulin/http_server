@@ -12,18 +12,11 @@ Request::~Request() {}
 void		Request::addRequestChunk(std::string chunk) {
 	_buffer += chunk;
 
-	// std::cout << "Before parsing header: " << _buffer << std::endl;
 	if (!_isHeaderParsed)
 		handleEndOfHeader();
-	else if (_isHeaderParsed && !_isBodyParsed)
+	if (_isHeaderParsed && !_isBodyParsed)
 		handleEndOfBody();
-	// std::cout << "Before parsing body: " << _buffer << std::endl;
 
-
-	// std::cout << "Buffer:" << std::endl << _buffer << std::endl;
-	// std::cout << "Body: " << _data.body << std::endl;
-	// std::cout << "After parsing: " << _buffer << std::endl;
-	
 	if (isDone()) {
 		_status = READED;
 	} else {
@@ -77,22 +70,19 @@ void		Request::handleEndOfBody() {
 					_isBodyParsed = true;
 				}
 			}
-		} 
-		else if (_data.header.find("transfer-encoding") != end) {
+		} else if (_data.header.find("transfer-encoding") != end) {
 			if (_data.header["transfer-encoding"].find("chunked") != std::string::npos) {
 				_data.body = ParserRequest::parseBody(_buffer);
 				_isBodyParsed = true;
 			}
 		}
-		// else {
-		// 	// TODO bad request
-		// }
+		else {
+			// TODO bad request
+		}
 
 	} else {
 		_isBodyParsed = true;
 	}
-
-	// _isParsed = true;
 }
 
 /*
