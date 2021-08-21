@@ -1,19 +1,12 @@
 #ifndef REQUEST
 # define REQUEST
 
-# include "typedef.hpp"
+# include "RequestTypes.hpp"
 # include "ParserRequest.hpp"
 
 # include <iostream>
 # include <sstream>
 # include <map>
-
-typedef enum { NO_REQUEST, READING, READED } requestStatus;
-
-typedef struct {
-	requestHeaderStruct header;
-	std::string			body;
-}	RequestData;
 
 static const std::string END_OF_HEADER = "\r\n\r\n";
 
