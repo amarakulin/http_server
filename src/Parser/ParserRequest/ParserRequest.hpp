@@ -27,13 +27,12 @@ class ParserRequest {
 		** содержится method, locatian и protocol
 		*/
 		static void	parseCommonHeaderData(std::string& data, requestHeaderStruct& header);
+		/*
+		** Парсит весь header и заполняет map<std::string, std::string>,
+		** где key - имя параметра, а value его значение
+		*/
 		static void	parseHeaderData(std::string& data, requestHeaderStruct& header);
 
-	// private:
-	// 	static void	parseBodyWithContentLength(std::string& data, std::string& body);
-	// 	static void	parseBodyBoundary(std::string& data, std::string& body);
-	// 	static void	parseBodyChunked(std::string& data, std::string& body);
-	
 	public:
 		ParserRequest();
 		ParserRequest(const ParserRequest& other);
@@ -41,10 +40,20 @@ class ParserRequest {
 
 		static requestHeaderStruct	parseHeader(std::string data);
 
-		static std::string			parseBody(std::string& data); // Cunked
-		static std::string			parseBody(std::string& data, int contentLengt); // With content-length
-		static std::string			parseBody(std::string& data, int contentLengt, std::string boundary); // Boundary
-		// Request& parse();
+		/*
+		** Cunked
+		*/
+		static std::string			parseBody(std::string& data);
+		/*
+		** With content-length
+		*/
+		static std::string			parseBody(std::string& data, int contentLengt);
+		/*
+		** Boundary: 
+		** Парсит только ту часть body, в котором есть поле filename
+		*/
+		static std::string			parseBody(std::string& data, int contentLengt, std::string boundary);
+		static std::string			parseBoundaryChunk(std::string& chunk);
 };
 
 #endif

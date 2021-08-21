@@ -2,7 +2,7 @@
 
 ParserRequest::ParserRequest() {}
 
-ParserRequest::ParserRequest(const ParserRequest& other) {
+ParserRequest::ParserRequest(const ParserRequest &other) {
 	*this = other;
 }
 
@@ -12,87 +12,64 @@ ParserRequest::~ParserRequest() {}
 ** Parse body
 */
 
-// void	ParserRequest::parseBodyWithContentLength(std::string& data, std::string& body) {
-// 	body = data;
-// }
-
-// void	ParserRequest::parseBodyBoundary(std::string& data, int contentLengt) {
-
-// }
-
-// void	ParserRequest::parseBodyChunked(std::string& data, std::string& body) {
-
-// }
-
-std::string			ParserRequest::parseBody(std::string& data) {
+std::string ParserRequest::parseBody(std::string &data) {
 	std::string body;
 	return body;
 }
 
-std::string			ParserRequest::parseBody(std::string& data, int contentLengt) {
+std::string ParserRequest::parseBody(std::string &data, int contentLengt) {
 	std::string body;
 
 	body = data.substr(0, contentLengt);
 	data.erase(0, contentLengt);
-	std::cout << "/* message */" << std::endl;
 
 	return body;
 }
 
-std::string			ParserRequest::parseBody(std::string& data, int contentLengt, std::string boundary) {
+std::string ParserRequest::parseBody(std::string &data, int contentLengt, std::string boundary) {
 	std::string body;
-	std::string firstKeySeporator = "name=\"";
+	std::string firstKeySeporator = "filename=\"";
 	std::string secondKeySeporator = "\"";
 
-	size_t		start = 0;
-	size_t		end = 0;
+	size_t start = 0;
+	size_t end = 0;
 
-	std::cout << "Body: " << std::endl << data << std::endl;
-	// std::cout << "Boundary:" << std::endl << boundary << std::endl;
-	size_t boundaryCount = 0;
+	std::string chunk;
+	size_t pos = 0;
 
-	do  {
-		start = data.find(boundary, start) + boundary.length();
-		// std::cout << data.c_str() + start << std::endl;
-		boundaryCount++;
-	} while ((*(data.c_str() + start) != '-' && *(data.c_str() + start + 1) != '-'));
+	while ((pos = data.find(boundary)) != std::string::npos)
+	{
+		chunk = data.substr(0, pos);
 
-	start = 0;
-	std::cout << "count" << boundaryCount << std::endl;
+		if ((start = chunk.find(firstKeySeporator, end)) != std::string::npos)
+			body += parseBoundaryChunk(chunk);
 
-	for (int i = 0; i < boundaryCount - 1; i++) {
-
-		start = data.find(firstKeySeporator, end) + firstKeySeporator.length();
-		end = data.find(secondKeySeporator, start);
-
-		// std::cout << "Start: " << start << std::endl;
-		// std::cout << "End: " << end << std::endl;
-
-		body += data.substr(start, end - start) + "=";
-		// std::cout << "Key: |" << body << "|" << std::endl;
-
-		start = data.find(END_OF_HEADER, end) + END_OF_HEADER.length();
-		end = data.find("\r\n", start);
-
-		if (end == std::string::npos) {
-			std::cout << "/* message */" << std::endl;
-			// break ;
-		}
-
-		body += data.substr(start, end - start) + " ";
-
-
-		// std::cout << "Start: " << data[start] << std::endl;
-		// std::cout << "End: " << data[end - 1] << std::endl;
-
-
-		// std::cout << "Value: " << data.substr(start, end - start) << std::endl;
+		data.erase(0, pos + boundary.length());
 	}
 
-		std::cout << "-<<<" << body << std::endl;
+	std::cout << "Body: " << body << std::endl;
 
-	data.erase(0, contentLengt);
+	data.erase(0, data.length());
 	return body;
+}
+
+std::string ParserRequest::parseBoundaryChunk(std::string& chunk) {
+	std::string parsedData;
+	std::string firstKeySeporator = "filename=\"";
+	std::string secondKeySeporator = "\"";
+
+	size_t start = 0;
+	size_t end = 0;
+
+	start = chunk.find(firstKeySeporator, end) + firstKeySeporator.length();
+	end = chunk.find(secondKeySeporator, start);
+	parsedData += chunk.substr(start, end - start) + "=";
+
+	start = chunk.find(END_OF_HEADER, end) + END_OF_HEADER.length();
+	end = chunk.find("\r\n", start);
+	parsedData += chunk.substr(start, end - start) + " ";
+
+	return parsedData;
 }
 
 /*
@@ -137,7 +114,6 @@ void	ParserRequest::parseHeaderData(std::string& data, requestHeaderStruct& head
 		header.insert(headerParam);
 	}
 }
-
 
 requestHeaderStruct ParserRequest::parseHeader(std::string data) {
 	requestHeaderStruct header;
