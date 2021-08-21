@@ -16,6 +16,9 @@ static const std::string COMMON_HEADE_DATA[] = {
 	""
 };
 
+static const std::string SEPORATOR = ": ";
+static const std::string END_OF_LINE = "\r\n";
+
 class ParserRequest {
 	private:
 		/*
