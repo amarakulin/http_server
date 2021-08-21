@@ -65,8 +65,6 @@ std::string ParserRequest::parseBody(std::string &data, int contentLengt, std::s
 		data.erase(0, pos + boundary.length());
 	}
 
-	std::cout << "Body: " << body << std::endl;
-
 	data.erase(0, data.length());
 	return body;
 }

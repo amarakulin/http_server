@@ -28,6 +28,9 @@ class Request {
 
 		void	handleEndOfHeader();
 		void	handleEndOfBody();
+		void	handleEndOfBoundaryBody();
+		void	handleEndOfChunkedBody();
+		void	handleEndOfBodyWithContentLengt();
 
 		void	resetRequest();
 
