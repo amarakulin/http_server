@@ -13,7 +13,7 @@ ParserRequest::~ParserRequest() {}
 */
 
 void	ParserRequest::parseBodyWithContentLength(std::string& data, std::string& body) {
-
+	body = data;
 }
 
 void	ParserRequest::parseBodyBoundary(std::string& data, std::string& body) {
@@ -30,7 +30,6 @@ std::string ParserRequest::parseBody(std::string& data, int type) {
 	switch (type) {
 		case WITH_CONTENT_LEN:
 			parseBodyWithContentLength(data, body);
-			std::cout << "/* Content length */" << std::endl;
 			break ;
 		case BOUNDARY:
 			parseBodyBoundary(data, body);

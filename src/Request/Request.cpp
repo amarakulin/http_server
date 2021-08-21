@@ -11,8 +11,13 @@ Request::~Request() {}
 void		Request::addRequestChunk(std::string chunk) {
 	_buffer += chunk;
 
+	// std::cout << "Before parsing header: " << _buffer << std::endl;
 	handleEndOfHeader();
+	// std::cout << "Before parsing body: " << _buffer << std::endl;
 	handleEndOfBody();
+
+	// std::cout << "Body: " << _data.body << std::endl;
+	// std::cout << "After parsing: " << _buffer << std::endl;
 	
 	if (isDone()) {
 		_status = READED;
@@ -35,7 +40,8 @@ void		Request::handleEndOfHeader() {
 
 	_data.header = ParserRequest::parseHeader(_buffer.substr(0, index));
 	_buffer.erase(0, index + END_OF_HEADER.length());
-	_isParsed = true;
+	if (_data.header["method"] != "post")
+		_isParsed = true;
 }
 
 void		Request::handleEndOfBody() {
@@ -45,19 +51,21 @@ void		Request::handleEndOfBody() {
 	if ( _data.header["method"] == "post") {
 
 		if (_data.header.find("content-length") != end) {
-			ParserRequest::parseBody(_buffer, WITH_CONTENT_LEN);
+			std::string sub = _buffer.substr(0, std::stoi(_data.header["content-length"]));
+
+			_data.body = ParserRequest::parseBody(sub, WITH_CONTENT_LEN);
+			_buffer.erase(0, sub.length());
 		} else if (_data.header.find("content-type") != end) {
 			if (_data.header["content-type"].find("boundary") != std::string::npos)
-				ParserRequest::parseBody(_buffer, BOUNDARY);
+				_data.body = ParserRequest::parseBody(_buffer, BOUNDARY);
 		} else if (_data.header.find("transfer-encoding") != end) {
 			if (_data.header["transfer-encoding"].find("chunked") != std::string::npos)
-				ParserRequest::parseBody(_buffer, CHUNKED);
+				_data.body = ParserRequest::parseBody(_buffer, CHUNKED);
 		}
-		
+
 	}
 
-
-
+	_isParsed = true;
 }
 
 /*
@@ -73,8 +81,8 @@ bool		Request::isDone() {
 
 void		Request::resetRequest() {
 	_status = NO_REQUEST;
-	_data.header.empty();
-	_data.body.empty();
+	_data.header.clear();
+	_data.body.clear();
 }
 
 /*
