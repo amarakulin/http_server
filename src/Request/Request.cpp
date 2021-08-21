@@ -63,6 +63,10 @@ void		Request::handleEndOfBody() {
 				std::cout << "<--- Boundary --->" << std::endl;
 
 				std::string boundary = contentType.substr(contentType.find("=") + 1, contentType.length());
+				if (boundary.find("\"") != std::string::npos) {
+					boundary.erase(0, 1);
+					boundary.pop_back();
+				}
 
 				if (_buffer.length() >= contentLength) {
 					_data.body = ParserRequest::parseBody(_buffer, contentLength, boundary);
