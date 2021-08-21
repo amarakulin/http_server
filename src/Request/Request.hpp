@@ -16,7 +16,8 @@ class Request {
 		std::string	_buffer;
 
 		RequestData	_data;
-		bool		_isParsed;
+		bool		_isHeaderParsed;
+		bool		_isBodyParsed;
 
 	public:
 		Request();
