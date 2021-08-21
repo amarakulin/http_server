@@ -34,15 +34,21 @@ void		Request::handleEndOfHeader() {
 
 	_data.header = ParserRequest().parseHeader(_buffer.substr(0, index));
 	_buffer.erase(0, index + END_OF_HEADER.length());
+	_buffer.erase(0, index);
+
+	_isParsed = true;
 }
 
 bool		Request::isDone() {
-	// if (_sup.method == "GET" || _sup.method == "DELETE") {
-	if (_buffer.find(END_OF_HEADER) == std::string::npos)
+	if (!_isParsed) //TODO очень важно написать правильные условия!!!
 		return false;
+	// if (_sup.method == "GET" || _sup.method == "DELETE") {
+	// if (_buffer.find(END_OF_HEADER) == std::string::npos)
+	// 	return false;
 	// } else if (_sup.method == "POST") {
 		
 	// }
+	_isParsed = false;
 	return true;
 }
 
