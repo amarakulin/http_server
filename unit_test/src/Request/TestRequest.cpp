@@ -393,6 +393,61 @@ void testParseSeveralRequest_11() {
 	TEST_CHECK(data.body == "12345");
 }
 
+void testParseSeveralRequest_12() {
+	Request 	req;
+	std::string requestSrt = "POST /index.html HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-length: 5\r\n\r\n12345POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
+	TEST_CHECK(data.header["content-length"] == "5");
+	TEST_CHECK(data.body == "12345");
+
+
+	req.resetRequest();
+	req.addRequestChunk("");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
+	TEST_CHECK(data.header["content-length"] == "291");
+	TEST_CHECK(data.body == "example.txt=TOOL ");
+}
+
+void testParseSeveralRequest_13() {
+	Request 	req;
+	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--POST /index.html HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-length: 5\r\n\r\n12345";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
+	TEST_CHECK(data.header["content-length"] == "291");
+	TEST_CHECK(data.body == "example.txt=TOOL ");
+
+	req.resetRequest();
+	req.addRequestChunk("");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
+	TEST_CHECK(data.header["content-length"] == "5");
+	TEST_CHECK(data.body == "12345");
+}
+
 TEST_LIST = {
 	{ "парсинг GET запроса без параметров", testParseGetRequest_1 },
 	{ "парсинг GET запроса без с одним параметром", testParseGetRequest_2 },
@@ -415,9 +470,14 @@ TEST_LIST = {
 	{ "парсинг двух одновременных запросов (GET -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_7 },
 	{ "парсинг двух одновременных запросов (POST(CL) -> GET) с несколькими параметрами и body", testParseSeveralRequest_8 },
 	{ "парсинг двух одновременных запросов (POST(CL) -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_9 },
+
 	{ "парсинг двух одновременных запросов (POST(CL) -> POST(CNUNKED)) с несколькими параметрами и body", testParseSeveralRequest_10 },
 	{ "парсинг двух одновременных запросов (POST(CNUNKED) -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_11 },
 
+	{ "парсинг двух одновременных запросов (POST(CL) -> POST(BOUNDARY)) с несколькими параметрами и body", testParseSeveralRequest_12 },
+	{ "парсинг двух одновременных запросов (POST(BOUNDARY) -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_13 },
+
+	//TODO дбавить POST(BOUNDARY) -> POST(CHUNKED), POST(CHUNKED) -> POST(BOUNDARY) и эти комбинации с GET
 
 	{ nullptr, nullptr }
 };
