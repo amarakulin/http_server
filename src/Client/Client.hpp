@@ -5,10 +5,10 @@
 
 # include "Host.hpp"
 # include "Request.hpp"
-# include "Response.hpp"
 # include "ResponseGet.hpp"
 # include "ResponseDelete.hpp"
 # include "ResponsePost.hpp"
+#include "../ResponseAPI/Response/Response.hpp"
 
 class Client {
 private:
