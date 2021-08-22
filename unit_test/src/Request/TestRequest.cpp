@@ -122,7 +122,7 @@ void testParsePostRequest_5() {
 	TEST_CHECK(data.body == "example.txt=TOOL ");
 }
 
-void testParseSeveralGetRequest_1() {
+void testParseSeveralRequest_1() {
 	Request 	req;
 	std::string requestSrt = "GET / HTTP/1.1\r\n\r\nPOST /index.html HTTP/1.1\r\n\r\n";
 	RequestData data;
@@ -143,7 +143,7 @@ void testParseSeveralGetRequest_1() {
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 }
 
-void testParseSeveralGetRequest_2() {
+void testParseSeveralRequest_2() {
 	Request 	req;
 	std::string requestSrt = "GET / HTTP/1.1\r\nHost: 127.0.0.1:8000\r\n\r\nPOST /index.html HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
 	RequestData data;
@@ -166,7 +166,7 @@ void testParseSeveralGetRequest_2() {
 	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
 }
 
-void testParseSeveralGetRequest_3() {
+void testParseSeveralRequest_3() {
 	Request 	req;
 	std::string requestSrt = "GET / HTTP/1.1\r\nHost: 127.0.0.1:8000\r\nContent-Type: application/x-www-form-urlencoded\r\n\r\nPOST /index.html HTTP/1.1\r\nHost: 127.0.0.1:5000\r\nContent-Type: text/plain\r\n\r\n";
 	RequestData data;
@@ -191,7 +191,7 @@ void testParseSeveralGetRequest_3() {
 	TEST_CHECK(data.header["content-type"] == "text/plain");
 }
 
-void testParseSeveralGetRequest_4() {
+void testParseSeveralRequest_4() {
 	Request 	req;
 	std::string requestSrt = "GET / HTTP/1.1\r\n\r\n";
 	RequestData data;
@@ -212,7 +212,7 @@ void testParseSeveralGetRequest_4() {
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 }
 
-void testParseSeveralGetRequest_5() {
+void testParseSeveralRequest_5() {
 	Request 	req;
 	std::string requestSrt = "GET / HTTP/1.1\r\nHost: 127.0.0.1:8000\r\n\r\n";
 	RequestData data;
@@ -235,7 +235,7 @@ void testParseSeveralGetRequest_5() {
 	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
 }
 
-void testParseSeveralGetRequest_6() {
+void testParseSeveralRequest_6() {
 	Request 	req;
 	std::string requestSrt = "GET / HTTP/1.1\r\nHost: 127.0.0.1:8000\r\nContent-Type: application/x-www-form-urlencoded\r\n\r\n";
 	RequestData data;
@@ -260,6 +260,138 @@ void testParseSeveralGetRequest_6() {
 	TEST_CHECK(data.header["content-type"] == "text/plain");
 }
 
+void testParseSeveralRequest_7() {
+	Request 	req;
+	std::string requestSrt = "GET / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\nPOST /index.html HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-length: 5\r\n\r\n12345";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "get");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
+
+	req.resetRequest();
+	req.addRequestChunk("");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
+	TEST_CHECK(data.header["content-length"] == "5");
+	TEST_CHECK(data.body == "12345");
+}
+
+void testParseSeveralRequest_8() {
+	Request 	req;
+	std::string requestSrt = "POST /index.html HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-length: 5\r\n\r\n12345GET / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
+	TEST_CHECK(data.header["content-length"] == "5");
+	TEST_CHECK(data.body == "12345");
+
+	req.resetRequest();
+	req.addRequestChunk("");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "get");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
+}
+
+void testParseSeveralRequest_9() {
+	Request 	req;
+	std::string requestSrt = "POST /index.html HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-length: 5\r\n\r\n12345POST / HTTP/1.1\r\nContent-Type: text/html\r\nContent-length: 7\r\n\r\nHello!!";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
+	TEST_CHECK(data.header["content-length"] == "5");
+	TEST_CHECK(data.body == "12345");
+
+	req.resetRequest();
+	req.addRequestChunk("");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "text/html");
+	TEST_CHECK(data.header["content-length"] == "7");
+	TEST_CHECK(data.body == "Hello!!");
+}
+
+void testParseSeveralRequest_10() {
+	Request 	req;
+	std::string requestSrt = "POST /index.html HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-length: 5\r\n\r\n12345POST / HTTP/1.1\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n7\r\nMozilla\r\nF\r\nFrontend_Develo\0\r\n\r\n";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
+	TEST_CHECK(data.header["content-length"] == "5");
+	TEST_CHECK(data.body == "12345");
+
+	req.resetRequest();
+	req.addRequestChunk("");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "text/plain");
+	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
+	TEST_CHECK(data.body == "Mozilla Frontend_Develo ");
+}
+
+void testParseSeveralRequest_11() {
+	Request 	req;
+	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n7\r\nMozilla\r\nF\r\nFrontend_Develo\0\r\n\r\nPOST /index.html HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-length: 5\r\n\r\n12345";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "text/plain");
+	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
+	TEST_CHECK(data.body == "Mozilla Frontend_Develo ");
+
+
+	req.resetRequest();
+	req.addRequestChunk("");
+	data = req.getData();
+
+	
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
+	TEST_CHECK(data.header["content-length"] == "5");
+	TEST_CHECK(data.body == "12345");
+}
 
 TEST_LIST = {
 	{ "парсинг GET запроса без параметров", testParseGetRequest_1 },
@@ -272,13 +404,19 @@ TEST_LIST = {
 	{ "парсинг CHUNKED POST запрос", testParsePostRequest_4 },
 	{ "парсинг BOUNDARY POST запрос", testParsePostRequest_5 },
 
-	{ "парсинг двух одновременных пустых GET запросов", testParseSeveralGetRequest_1 },
-	{ "парсинг двух одновременных GET запросов с одним параметром", testParseSeveralGetRequest_2 },
-	{ "парсинг двух одновременных GET запросов с несколькими параметрами", testParseSeveralGetRequest_3 },
+	{ "парсинг двух одновременных пустых запросов", testParseSeveralRequest_1 },
+	{ "парсинг двух одновременных запросов с одним параметром", testParseSeveralRequest_2 },
+	{ "парсинг двух одновременных запросов с несколькими параметрами", testParseSeveralRequest_3 },
 
-	{ "парсинг двух последовательных GET запросов с несколькими параметрами", testParseSeveralGetRequest_4 },
-	{ "парсинг двух последовательных GET запросов с одним параметром", testParseSeveralGetRequest_5 },
-	{ "парсинг двух последовательных GET запросов с несколькими параметрами", testParseSeveralGetRequest_6 },
+	{ "парсинг двух последовательных запросов с несколькими параметрами", testParseSeveralRequest_4 },
+	{ "парсинг двух последовательных запросов с одним параметром", testParseSeveralRequest_5 },
+	{ "парсинг двух последовательных запросов с несколькими параметрами", testParseSeveralRequest_6 },
+
+	{ "парсинг двух одновременных запросов (GET -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_7 },
+	{ "парсинг двух одновременных запросов (POST(CL) -> GET) с несколькими параметрами и body", testParseSeveralRequest_8 },
+	{ "парсинг двух одновременных запросов (POST(CL) -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_9 },
+	{ "парсинг двух одновременных запросов (POST(CL) -> POST(CNUNKED)) с несколькими параметрами и body", testParseSeveralRequest_10 },
+	{ "парсинг двух одновременных запросов (POST(CNUNKED) -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_11 },
 
 
 	{ nullptr, nullptr }
