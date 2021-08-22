@@ -1,7 +1,7 @@
 #ifndef RESPONSE_GET
 # define RESPONSE_GET
 
-# include "Response.hpp"
+# include "../Response/Response.hpp"
 
 class ResponseGet : public Response {
 	public:
@@ -10,7 +10,9 @@ class ResponseGet : public Response {
 		ResponseGet(const Request* other);
 		~ResponseGet();
 
-		std::string createBody();
+		std::string		createBody();
+		std::string		createHead();
+		int				send();
 };
 
 #endif

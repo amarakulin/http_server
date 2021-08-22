@@ -16,6 +16,10 @@ std::string Response::createHead() {
 	return "";
 }
 
+int Response::send(){
+	return 0;
+}
+
 /*
 ** Getters
 */
