@@ -10,7 +10,8 @@ NAME_LIB = webserver.a
 
 ### COMPILE ###
 CC = clang++
-FLAGS = -Wall -Wextra -Werror --std=c++98
+FLAGS =
+# FLAGS = -Wall -Wextra -Werror --std=c++98
 NOT_PATH = -not -path
 
 ### DIRECTORY/PATH ###
