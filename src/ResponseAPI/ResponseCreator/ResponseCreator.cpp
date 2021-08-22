@@ -18,7 +18,7 @@ ResponseDelete* ResponseCreator::createResponseDelete(Request* request) {
 
 Response *ResponseCreator::createResponse(Request *request) {
 	std::string requestMethod = request->getMethod();
-	
+	//TODO change to lowercase
 	if (requestMethod == "GET")
 		return createResponseGet(request);
 	else if (requestMethod == "POST")
