@@ -98,7 +98,7 @@ void	ParserRequest::parseCommonHeaderData(std::string& data, requestHeaderStruct
 
 	for (int i = 0; COMMON_HEADE_DATA[i].length(); i++) {
 		if (COMMON_HEADE_DATA[i] == "protocol")
-			seporator = "\n";
+			seporator = "\r\n";
 		index = data.find(seporator);
 		header.insert(std::make_pair(COMMON_HEADE_DATA[i], data.substr(0, index)));
 		data.erase(0, index + seporator.length());
