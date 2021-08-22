@@ -18,12 +18,12 @@ ResponseDelete* ResponseCreator::createResponseDelete(Request* request) {
 
 Response *ResponseCreator::createResponse(Request *request) {
 	std::string requestMethod = request->getMethod();
-	//TODO change to lowercase
-	if (requestMethod == "GET")
+	if (requestMethod == "get")
 		return createResponseGet(request);
-	else if (requestMethod == "POST")
+	else if (requestMethod == "post")
 		return createResponsePost(request);
-	else if (requestMethod == "DELETE")
+	else if (requestMethod == "delete")
 		return createResponseDelete(request);
-	return new ResponseGet;
+	//TODO change final return
+	return new ResponseGet(request);
 }
