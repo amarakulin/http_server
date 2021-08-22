@@ -114,8 +114,6 @@ void testParsePostRequest_5() {
 	req.addRequestChunk(requestSrt);
 	data = req.getData();
 
-	// std::cout << "BODY: " << "|" << data.body << "|" << std::endl;
-
 	TEST_CHECK(data.header["method"] == "post");
 	TEST_CHECK(data.header["location"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
@@ -124,16 +122,88 @@ void testParsePostRequest_5() {
 	TEST_CHECK(data.body == "example.txt=TOOL ");
 }
 
+void testParseSeveralGetRequest_1() {
+	Request 	req;
+	std::string requestSrt = "GET / HTTP/1.1\r\n\r\nPOST /index.html HTTP/1.1\r\n\r\n";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "get");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+
+	req.resetRequest();
+	req.addRequestChunk("");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+}
+
+void testParseSeveralGetRequest_2() {
+	Request 	req;
+	std::string requestSrt = "GET / HTTP/1.1\r\nHost: 127.0.0.1:8000\r\n\r\nPOST /index.html HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "get");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["host"] == "127.0.0.1:8000");
+
+	req.resetRequest();
+	req.addRequestChunk("");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
+}
+
+void testParseSeveralGetRequest_3() {
+	Request 	req;
+	std::string requestSrt = "GET / HTTP/1.1\r\nHost: 127.0.0.1:8000\r\nContent-Type: application/x-www-form-urlencoded\r\n\r\nPOST /index.html HTTP/1.1\r\nHost: 127.0.0.1:5000\r\nContent-Type: text/plain\r\n\r\n";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "get");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["host"] == "127.0.0.1:8000");
+	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
+
+	req.resetRequest();
+	req.addRequestChunk("");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
+	TEST_CHECK(data.header["content-type"] == "text/plain");
+}
+
 
 TEST_LIST = {
-	{ "парсинг GET запроса без параметров №1", testParseGetRequest_1 },
-	{ "парсинг GET запроса без с одним параметром №2", testParseGetRequest_2 },
-	{ "парсинг GET запроса без с несколькими параметрами №3", testParseGetRequest_3 },
-	{ "парсинг POST запроса без параметров №1", testParsePostRequest_1 },
-	{ "парсинг POST запроса с одним параметром в body (CL + CT) №2", testParsePostRequest_2 },
-	{ "парсинг POST запроса с одним параметром в body (без Content-Type) №3", testParsePostRequest_3 },
-	{ "парсинг CHUNKED POST запрос №4", testParsePostRequest_4 },
-	{ "парсинг BOUNDARY POST запрос №5", testParsePostRequest_5 },
+	{ "парсинг GET запроса без параметров", testParseGetRequest_1 },
+	{ "парсинг GET запроса без с одним параметром", testParseGetRequest_2 },
+	{ "парсинг GET запроса без с несколькими параметрами", testParseGetRequest_3 },
+	{ "парсинг POST запроса без параметров", testParsePostRequest_1 },
+	{ "парсинг POST запроса с одним параметром в body (CL + CT)", testParsePostRequest_2 },
+	{ "парсинг POST запроса с одним параметром в body (без Content-Type)", testParsePostRequest_3 },
+	{ "парсинг CHUNKED POST запрос", testParsePostRequest_4 },
+	{ "парсинг BOUNDARY POST запрос", testParsePostRequest_5 },
+	{ "парсинг двух одновременных пустых GET запросов", testParseSeveralGetRequest_1 },
+	{ "парсинг двух одновременных GET запросов с одним параметром", testParseSeveralGetRequest_2 },
+	{ "парсинг двух одновременных GET запросов с несколькими параметрами", testParseSeveralGetRequest_3 },
 
 	{ nullptr, nullptr }
 };
