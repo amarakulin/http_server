@@ -12,7 +12,6 @@ class ResponseGet : public Response {
 
 		std::string		createBody();
 		std::string		createHead();
-		int				send();
 };
 
 #endif

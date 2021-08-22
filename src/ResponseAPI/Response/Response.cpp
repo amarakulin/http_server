@@ -16,8 +16,8 @@ std::string Response::createHead() {
 	return "";
 }
 
-int Response::send(){
-	return 0;
+const std::string &Response::getDataToSend() const{
+	return _dataToSend;
 }
 
 /*

@@ -8,7 +8,6 @@
 
 class Response {
 protected:
-
 	size_t		_leftDataToSend;
 	std::string	_dataToSend;
 
@@ -18,10 +17,10 @@ public:
 	Response(const Request* request);
 	virtual ~Response();
 
-		virtual std::string		createBody();
-		virtual std::string		createHead();
-		virtual int				send();
+	virtual std::string		createBody();
+	virtual std::string		createHead();
 
+	const std::string &getDataToSend() const;
 };
 
 #endif
