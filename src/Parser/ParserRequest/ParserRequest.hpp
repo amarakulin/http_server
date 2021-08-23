@@ -20,7 +20,7 @@ static const std::string SEPORATOR = ": ";
 static const std::string END_OF_LINE = "\r\n";
 static const std::string END_OF_HEADER = "\r\n\r\n";
 static const std::string END_OF_CHUNKED_BODY = "0\r\n\r\n";
-static const std::string REQUEST_WITH_BODY = "post put";
+static const std::string REQUEST_WITH_BODY = "post put delete";
 
 class ParserRequest {
 	private:

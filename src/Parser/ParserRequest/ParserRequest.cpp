@@ -25,6 +25,8 @@ bool		ParserRequest::handleEndOfHeader(requestHeaderStruct& header, std::string&
 }
 
 bool		ParserRequest::handleEndOfBody(RequestData& data, std::string& buffer) {
+	// std::cout << "Buffer: " << buffer << std::endl;
+	
 	requestHeaderStruct::iterator end = data.header.end();
 
 	if (REQUEST_WITH_BODY.find(data.header["method"]) != std::string::npos) {
@@ -146,7 +148,7 @@ std::string ParserRequest::parseBody(std::string &data, int contentLengt, std::s
 
 		data.erase(0, pos + boundary.length());
 	}
-	data.erase(0, 2);
+	data.erase(0, END_OF_HEADER.length() + 2);
 	return body;
 }
 
