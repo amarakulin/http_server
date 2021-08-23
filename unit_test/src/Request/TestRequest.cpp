@@ -92,7 +92,7 @@ void testParsePostRequest_3() {
 
 void testParsePostRequest_4() {
 	Request 	req;
-	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n7\r\nMozilla\r\nF\r\nFrontend_Develo\0\r\n\r\n";
+	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n7\r\nMozilla\r\nF\r\nFrontend_Develo\r\n0\r\n\r\n";
 	RequestData data;
 
 	req.addRequestChunk(requestSrt);
@@ -339,7 +339,7 @@ void testParseSeveralRequest_9() {
 
 void testParseSeveralRequest_10() {
 	Request 	req;
-	std::string requestSrt = "POST /index.html HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-length: 5\r\n\r\n12345POST / HTTP/1.1\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n7\r\nMozilla\r\nF\r\nFrontend_Develo\0\r\n\r\n";
+	std::string requestSrt = "POST /index.html HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-length: 5\r\n\r\n12345POST / HTTP/1.1\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n7\r\nMozilla\r\nF\r\nFrontend_Develo\r\n0\r\n\r\n";
 	RequestData data;
 
 	req.addRequestChunk(requestSrt);
@@ -366,7 +366,7 @@ void testParseSeveralRequest_10() {
 
 void testParseSeveralRequest_11() {
 	Request 	req;
-	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n7\r\nMozilla\r\nF\r\nFrontend_Develo\0\r\n\r\nPOST /index.html HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-length: 5\r\n\r\n12345";
+	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n7\r\nMozilla\r\nF\r\nFrontend_Develo\r\n0\r\n\r\nPOST /index.html HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-length: 5\r\n\r\n12345";
 	RequestData data;
 
 	req.addRequestChunk(requestSrt);
@@ -448,6 +448,500 @@ void testParseSeveralRequest_13() {
 	TEST_CHECK(data.body == "12345");
 }
 
+void testParseSeveralRequest_14() {
+	Request 	req;
+	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--POST / HTTP/1.1\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n7\r\nMozilla\r\nF\r\nFrontend_Develo\r\n0\r\n\r\n";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
+	TEST_CHECK(data.header["content-length"] == "291");
+	TEST_CHECK(data.body == "example.txt=TOOL ");
+
+	req.resetRequest();
+	req.addRequestChunk("");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "text/plain");
+	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
+	TEST_CHECK(data.body == "Mozilla Frontend_Develo ");
+}
+
+void testParseSeveralRequest_15() {
+	Request 	req;
+	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n7\r\nMozilla\r\nF\r\nFrontend_Develo\r\n0\r\n\r\nPOST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "text/plain");
+	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
+	TEST_CHECK(data.body == "Mozilla Frontend_Develo ");
+
+	req.resetRequest();
+	req.addRequestChunk("");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
+	TEST_CHECK(data.header["content-length"] == "291");
+	TEST_CHECK(data.body == "example.txt=TOOL ");
+}
+
+void testParseSeveralRequest_16() {
+	Request 	req;
+	std::string requestSrt = "GET / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\nPOST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "get");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
+
+	req.resetRequest();
+	req.addRequestChunk("");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
+	TEST_CHECK(data.header["content-length"] == "291");
+	TEST_CHECK(data.body == "example.txt=TOOL ");
+}
+
+void testParseSeveralRequest_17() {
+	Request 	req;
+	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--GET / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
+	TEST_CHECK(data.header["content-length"] == "291");
+	TEST_CHECK(data.body == "example.txt=TOOL ");
+
+	req.resetRequest();
+	req.addRequestChunk("");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "get");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
+}
+
+void testParseSeveralRequest_18() {
+	Request 	req;
+	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n7\r\nMozilla\r\nF\r\nFrontend_Develo\r\n0\r\n\r\nGET / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "text/plain");
+	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
+	TEST_CHECK(data.body == "Mozilla Frontend_Develo ");
+
+	req.resetRequest();
+	req.addRequestChunk("");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "get");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
+}
+
+void testParseSeveralRequest_19() {
+	Request 	req;
+	std::string requestSrt = "GET / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\nPOST / HTTP/1.1\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n7\r\nMozilla\r\nF\r\nFrontend_Develo\r\n0\r\n\r\n";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "get");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
+
+	req.resetRequest();
+	req.addRequestChunk("");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "text/plain");
+	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
+	TEST_CHECK(data.body == "Mozilla Frontend_Develo ");
+}
+
+void testParseSeveralRequest_20() {
+	Request 	req;
+	std::string requestSrt = "GET / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "get");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
+
+	req.resetRequest();
+	req.addRequestChunk("POST /index.html HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-length: 5\r\n\r\n12345");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
+	TEST_CHECK(data.header["content-length"] == "5");
+	TEST_CHECK(data.body == "12345");
+}
+
+void testParseSeveralRequest_21() {
+	Request 	req;
+	std::string requestSrt = "POST /index.html HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-length: 5\r\n\r\n12345";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
+	TEST_CHECK(data.header["content-length"] == "5");
+	TEST_CHECK(data.body == "12345");
+
+	req.resetRequest();
+	req.addRequestChunk("GET / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "get");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
+}
+
+void testParseSeveralRequest_22() {
+	Request 	req;
+	std::string requestSrt = "POST /index.html HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-length: 5\r\n\r\n12345";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
+	TEST_CHECK(data.header["content-length"] == "5");
+	TEST_CHECK(data.body == "12345");
+
+	req.resetRequest();
+	req.addRequestChunk("POST / HTTP/1.1\r\nContent-Type: text/html\r\nContent-length: 7\r\n\r\nHello!!");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "text/html");
+	TEST_CHECK(data.header["content-length"] == "7");
+	TEST_CHECK(data.body == "Hello!!");
+}
+
+void testParseSeveralRequest_23() {
+	Request 	req;
+	std::string requestSrt = "POST /index.html HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-length: 5\r\n\r\n12345";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
+	TEST_CHECK(data.header["content-length"] == "5");
+	TEST_CHECK(data.body == "12345");
+
+	req.resetRequest();
+	req.addRequestChunk("POST / HTTP/1.1\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n7\r\nMozilla\r\nF\r\nFrontend_Develo\r\n0\r\n\r\n");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "text/plain");
+	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
+	TEST_CHECK(data.body == "Mozilla Frontend_Develo ");
+}
+
+void testParseSeveralRequest_24() {
+	Request 	req;
+	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n7\r\nMozilla\r\nF\r\nFrontend_Develo\r\n0\r\n\r\n";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "text/plain");
+	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
+	TEST_CHECK(data.body == "Mozilla Frontend_Develo ");
+
+	req.resetRequest();
+	req.addRequestChunk("POST /index.html HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-length: 5\r\n\r\n12345");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
+	TEST_CHECK(data.header["content-length"] == "5");
+	TEST_CHECK(data.body == "12345");
+}
+
+void testParseSeveralRequest_25() {
+	Request 	req;
+	std::string requestSrt = "POST /index.html HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-length: 5\r\n\r\n12345";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
+	TEST_CHECK(data.header["content-length"] == "5");
+	TEST_CHECK(data.body == "12345");
+
+
+	req.resetRequest();
+	req.addRequestChunk("POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
+	TEST_CHECK(data.header["content-length"] == "291");
+	TEST_CHECK(data.body == "example.txt=TOOL ");
+}
+
+void testParseSeveralRequest_26() {
+	Request 	req;
+	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
+	TEST_CHECK(data.header["content-length"] == "291");
+	TEST_CHECK(data.body == "example.txt=TOOL ");
+
+	req.resetRequest();
+	req.addRequestChunk("POST /index.html HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-length: 5\r\n\r\n12345");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
+	TEST_CHECK(data.header["content-length"] == "5");
+	TEST_CHECK(data.body == "12345");
+}
+
+void testParseSeveralRequest_27() {
+	Request 	req;
+	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
+	TEST_CHECK(data.header["content-length"] == "291");
+	TEST_CHECK(data.body == "example.txt=TOOL ");
+
+	req.resetRequest();
+	req.addRequestChunk("POST / HTTP/1.1\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n7\r\nMozilla\r\nF\r\nFrontend_Develo\r\n0\r\n\r\n");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "text/plain");
+	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
+	TEST_CHECK(data.body == "Mozilla Frontend_Develo ");
+}
+
+void testParseSeveralRequest_28() {
+	Request 	req;
+	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n7\r\nMozilla\r\nF\r\nFrontend_Develo\r\n0\r\n\r\n";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "text/plain");
+	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
+	TEST_CHECK(data.body == "Mozilla Frontend_Develo ");
+
+	req.resetRequest();
+	req.addRequestChunk("POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
+	TEST_CHECK(data.header["content-length"] == "291");
+	TEST_CHECK(data.body == "example.txt=TOOL ");
+}
+
+void testParseSeveralRequest_29() {
+	Request 	req;
+	std::string requestSrt = "GET / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "get");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
+
+	req.resetRequest();
+	req.addRequestChunk("POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
+	TEST_CHECK(data.header["content-length"] == "291");
+	TEST_CHECK(data.body == "example.txt=TOOL ");
+}
+
+void testParseSeveralRequest_30() {
+	Request 	req;
+	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
+	TEST_CHECK(data.header["content-length"] == "291");
+	TEST_CHECK(data.body == "example.txt=TOOL ");
+
+	req.resetRequest();
+	req.addRequestChunk("GET / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "get");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
+}
+
+void testParseSeveralRequest_31() {
+	Request 	req;
+	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n7\r\nMozilla\r\nF\r\nFrontend_Develo\r\n0\r\n\r\n";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "text/plain");
+	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
+	TEST_CHECK(data.body == "Mozilla Frontend_Develo ");
+
+	req.resetRequest();
+	req.addRequestChunk("GET / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "get");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
+}
+
+void testParseSeveralRequest_32() {
+	Request 	req;
+	std::string requestSrt = "GET / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "get");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
+
+	req.resetRequest();
+	req.addRequestChunk("POST / HTTP/1.1\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n7\r\nMozilla\r\nF\r\nFrontend_Develo\r\n0\r\n\r\n");
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "post");
+	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+	TEST_CHECK(data.header["content-type"] == "text/plain");
+	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
+	TEST_CHECK(data.body == "Mozilla Frontend_Develo ");
+}
+
 TEST_LIST = {
 	{ "парсинг GET запроса без параметров", testParseGetRequest_1 },
 	{ "парсинг GET запроса без с одним параметром", testParseGetRequest_2 },
@@ -476,6 +970,34 @@ TEST_LIST = {
 
 	{ "парсинг двух одновременных запросов (POST(CL) -> POST(BOUNDARY)) с несколькими параметрами и body", testParseSeveralRequest_12 },
 	{ "парсинг двух одновременных запросов (POST(BOUNDARY) -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_13 },
+
+	{ "парсинг двух одновременных запросов (POST(BOUNDARY) -> POST(CNUNKED)) с несколькими параметрами и body", testParseSeveralRequest_14 },
+	{ "парсинг двух одновременных запросов (POST(CNUNKED) -> POST(BOUNDARY)) с несколькими параметрами и body", testParseSeveralRequest_15 },
+
+	{ "парсинг двух одновременных запросов (POST(BOUNDARY) -> POST(GET)) с несколькими параметрами и body", testParseSeveralRequest_16 },
+	{ "парсинг двух одновременных запросов (POST(GET) -> POST(BOUNDARY)) с несколькими параметрами и body", testParseSeveralRequest_17 },
+	
+	{ "парсинг двух одновременных запросов (POST(CNUNKED) -> POST(GET)) с несколькими параметрами и body", testParseSeveralRequest_18 },
+	{ "парсинг двух одновременных запросов (POST(GET) -> POST(CNUNKED)) с несколькими параметрами и body", testParseSeveralRequest_19 },
+
+	{ "парсинг двух последовательных запросов (GET -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_20 },
+	{ "парсинг двух последовательных запросов (POST(CL) -> GET) с несколькими параметрами и body", testParseSeveralRequest_21 },
+	{ "парсинг двух последовательных запросов (POST(CL) -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_22 },
+
+	{ "парсинг двух последовательных запросов (POST(CL) -> POST(CNUNKED)) с несколькими параметрами и body", testParseSeveralRequest_23 },
+	{ "парсинг двух последовательных запросов (POST(CNUNKED) -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_24 },
+
+	{ "парсинг двух последовательных запросов (POST(CL) -> POST(BOUNDARY)) с несколькими параметрами и body", testParseSeveralRequest_25 },
+	{ "парсинг двух последовательных запросов (POST(BOUNDARY) -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_26 },
+
+	{ "парсинг двух последовательных запросов (POST(BOUNDARY) -> POST(CNUNKED)) с несколькими параметрами и body", testParseSeveralRequest_27 },
+	{ "парсинг двух последовательных запросов (POST(CNUNKED) -> POST(BOUNDARY)) с несколькими параметрами и body", testParseSeveralRequest_28 },
+
+	{ "парсинг двух последовательных запросов (POST(BOUNDARY) -> POST(GET)) с несколькими параметрами и body", testParseSeveralRequest_29 },
+	{ "парсинг двух последовательных запросов (POST(GET) -> POST(BOUNDARY)) с несколькими параметрами и body", testParseSeveralRequest_30 },
+
+	{ "парсинг двух последовательных запросов (POST(CNUNKED) -> POST(GET)) с несколькими параметрами и body", testParseSeveralRequest_31 },
+	{ "парсинг двух последовательных запросов (POST(GET) -> POST(CNUNKED)) с несколькими параметрами и body", testParseSeveralRequest_32 },
 
 	//TODO дбавить POST(BOUNDARY) -> POST(CHUNKED), POST(CHUNKED) -> POST(BOUNDARY) и эти комбинации с GET
 
