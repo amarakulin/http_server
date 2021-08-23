@@ -64,8 +64,7 @@ std::string ParserRequest::parseBody(std::string &data, int contentLengt, std::s
 
 		data.erase(0, pos + boundary.length());
 	}
-
-	data.erase(0, data.length());
+	data.erase(0, 2);
 	return body;
 }
 
