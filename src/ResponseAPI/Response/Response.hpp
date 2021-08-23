@@ -10,6 +10,7 @@ class Response {
 protected:
 	size_t		_leftDataToSend;
 	std::string	_dataToSend;
+	int			_status;
 
 public:
 	Response();
@@ -19,8 +20,9 @@ public:
 
 	virtual std::string		createBody();
 	virtual std::string		createHead();
-
-	const std::string &getDataToSend() const;
+	bool					isDone();
+	const std::string		&getDataToSend() const;
+	void					countSendedData(int byteSended);
 };
 
 #endif
