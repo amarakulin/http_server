@@ -11,22 +11,22 @@ Response *ResponseCreator::createResponse(Request *request) {
 		if (requestMethod == responseCreatorList[i].method)
 			return responseCreatorList[i].createResponse(request);
 	}
-	
-	return new ResponseGet;
+	//TODO think about final return
+	return new Response;
 }
 
 Response*	createResponseGet(Request* request) {
 	std::cout << "GET" << std::endl;
-	return new ResponseGet;
+	return new ResponseGet(request);
 }
 
 Response*	createResponsePost(Request* request) {
 	std::cout << "POST" << std::endl;
-	return new ResponsePost;
+	return new ResponsePost(request);
 }
 
 Response* createResponseDelete(Request* request) {
 	std::cout << "DELETE" << std::endl;
-	return new ResponseDelete;
+	return new ResponseDelete(request);
 }
 
