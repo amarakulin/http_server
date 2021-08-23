@@ -27,7 +27,7 @@ bool		ParserRequest::handleEndOfHeader(requestHeaderStruct& header, std::string&
 bool		ParserRequest::handleEndOfBody(RequestData& data, std::string& buffer) {
 	requestHeaderStruct::iterator end = data.header.end();
 
-	if (data.header["method"] == "post") {
+	if (REQUEST_WITH_BODY.find(data.header["method"]) != std::string::npos) {
 		bool hasContetnType = data.header.find("content-type") != end;
 		bool hasContentLength = data.header.find("content-length") != end;
 
