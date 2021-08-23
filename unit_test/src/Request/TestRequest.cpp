@@ -108,7 +108,7 @@ void testParsePostRequest_4() {
 
 void testParsePostRequest_5() {
 	Request 	req;
-	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--";
+	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--\r\n\r\n";
 	RequestData data;
 
 	req.addRequestChunk(requestSrt);
@@ -395,7 +395,7 @@ void testParseSeveralRequest_11() {
 
 void testParseSeveralRequest_12() {
 	Request 	req;
-	std::string requestSrt = "POST /index.html HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-length: 5\r\n\r\n12345POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--";
+	std::string requestSrt = "POST /index.html HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-length: 5\r\n\r\n12345POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--\r\n\r\n";
 	RequestData data;
 
 	req.addRequestChunk(requestSrt);
@@ -423,7 +423,7 @@ void testParseSeveralRequest_12() {
 
 void testParseSeveralRequest_13() {
 	Request 	req;
-	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--POST /index.html HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-length: 5\r\n\r\n12345";
+	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--\r\n\r\nPOST /index.html HTTP/1.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-length: 5\r\n\r\n12345";
 	RequestData data;
 
 	req.addRequestChunk(requestSrt);
@@ -450,7 +450,7 @@ void testParseSeveralRequest_13() {
 
 void testParseSeveralRequest_14() {
 	Request 	req;
-	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--POST / HTTP/1.1\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n7\r\nMozilla\r\nF\r\nFrontend_Develo\r\n0\r\n\r\n";
+	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--\r\n\r\nPOST / HTTP/1.1\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n7\r\nMozilla\r\nF\r\nFrontend_Develo\r\n0\r\n\r\n";
 	RequestData data;
 
 	req.addRequestChunk(requestSrt);
@@ -477,7 +477,7 @@ void testParseSeveralRequest_14() {
 
 void testParseSeveralRequest_15() {
 	Request 	req;
-	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n7\r\nMozilla\r\nF\r\nFrontend_Develo\r\n0\r\n\r\nPOST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--";
+	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n7\r\nMozilla\r\nF\r\nFrontend_Develo\r\n0\r\n\r\nPOST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--\r\n\r\n";
 	RequestData data;
 
 	req.addRequestChunk(requestSrt);
@@ -504,7 +504,7 @@ void testParseSeveralRequest_15() {
 
 void testParseSeveralRequest_16() {
 	Request 	req;
-	std::string requestSrt = "GET / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\nPOST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--";
+	std::string requestSrt = "GET / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\nPOST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--\r\n\r\n";
 	RequestData data;
 
 	req.addRequestChunk(requestSrt);
@@ -529,7 +529,7 @@ void testParseSeveralRequest_16() {
 
 void testParseSeveralRequest_17() {
 	Request 	req;
-	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--GET / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--\r\n\r\nGET / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
 	RequestData data;
 
 	req.addRequestChunk(requestSrt);
@@ -750,7 +750,7 @@ void testParseSeveralRequest_25() {
 
 
 	req.resetRequest();
-	req.addRequestChunk("POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--");
+	req.addRequestChunk("POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--\r\n\r\n");
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
@@ -763,7 +763,7 @@ void testParseSeveralRequest_25() {
 
 void testParseSeveralRequest_26() {
 	Request 	req;
-	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--";
+	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--\r\n\r\n";
 	RequestData data;
 
 	req.addRequestChunk(requestSrt);
@@ -790,7 +790,7 @@ void testParseSeveralRequest_26() {
 
 void testParseSeveralRequest_27() {
 	Request 	req;
-	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--";
+	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--\r\n\r\n";
 	RequestData data;
 
 	req.addRequestChunk(requestSrt);
@@ -831,7 +831,7 @@ void testParseSeveralRequest_28() {
 	TEST_CHECK(data.body == "Mozilla Frontend_Develo ");
 
 	req.resetRequest();
-	req.addRequestChunk("POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--");
+	req.addRequestChunk("POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--\r\n\r\n");
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
@@ -856,7 +856,7 @@ void testParseSeveralRequest_29() {
 	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
 
 	req.resetRequest();
-	req.addRequestChunk("POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--");
+	req.addRequestChunk("POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--\r\n\r\n");
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
@@ -869,7 +869,7 @@ void testParseSeveralRequest_29() {
 
 void testParseSeveralRequest_30() {
 	Request 	req;
-	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--";
+	std::string requestSrt = "POST / HTTP/1.1\r\nContent-Type: multipart/form-data; boundary=--------------------------130962363752115593144698\r\ncontent-length: 291\r\n\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nvalue\r\n----------------------------130962363752115593144698\r\nContent-Disposition: form-data; name=\"DEV\"; filename=\"example.txt\"\r\n\r\nTOOL\r\n----------------------------130962363752115593144698--\r\n\r\n";
 	RequestData data;
 
 	req.addRequestChunk(requestSrt);
