@@ -27,7 +27,7 @@ public:
 	Response*	getResponse() const;
 	int			getSocket() const;
 	int			getRequestStatus() const;
-	int			getResponseStatus() const;
+//	int			getResponseStatus() const;
 
 	bool		hasResponse() const;
 	bool		hasRequest() const;
@@ -36,7 +36,6 @@ public:
 
 	void		resetRequest();
 	void		resetResponse();
-	int			sendResponse();
 };
 
 #endif

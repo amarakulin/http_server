@@ -20,9 +20,6 @@ void Client::resetResponse() {
 	}
 }
 
-int Client::sendResponse() { //! клиент не отправляет response!! это делает сервер!! BITCH
-	return 0; // TODO realization //TODO pichkasik
-}
 
 bool	Client::hasResponse() const {
 	if (_response)
