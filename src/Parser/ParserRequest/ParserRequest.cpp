@@ -9,6 +9,87 @@ ParserRequest::ParserRequest(const ParserRequest &other) {
 ParserRequest::~ParserRequest() {}
 
 /*
+** Handling request parts
+*/
+
+bool		ParserRequest::handleEndOfHeader(requestHeaderStruct& header, std::string& buffer) {
+	size_t index = buffer.find(END_OF_HEADER);
+
+	if (index == std::string::npos) {
+		return false;
+	}
+
+	header = parseHeader(buffer.substr(0, index));
+	buffer.erase(0, index + END_OF_HEADER.length());
+	return true;
+}
+
+bool		ParserRequest::handleEndOfBody(RequestData& data, std::string& buffer) {
+	requestHeaderStruct::iterator end = data.header.end();
+
+	if (data.header["method"] == "post") {
+		bool hasContetnType = data.header.find("content-type") != end;
+		bool hasContentLength = data.header.find("content-length") != end;
+
+		if (hasContetnType && hasContentLength) {
+			std::string contentType = data.header["content-type"];
+
+			if (contentType.find("boundary") != std::string::npos)
+				return handleEndOfBoundaryBody(data, buffer);
+			else
+				return handleEndOfBodyWithContentLengt(data, buffer);
+
+		} else if (hasContentLength) {
+			return handleEndOfBodyWithContentLengt(data, buffer);
+		}  else if (data.header.find("transfer-encoding") != end) {
+			return handleEndOfChunkedBody(data, buffer);
+		}
+		else {
+			// TODO bad request
+		}
+
+	} else {
+		return true;
+	}
+	return false;
+}
+
+bool	ParserRequest::handleEndOfBoundaryBody(RequestData& data, std::string& buffer) {
+	size_t		contentLength = std::stoi(data.header["content-length"]);
+	std::string contentType = data.header["content-type"];
+
+	std::string boundary = contentType.substr(contentType.find("=") + 1, contentType.length());
+	if (boundary.find("\"") != std::string::npos) {
+		boundary.erase(0, 1);
+		boundary.pop_back();
+	}
+
+	if (buffer.length() >= contentLength) {
+		data.body = parseBody(buffer, contentLength, boundary);
+		return true;
+	}
+	return false;
+}
+
+bool	ParserRequest::handleEndOfChunkedBody(RequestData& data, std::string& buffer) {
+	if (data.header["transfer-encoding"] == "chunked") {
+		data.body = parseBody(buffer);
+		return true;
+	}
+	return false;
+}
+
+bool	ParserRequest::handleEndOfBodyWithContentLengt(RequestData& data, std::string& buffer) {
+	size_t		contentLength = std::stoi(data.header["content-length"]);
+
+	if (buffer.length() >= contentLength) {
+		data.body = parseBody(buffer, contentLength);
+		return true;
+	}
+	return false;
+}
+
+/*
 ** Parse body
 */
 

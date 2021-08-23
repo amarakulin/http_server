@@ -23,16 +23,9 @@ class Request {
 		~Request();
 
 		void	addRequestChunk(std::string chunk);
+		void	resetRequest();
 
 		bool	isDone();
-
-		void	handleEndOfHeader();
-		void	handleEndOfBody();
-		void	handleEndOfBoundaryBody();
-		void	handleEndOfChunkedBody();
-		void	handleEndOfBodyWithContentLengt();
-
-		void	resetRequest();
 
 		int			getStatus() const;
 		RequestData& getData();

@@ -12,12 +12,10 @@ Request::~Request() {}
 void		Request::addRequestChunk(std::string chunk) {
 	_buffer += chunk;
 
-	// std::cout << "Buffer: " << _buffer << std::endl;
-
 	if (!_isHeaderParsed)
-		handleEndOfHeader();
+		_isHeaderParsed = ParserRequest::handleEndOfHeader(_data.header, _buffer);
 	if (_isHeaderParsed && !_isBodyParsed)
-		handleEndOfBody();
+		_isBodyParsed = ParserRequest::handleEndOfBody(_data, _buffer);
 
 	if (isDone()) {
 		_status = READED;
@@ -25,85 +23,6 @@ void		Request::addRequestChunk(std::string chunk) {
 		_status = READING;
 	}
 }
-
-
-/*
-** Handling request parts
-*/
-
-void		Request::handleEndOfHeader() {
-	size_t index = _buffer.find(END_OF_HEADER);
-
-	if (index == std::string::npos) {
-		return ;
-	}
-
-	_data.header = ParserRequest::parseHeader(_buffer.substr(0, index));
-	_buffer.erase(0, index + END_OF_HEADER.length());
-	_isHeaderParsed = true;
-}
-
-void		Request::handleEndOfBody() {
-	requestHeaderStruct::iterator end = _data.header.end();
-
-	if (_data.header["method"] == "post") {
-		bool hasContetnType = _data.header.find("content-type") != end;
-		bool hasContentLength = _data.header.find("content-length") != end;
-
-		if (hasContetnType && hasContentLength) {
-			std::string contentType = _data.header["content-type"];
-
-			if (contentType.find("boundary") != std::string::npos)
-				handleEndOfBoundaryBody();
-			else
-				handleEndOfBodyWithContentLengt();
-
-		} else if (hasContentLength) {
-			handleEndOfBodyWithContentLengt();
-		}  else if (_data.header.find("transfer-encoding") != end) {
-			handleEndOfChunkedBody();
-		}
-		else {
-			// TODO bad request
-		}
-
-	} else {
-		_isBodyParsed = true;
-	}
-}
-
-void	Request::handleEndOfBoundaryBody() {
-	size_t		contentLength = std::stoi(_data.header["content-length"]);
-	std::string contentType = _data.header["content-type"];
-
-	std::string boundary = contentType.substr(contentType.find("=") + 1, contentType.length());
-	if (boundary.find("\"") != std::string::npos) {
-		boundary.erase(0, 1);
-		boundary.pop_back();
-	}
-
-	if (_buffer.length() >= contentLength) {
-		_data.body = ParserRequest::parseBody(_buffer, contentLength, boundary);
-		_isBodyParsed = true;
-	}
-}
-
-void	Request::handleEndOfChunkedBody() {
-	if (_data.header["transfer-encoding"] == "chunked") {
-		_data.body = ParserRequest::parseBody(_buffer);
-		_isBodyParsed = true;
-	}
-}
-
-void	Request::handleEndOfBodyWithContentLengt() {
-	size_t		contentLength = std::stoi(_data.header["content-length"]);
-
-	if (_buffer.length() >= contentLength) {
-		_data.body = ParserRequest::parseBody(_buffer, contentLength);
-		_isBodyParsed = true;
-	}
-}
-
 
 /*
 ** Checking request state

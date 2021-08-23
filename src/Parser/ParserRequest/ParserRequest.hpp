@@ -39,6 +39,18 @@ class ParserRequest {
 		ParserRequest(const ParserRequest& other);
 		~ParserRequest();
 
+		/*
+		** Функции для определения конца body/header
+		** Если условия удовлетворяются, то body/header будет спаршен
+		*/
+
+		static bool					handleEndOfHeader(requestHeaderStruct& header, std::string& buffer);
+
+		static bool					handleEndOfBody(RequestData& data, std::string& buffer);
+		static bool					handleEndOfBoundaryBody(RequestData& data, std::string& buffer);
+		static bool					handleEndOfChunkedBody(RequestData& data, std::string& buffer);
+		static bool					handleEndOfBodyWithContentLengt(RequestData& data, std::string& buffer);
+
 		static requestHeaderStruct	parseHeader(std::string data);
 
 		/*
