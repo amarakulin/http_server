@@ -6,27 +6,21 @@
 
 // Здесь понадобиться fork и excve???
 
-typedef struct {
-	std::string	head;
-	std::string	body;
-}	ResponseData;
-
 class Response {
-	protected:
-		ResponseData _data;
+protected:
+	size_t		_leftDataToSend;
+	std::string	_dataToSend;
 
-		size_t		_sendedData;
-		size_t		_leftDataToSend;
+public:
+	Response();
+	Response(const Response& other);
+	Response(const Request* request);
+	virtual ~Response();
 
-	public:
-		Response();
-		Response(const Response& other);
-		Response(const Request* request);
-		virtual ~Response();
+	virtual std::string		createBody();
+	virtual std::string		createHead();
 
-		virtual std::string createBody();
-		std::string 		createHead();
-
+	const std::string &getDataToSend() const;
 };
 
 #endif
