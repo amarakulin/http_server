@@ -10,25 +10,56 @@
 # include <functional>
 
 # include <vector>
+# include <map>
 
 # include "Config.hpp"
 # include "Request.hpp"
 # include "Host.hpp"
+# include "Client.hpp"
+# include "Listener.hpp"
+# include "Sockets.hpp"
+# include "ResponseCreator.hpp"
+
+# include "utils.hpp"
+
+# define MB 1048576
+
 
 class Config;
 
 class Server {
 	private:
 		const Config*		_config;
-		std::vector<Host>	_hosts;
+
+		std::vector<Client>		_clients;
+		std::vector<Listener>	_listeners;
+		Sockets					_sockets;
+		ResponseCreator			_responseCreator;
+
 	
 	private:
-		void	processingRequest() const;
-		void	sendResponse() const;
-		void	startMainProcess() const;
+		void	processingRequest(int clientSocket, Client& client);
+		void	createResponse(Client& client);
+		void	sendResponse(int clientSocket, Client& client);
+
+	private:
+		void				startMainProcess();
+
+		void				createNewClient(int hostSocket);
+		void				closeClientConnection(int clientSocket);
+
+		void				createListeners();
+		struct sockaddr_in	createSockaddrStruct(const Host& host);
+		int					createListenerSocket(struct sockaddr_in addr);
+
+		void				handleListenerEvents();
+		void				handleClientEvents();
 	
-	public:
 		Server();
+
+		Client& getClientByFD(std::vector<Client>& clients, int fd);
+
+	public:
 		Server(const Config* config);
 		~Server();
 

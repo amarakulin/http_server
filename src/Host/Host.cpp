@@ -2,22 +2,24 @@
 
 Host::Host() {}
 
-Host::Host(std::string ip, size_t port, std::string hostName)
-	: _ip(ip), _port(port), _hostName(hostName) {}
+Host::Host(std::string ip, size_t port, std::string hostName) {}
 
-std::string 	Host::getIp() const {
-	return _ip;
+Host::Host(const Host& other) {}
+
+std::string		Host::getIp() const {
+	return _data.ip;
 }
 
 size_t			Host::getPort() const {
-	return _port;
+	return _data.port;
 }
 
 std::string		Host::getHostName() const {
-	return _hostName;
+	return _data.host;
+	// return _hostName;
 }
 
-bool operator==(const Host &lhs, const Host &rhs){
+bool operator==(const Host &lhs, const Host &rhs) {
 	if (lhs.getIp() != rhs.getIp()
 		|| lhs.getPort() != rhs.getPort()
 		|| lhs.getHostName() != rhs.getHostName()){

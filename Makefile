@@ -10,8 +10,8 @@ NAME_LIB = webserver.a
 
 ### COMPILE ###
 CC = clang++
-FLAGS =
-# FLAGS = -Wall -Wextra -Werror --std=c++98
+#FLAGS = -Wall -Wextra -Werror --std=c++98
+FLAGS = --std=c++98
 NOT_PATH = -not -path
 
 ### DIRECTORY/PATH ###
@@ -40,7 +40,7 @@ vpath %.hpp $(INCLUDE)
 
 .PHONY: all clean fclean re
 
-all: $(OBJ_DIR) $(NAME) create_lib test
+all: $(OBJ_DIR) $(NAME)
 
 create_lib: $(O_FILES)
 	@ar -rc $(NAME_LIB) $^
@@ -71,7 +71,7 @@ fclean: clean
 	@echo "$(YELLOW)Delete the binary file '$(NAME)'$(TEXT_RESET)"
 	@echo
 
-test:
+test: create_lib
 	@make -C $(TEST_DIR)
 	@echo "\n\n"
 

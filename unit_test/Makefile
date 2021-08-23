@@ -18,6 +18,7 @@ WEBSERVER_LIB_PATH = ../webserver.a
 
 ### SEARCH PATHS ###
 HPP_DIR = $(shell find ./src -type d $(IGNORE_PATHS))
+HPP_DIR_LIB = $(shell find ../ -type d $(IGNORE_PATHS))
 SRC_PATHS = $(shell find . -type d $(IGNORE_PATHS) )
 CPP_FILES = $(shell find . -name "*.cpp" $(IGNORE_PATHS) -execdir echo {} ';')
 
@@ -25,6 +26,7 @@ CPP_FILES = $(shell find . -name "*.cpp" $(IGNORE_PATHS) -execdir echo {} ';')
 OBJ = $(CPP_FILES:%.cpp=%.o)
 O_FILES = $(addprefix $(OBJ_DIR)/, $(OBJ))
 INCLUDE = $(addprefix -I, $(HPP_DIR))
+INCLUDE_LIB_HPP = $(addprefix -I, $(HPP_DIR_LIB))
 
 vpath %.cpp $(SRC_PATHS)
 vpath %.o $(OBJ_DIR)
@@ -46,7 +48,7 @@ $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 
 %.o: %.cpp
-	@$(CC) $(FLAGS) $(INCLUDE) -c $< -o $(OBJ_DIR)/$@
+	@$(CC) $(FLAGS) $(INCLUDE_LIB_HPP) -c $< -o $(OBJ_DIR)/$@
 
 clean:
 	@echo "$(TEXT_RESET)"
