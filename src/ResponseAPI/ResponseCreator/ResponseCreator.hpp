@@ -1,18 +1,25 @@
 #ifndef RESPONSE_CREATOR
 # define RESPONSE_CREATOR
 
-#include <Request.hpp>
-#include "../ResponseGet/ResponseGet.hpp"
-#include "../ResponsePost/ResponsePost.hpp"
-#include "../ResponseDelete/ResponseDelete.hpp"
-#include "../Response/Response.hpp"
+# include <Request.hpp>
+# include "ResponseGet.hpp"
+# include "ResponsePost.hpp"
+# include "ResponseDelete.hpp"
+# include "Response.hpp"
+# include "ResponseTypes.hpp"
+
+Response*	createResponseGet(Request* request);
+Response*	createResponsePost(Request* request);
+Response* createResponseDelete(Request* request);
+
+static const ResponseCreatorList responseCreatorList[] ={
+	{"get", &createResponseGet}, 
+	{"post", &createResponsePost}, 
+	{"delete", &createResponseDelete}, 
+	{"", nullptr}
+};
 
 class ResponseCreator {
-	private:
-		ResponseGet*	createResponseGet(Request* request);
-		ResponsePost*	createResponsePost(Request* request);
-		ResponseDelete* createResponseDelete(Request* request);
-	
 	public:
 		ResponseCreator();
 		~ResponseCreator();
