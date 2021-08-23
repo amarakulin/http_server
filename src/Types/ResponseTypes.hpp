@@ -11,4 +11,10 @@ typedef struct {
 	Response*	(*createResponse)(Request*);
 }	ResponseCreatorList;
 
+typedef enum { NO_RESPONSE, SENDING, SENDED } responseStatus;
+
+/*
+** Характеризует текущий статут считывание ответа
+*/
+
 #endif
