@@ -19,7 +19,7 @@ std::string ParserRequest::parseBody(std::string &data) {
 	size_t pos = 0;
 	size_t len = 0;
 
-	while (data != END_OF_BOUNDARY_BODY) {
+	while (data != END_OF_CHUNKED_BODY) {
 		len = std::stoi(data, 0, 16);
 		pos = data.find("\r\n") + 2;
 
@@ -32,6 +32,7 @@ std::string ParserRequest::parseBody(std::string &data) {
 
 		data.erase(0, data.substr(0, pos + 2).length() + len); //TODO Оптимизировать
 	}
+	data.erase(0, END_OF_CHUNKED_BODY.length());
 
 	return body;
 }
