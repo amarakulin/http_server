@@ -12,6 +12,8 @@ Request::~Request() {}
 void		Request::addRequestChunk(std::string chunk) {
 	_buffer += chunk;
 
+	// std::cout << "Buffer: " << _buffer << std::endl;
+
 	if (!_isHeaderParsed)
 		handleEndOfHeader();
 	if (_isHeaderParsed && !_isBodyParsed)
@@ -42,12 +44,13 @@ void		Request::handleEndOfHeader() {
 }
 
 void		Request::handleEndOfBody() {
-	std::string param;
 	requestHeaderStruct::iterator end = _data.header.end();
 
 	if (_data.header["method"] == "post") {
+		bool hasContetnType = _data.header.find("content-type") != end;
+		bool hasContentLength = _data.header.find("content-length") != end;
 
-		if (_data.header.find("content-type") != end && _data.header.find("content-length") != end) {
+		if (hasContetnType && hasContentLength) {
 			std::string contentType = _data.header["content-type"];
 
 			if (contentType.find("boundary") != std::string::npos)
@@ -55,7 +58,9 @@ void		Request::handleEndOfBody() {
 			else
 				handleEndOfBodyWithContentLengt();
 
-		} else if (_data.header.find("transfer-encoding") != end) {
+		} else if (hasContentLength) {
+			handleEndOfBodyWithContentLengt();
+		}  else if (_data.header.find("transfer-encoding") != end) {
 			handleEndOfChunkedBody();
 		}
 		else {
@@ -84,7 +89,7 @@ void	Request::handleEndOfBoundaryBody() {
 }
 
 void	Request::handleEndOfChunkedBody() {
-	if (_data.header["transfer-encoding"].find("chunked") != std::string::npos) {
+	if (_data.header["transfer-encoding"] == "chunked") {
 		_data.body = ParserRequest::parseBody(_buffer);
 		_isBodyParsed = true;
 	}
@@ -107,7 +112,7 @@ void	Request::handleEndOfBodyWithContentLengt() {
 bool		Request::isDone() {
 	if (!_isHeaderParsed || !_isBodyParsed)
 		return false;
-	printRequest(_data);
+	// printRequest(_data);
 	return true;
 }
 
