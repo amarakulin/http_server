@@ -25,16 +25,13 @@ Response &Response::operator=(const Response &assign){
 
 Response::~Response() {}
 
-const std::string &Response::getDataToSend() const{
-	return _dataToSend;
-}
+
 
 bool Response::isDone(){
 	return _status == SENDED;
 }
 
 void Response::countSendedData(int byteSended){
-	std::cout << "BEFORE leftDataToSend: " << _leftDataToSend << std::endl;
 	if (byteSended < 0 || byteSended > _leftDataToSend){
 		std::cout << "DATA SENT is negative!!!" << std::endl;
 		_status = SENDED;
@@ -57,22 +54,24 @@ void Response::countSendedData(int byteSended){
 		return;
 	}
 	_dataToSend.erase(_dataToSend.begin(), _dataToSend.begin() + byteSended);
-	std::cout << "dataToSend: " << _dataToSend << std::endl;
-	std::cout << "AFTER leftDataToSend: " << _leftDataToSend << std::endl;
-
 }
+
+
+/*
+** Getters
+*/
 
 size_t Response::getLeftDataToSend() const {
 	return _leftDataToSend;
 }
 
+const std::string &Response::getDataToSend() const{
+	return _dataToSend;
+}
+
 int Response::getStatus() const {
 	return _status;
 }
-
-/*
-** Getters
-*/
 
 /*
 ** Setters

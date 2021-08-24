@@ -20,12 +20,18 @@ public:
 	virtual ~Response();
 
 	bool					isDone();
-	const std::string		&getDataToSend() const;
 	void					countSendedData(int byteSended);
 
-	//TODO FOR tests
+/*
+** Getters
+*/
 	virtual size_t			getLeftDataToSend() const;
+	const std::string		&getDataToSend() const;
 	virtual int				getStatus() const;
+
+/*
+** Setters
+*/
 };
 
 #endif
