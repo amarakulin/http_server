@@ -1,10 +1,8 @@
-#ifndef HOSTTYPES_HPP
-# define HOSTTYPES_HPP
+#ifndef HOSTTYPES
+# define HOSTTYPES
 
 # include <iostream>
 # include <vector>
-
-// # define GET_VARIABLE_NAME(var) (#var)
 
 static const int SIZE_OF_KEYS = 6;
 static const int SIZE_OF_LOCATION_KEYS = 8;
@@ -30,7 +28,7 @@ static const std::string locationKeys[SIZE_OF_LOCATION_KEYS] = {
 };
 
 /*
-** Структура-дополнение с HostData. Нет обязательных полей.
+*	Структура-дополнение с HostData. Описывает location. Нет обязательных полей.
 */
 
 typedef struct {
@@ -46,19 +44,29 @@ typedef struct {
 } Location;
 
 /*
-** Структура со всеми возможными данными из конфигурационного файла. Обязательные поля:
-** - host;
-** - port;
-** - errorPage;
-** - location;
+*	Структура-дополнение к HostData. Описывает ErrorPage.
+*/
+
+typedef struct {
+	size_t						errorNumber;
+	std::string					locationOfErrorPage;
+} ErrorPage;
+
+/*
+*	Структура со всеми возможными данными из конфигурационного файла. Обязательные поля:
+*	- host;
+*	- port;
+*	- errorPage;
+*	- location;
 */
 
 typedef struct {
 	std::string					ip;
 	std::string					host;
+	std::string					serverName;
 	size_t						port;
 	std::string					root;
-	std::string					errorPage;
+	ErrorPage					errorPage;
 	std::string					clientMaxBodySize;
 	std::vector<Location>		location;
 } HostData;
