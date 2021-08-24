@@ -8,7 +8,7 @@
 
 class Response {
 protected:
-	size_t		_leftDataToSend;
+	size_t		_leftBytesToSend;
 	std::string	_dataToSend;
 	int			_status;
 
@@ -25,7 +25,7 @@ public:
 /*
 ** Getters
 */
-	virtual size_t			getLeftDataToSend() const;
+	virtual size_t			getLeftBytesToSend() const;
 	const std::string		&getDataToSend() const;
 	virtual int				getStatus() const;
 

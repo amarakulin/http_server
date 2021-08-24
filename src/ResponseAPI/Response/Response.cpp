@@ -3,7 +3,7 @@
 
 Response::Response() {
 	_status = NO_RESPONSE;
-	_leftDataToSend = 0;//TODO Think
+	_leftBytesToSend = 0;//TODO Think
 }
 
 Response::Response(const Response& other) {
@@ -16,7 +16,7 @@ Response::Response(const Request* request) {
 
 Response &Response::operator=(const Response &assign){
 	if (this != &assign){
-		_leftDataToSend = assign.getLeftDataToSend();
+		_leftBytesToSend = assign.getLeftBytesToSend();
 		_dataToSend = assign.getDataToSend();
 		_status = assign.getStatus();
 	}
@@ -32,24 +32,24 @@ bool Response::isDone(){
 }
 
 void Response::countSendedData(int byteSended){
-	if (byteSended < 0 || byteSended > _leftDataToSend){
+	if (byteSended < 0 || byteSended > _leftBytesToSend){
 		std::cout << "DATA SENT is negative!!!" << std::endl;
 		_status = SENDED;
 		return;
 	}
-	_leftDataToSend -= byteSended;
-	if (_leftDataToSend == 0 && !_dataToSend.empty()){
+	_leftBytesToSend -= byteSended;
+	if (_leftBytesToSend == 0 && !_dataToSend.empty()){
 		_status = SENDED;
 	}
-	else if (_leftDataToSend == 0 && _dataToSend.empty()){//TODO delete
+	else if (_leftBytesToSend == 0 && _dataToSend.empty()){//TODO delete
 		std::cout << "EMPTY SEND!!!" << std::endl;
 		return;
 	}
-	else if (_leftDataToSend < 0){//TODO delete
+	else if (_leftBytesToSend < 0){//TODO delete
 		std::cout << "1)LEFT DATA SENT error!!!" << std::endl;
 		return;
 	}
-	else if (_leftDataToSend != 0 && _dataToSend.empty()){//TODO delete
+	else if (_leftBytesToSend != 0 && _dataToSend.empty()){//TODO delete
 		std::cout << "2)LEFT DATA SENT error!!!" << std::endl;
 		return;
 	}
@@ -61,8 +61,8 @@ void Response::countSendedData(int byteSended){
 ** Getters
 */
 
-size_t Response::getLeftDataToSend() const {
-	return _leftDataToSend;
+size_t Response::getLeftBytesToSend() const {
+	return _leftBytesToSend;
 }
 
 const std::string &Response::getDataToSend() const{
