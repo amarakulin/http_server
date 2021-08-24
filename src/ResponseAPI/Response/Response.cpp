@@ -1,11 +1,12 @@
 #include "Response.hpp"
 #include "../../Types/ResponseTypes.hpp"
 
-Response::Response() {}
+Response::Response() {
+	_status = NO_RESPONSE;
+	_leftDataToSend = 0;//TODO Think
+}
 
 Response::Response(const Response& other) {
-	_status = NO_RESPONSE;
-	_leftDataToSend = -1;
 }
 
 Response::Response(const Request* request) {
@@ -13,14 +14,6 @@ Response::Response(const Request* request) {
 }
 
 Response::~Response() {}
-
-std::string Response::createBody() {
-	return "";
-}
-
-std::string Response::createHead() {
-	return "";
-}
 
 const std::string &Response::getDataToSend() const{
 	return _dataToSend;
@@ -57,6 +50,14 @@ void Response::countSendedData(int byteSended){
 	std::cout << "dataToSend: " << _dataToSend << std::endl;
 	std::cout << "AFTER leftDataToSend: " << _leftDataToSend << std::endl;
 
+}
+
+size_t Response::getLeftDataToSend() const {
+	return _leftDataToSend;
+}
+
+int Response::getStatus() const {
+	return _status;
 }
 
 /*

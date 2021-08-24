@@ -18,11 +18,13 @@ public:
 	Response(const Request* request);
 	virtual ~Response();
 
-	virtual std::string		createBody();
-	virtual std::string		createHead();
 	bool					isDone();
 	const std::string		&getDataToSend() const;
 	void					countSendedData(int byteSended);
+
+	//TODO FOR tests
+	virtual size_t			getLeftDataToSend() const;
+	virtual int				getStatus() const;
 };
 
 #endif
