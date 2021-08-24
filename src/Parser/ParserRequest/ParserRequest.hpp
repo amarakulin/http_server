@@ -1,8 +1,12 @@
 #ifndef PARSER_REQUEST
 # define PARSER_REQUEST
 
-# include "RequestTypes.hpp"
-# include "utils.hpp"
+//# include "RequestTypes.hpp"
+//# include "utils.hpp"
+
+//FOR Debug for lovely Clion
+#include "../Types/ResponseTypes.hpp"
+#include "../utils/utils.hpp"
 
 # include <iostream>
 # include <map>

@@ -31,6 +31,7 @@ bool Response::isDone(){
 }
 
 void Response::countSendedData(int byteSended){
+	std::cout << "BEFORE leftDataToSend: " << _leftDataToSend << std::endl;
 	if (byteSended < 0 || byteSended > _leftDataToSend){
 		std::cout << "DATA SENT is negative!!!" << std::endl;
 		_status = SENDED;
@@ -53,6 +54,9 @@ void Response::countSendedData(int byteSended){
 		return;
 	}
 	_dataToSend.erase(_dataToSend.begin(), _dataToSend.begin() + byteSended);
+	std::cout << "dataToSend: " << _dataToSend << std::endl;
+	std::cout << "AFTER leftDataToSend: " << _leftDataToSend << std::endl;
+
 }
 
 /*

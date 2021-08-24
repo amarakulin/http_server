@@ -1,8 +1,11 @@
 #ifndef REQUEST
 # define REQUEST
 
-# include "RequestTypes.hpp"
+//# include "RequestTypes.hpp"
 # include "ParserRequest.hpp"
+
+//FOR Debug for lovely Clion
+#include "../Types/RequestTypes.hpp"
 
 # include <iostream>
 # include <sstream>

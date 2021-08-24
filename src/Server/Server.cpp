@@ -133,9 +133,12 @@ void				Server::handleClientEvents() {
 		
 		if (client.hasRequest() && !client.hasResponse()) //TODO pichkasik
 			createResponse(client);
+		//FIXME: Меняет после первой отправки даты revents и больше не заходит сюды
+		if ((clientPollStruct.revents & POLLOUT) && client.hasResponse()){// проверяем можем ли мы отпраивть ответ
+			std::cout << "respoonserespoonserespoonse: "<< client.hasResponse() << std::endl;
 
-		if ((clientPollStruct.revents & POLLOUT) && client.hasResponse())// проверяем можем ли мы отпраивть ответ
 			sendResponse(clientPollStruct.fd, client);
+		}
 	}
 }
 
@@ -169,11 +172,15 @@ void				Server::createResponse(Client& client) {
 void				Server::sendResponse(int clientSocket, Client& client) {
 	// std::string response = "HTTP/1.1 200 OK\r\nContent-length: 436\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta http-equiv='X-UA-Compatible' content='IE=edge'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>Document</title><link rel='stylesheet' href='index.css'></head><body><h2>Hello</h2><form method='POST' action='127.0.0.1'><input name='value' value='key' placeholder='TEST'><button>POST</button></form><script src='index.js'></script></body></html>";
 	// std::string response = "HTTP/1.1 200 OK\r\nContent-length: 318\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta http-equiv='X-UA-Compatible' content='IE=edge'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>Document</title><link rel='stylesheet' href='index.css'></head><body><h2>Hello</h2><script src='index.js'></script></body></html>";
-	std::cout << "!!!Response: " << client.getResponse()->getDataToSend() << std::endl;
+	int sendByte = client.getResponse()->getDataToSend().length();//100;//Move to define
+
 	int s = send(clientSocket,
 				 client.getResponse()->getDataToSend().c_str(),
-				 client.getResponse()->getDataToSend().length(),
+				 sendByte,
+//				 client.getResponse()->getDataToSend().length(),
 				 0);
+	std::string cutResponse = client.getResponse()->getDataToSend().substr(0, sendByte);
+//	std::cout << "!!!Response: " << cutResponse << std::endl;
 	if (s < 0){
 		std::cout << "Send error" << std::endl;
 	}
@@ -183,9 +190,8 @@ void				Server::sendResponse(int clientSocket, Client& client) {
 	if (client.getResponse()->isDone()){
 		std::cout << "Reset Response" << std::endl;
 		client.resetResponse();
+		std::cout << "/* Client out */ " << clientSocket << " Sended: " << s << std::endl;
 	}
-
-	std::cout << "/* Client out */ " << clientSocket << " Sended: " << s << std::endl;
 }
 
 /*

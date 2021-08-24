@@ -216,7 +216,9 @@ void	ParserRequest::parseHeaderData(std::string& data, requestHeaderStruct& head
 
 requestHeaderStruct ParserRequest::parseHeader(std::string data) {
 	requestHeaderStruct header;
-	toLowerCase(data);
+	std::transform(data.begin(), data.end(), data.begin(), ::tolower);//TODO DELETE
+//	toLowerCase(data);//TODO UNCOMMENT USE ONLY FOR DEBUG
+
 
 	parseCommonHeaderData(data, header);
 	parseHeaderData(data, header);

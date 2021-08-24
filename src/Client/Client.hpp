@@ -5,9 +5,12 @@
 
 # include "Host.hpp"
 # include "Request.hpp"
-# include "ResponseGet.hpp"
-# include "ResponseDelete.hpp"
-# include "ResponsePost.hpp"
+//# include "ResponseGet.hpp"
+//# include "ResponseDelete.hpp"
+//# include "ResponsePost.hpp"
+#include "../ResponseAPI/ResponsePost/ResponsePost.hpp"
+#include "../ResponseAPI/ResponseGet/ResponseGet.hpp"
+#include "../ResponseAPI/ResponseDelete/ResponseDelete.hpp"
 #include "../ResponseAPI/Response/Response.hpp"
 
 class Client {
