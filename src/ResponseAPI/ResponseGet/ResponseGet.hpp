@@ -9,6 +9,7 @@ public:
 	ResponseGet();
 	ResponseGet(const ResponseGet& other);
 	ResponseGet(Request *other);
+	ResponseGet& operator=(const ResponseGet &assign);
 	~ResponseGet();
 
 private:

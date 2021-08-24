@@ -4,6 +4,15 @@ ResponseGet::ResponseGet() : Response() {}
 
 ResponseGet::ResponseGet(const ResponseGet& other) : Response(other) {}
 
+ResponseGet &ResponseGet::operator=(const ResponseGet &assign) {
+	if (this != &assign){
+		_leftDataToSend = assign.getLeftDataToSend();
+		_dataToSend = assign.getDataToSend();
+		_status = assign.getStatus();
+	}
+	return *this;
+}
+
 ResponseGet::ResponseGet(Request *request) : Response(request) {
 	std::cout << "Constructor ResponseGet" << std::endl;
 

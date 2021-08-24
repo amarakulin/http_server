@@ -7,10 +7,20 @@ Response::Response() {
 }
 
 Response::Response(const Response& other) {
+	operator=(other);
 }
 
 Response::Response(const Request* request) {
 	_status = SENDING;
+}
+
+Response &Response::operator=(const Response &assign){
+	if (this != &assign){
+		_leftDataToSend = assign.getLeftDataToSend();
+		_dataToSend = assign.getDataToSend();
+		_status = assign.getStatus();
+	}
+	return *this;
 }
 
 Response::~Response() {}

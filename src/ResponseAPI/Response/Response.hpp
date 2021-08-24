@@ -16,6 +16,7 @@ public:
 	Response();
 	Response(const Response& other);
 	Response(const Request* request);
+	Response& operator=(const Response &assign);
 	virtual ~Response();
 
 	bool					isDone();
