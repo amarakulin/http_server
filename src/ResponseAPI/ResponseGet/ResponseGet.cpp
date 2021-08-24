@@ -14,8 +14,6 @@ ResponseGet &ResponseGet::operator=(const ResponseGet &assign) {
 }
 
 ResponseGet::ResponseGet(Request *request) : Response(request) {
-	std::cout << "Constructor ResponseGet" << std::endl;
-
 	std::string head = createHead(request->getData().header);
 	std::string body = createBody(request->getData().body);
 	_dataToSend = head + body;
