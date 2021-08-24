@@ -63,6 +63,7 @@ class Server {
 		Server();
 
 		Client& getClientByFD(std::vector<Client>& clients, int fd);
+		size_t countBytesToSend(size_t leftBytesToSend);
 
 	public:
 		Server(const Config* config);
