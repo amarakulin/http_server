@@ -10,16 +10,16 @@ void	ParserConfig::parse(char *configFilePath) {
 	try {
 		readConfigFile(configFilePath, &config);
 		devideConfigToComponents(config, &hostData);
-		// std::cout << hostData.host << std::endl;
-		// std::cout << hostData.port << std::endl;
-		// std::cout << hostData.serverName << std::endl;
-		// std::cout << hostData.root << std::endl;
-		// std::cout << hostData.errorPage.errorNumber << std::endl;
-		// std::cout << hostData.errorPage.locationOfErrorPage << std::endl;
-		// std::cout << hostData.clientMaxBodySize << std::endl;
-		// std::cout << hostData.location[0].way << std::endl;
-		// std::cout << hostData.location[1].way << std::endl;
-		// std::cout << hostData.location[2].way << std::endl;
+		std::cout << hostData.host << std::endl;
+		std::cout << hostData.port << std::endl;
+		std::cout << hostData.serverName << std::endl;
+		std::cout << hostData.root << std::endl;
+		std::cout << hostData.errorPage.errorNumber << std::endl;
+		std::cout << hostData.errorPage.locationOfErrorPage << std::endl;
+		std::cout << hostData.clientMaxBodySize << std::endl;
+		std::cout << hostData.location[0].way << std::endl;
+		std::cout << hostData.location[1].way << std::endl;
+		std::cout << hostData.location[2].way << std::endl;
 	} catch (ParserConfigException e) {
 		std::cout << e.what() << std::endl;
 	}
