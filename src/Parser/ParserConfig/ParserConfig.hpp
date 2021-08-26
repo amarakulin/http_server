@@ -27,6 +27,9 @@ public:
 	void	fillHostData(HostData *host, std::list<std::string>::iterator *it);
 	void	checkHostData(HostData *host);
 	void	enterDataToHostDataStruct(std::string const &key, std::string const &value, HostData *hostData);
+
+	/*			SETTERS			*/
+
 	void	setListenData(std::string data, HostData *hostData);
 	void	setServerNameData(std::string data, HostData *hostData);
 	void	setRootData(std::string data, HostData *hostData);
@@ -34,6 +37,14 @@ public:
 	void	setClientMaxBodySizeData(std::string data, HostData *hostData);
 	void	setLocationWayData(std::string data, HostData *hostData);
 	void	setLocationDetailsData(std::string data, HostData *hostData);
+	void	setRootDataToLocation(std::string data, HostData *hostData, int	currentLocation);
+	void	setMethodsToLocation(std::string data, HostData *hostData, int currentLocation);
+	void	setAutoindexToLocation(std::string data, HostData *hostData, int currentLocation);
+	void	setIndexToLocation(std::string data, HostData *hostData, int currentLocation);
+	void	setUploadEnableToLocation(std::string data, HostData *hostData, int	currentLocation);
+	void	setUploadPathToLocation(std::string data, HostData *hostData, int currentLocation);
+	void	setCgiExtencionToLocation(std::string data, HostData *hostData, int	currentLocation);
+	void	setCgiPathToLocation(std::string data, HostData *hostData, int currentLocation);
 
 	class ParserConfigException : public std::exception {
 		public:
