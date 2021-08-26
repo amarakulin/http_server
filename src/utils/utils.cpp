@@ -21,6 +21,21 @@ void	splitFirstArgiment(std::string s, std::string *key, std::string *value) {
 	*value = s.substr(delim + 1, s.length());
 }
 
+std::vector<std::string>	split(std::string value) {
+	std::vector<std::string> tmp;
+	std::string buf;
+
+	for (int i = 0; i < value.length(); i++) {
+		if (value[i] == ' ' || value[i] == ';') {
+			tmp.push_back(buf);
+			buf = "";
+		} else {
+			buf += value[i];
+		}
+	}
+	return tmp;
+}
+
 bool	isSomeSymbolInTheEnd(std::string end, char symbol) {
 	if (end[end.length() - 1] == symbol && !end[end.length()]) {
 		return true;
