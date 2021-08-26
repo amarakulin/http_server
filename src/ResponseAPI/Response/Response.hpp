@@ -10,7 +10,7 @@ class Response {
 protected:
 	size_t		_leftBytesToSend;
 	std::string	_dataToSend;
-	int			_status;
+	int			_state;
 
 public:
 	Response();

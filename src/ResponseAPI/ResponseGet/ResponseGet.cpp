@@ -8,7 +8,7 @@ ResponseGet &ResponseGet::operator=(const ResponseGet &assign) {
 	if (this != &assign){
 		_leftBytesToSend = assign.getLeftBytesToSend();
 		_dataToSend = assign.getDataToSend();
-		_status = assign.getStatus();
+		_state = assign.getStatus();
 	}
 	return *this;
 }
@@ -28,9 +28,21 @@ ResponseGet::ResponseGet(Request *request) : Response(request) {
 ResponseGet::~ResponseGet() {}
 
 std::string ResponseGet::createHead(const requestHeaderStruct& headers){
+	requestHeaderStruct::const_iterator it;
+	std::cout << "HEAD" << std::endl;
+//	handle_method(headers.find("method"));
+//	handle_host(headers.find("host"));
+//	handle_location(headers.find("location"));
+	for (it = headers.begin(); it != headers.end(); it++)//TODO optimeze all header methods in one loop
+	{
+
+	}
 	return "";
 }
 
 std::string ResponseGet::createBody(const std::string& body) {
+	std::cout << "BODY" << std::endl;
+
+	std::cout << "Body: " << std::endl << body << std::endl;
 	return "";
 }

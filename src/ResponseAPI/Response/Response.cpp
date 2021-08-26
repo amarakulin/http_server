@@ -2,7 +2,7 @@
 #include "../../Types/ResponseTypes.hpp"
 
 Response::Response() {
-	_status = NO_RESPONSE;
+	_state = NO_RESPONSE;
 	_leftBytesToSend = 0;//TODO Think
 }
 
@@ -11,14 +11,14 @@ Response::Response(const Response& other) {
 }
 
 Response::Response(const Request* request) {
-	_status = SENDING;
+	_state = SENDING;
 }
 
 Response &Response::operator=(const Response &assign){
 	if (this != &assign){
 		_leftBytesToSend = assign.getLeftBytesToSend();
 		_dataToSend = assign.getDataToSend();
-		_status = assign.getStatus();
+		_state = assign.getStatus();
 	}
 	return *this;
 }
@@ -28,7 +28,7 @@ Response::~Response() {}
 
 
 bool Response::isDone(){
-	return _status == SENDED;
+	return _state == SENDED;
 }
 
 void Response::countSendedData(int byteSended){
@@ -37,7 +37,7 @@ void Response::countSendedData(int byteSended){
 	}
 	_leftBytesToSend -= byteSended;
 	if (_leftBytesToSend == 0 && !_dataToSend.empty()){
-		_status = SENDED;
+		_state = SENDED;
 	}
 	_dataToSend.erase(_dataToSend.begin(), _dataToSend.begin() + byteSended);
 }
@@ -56,7 +56,7 @@ const std::string &Response::getDataToSend() const{
 }
 
 int Response::getStatus() const {
-	return _status;
+	return _state;
 }
 
 /*
