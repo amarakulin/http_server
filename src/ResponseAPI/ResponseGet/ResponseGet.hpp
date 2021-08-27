@@ -4,6 +4,11 @@
 # include "../Response/Response.hpp"
 #include "../Types/RequestTypes.hpp"
 
+typedef struct {
+	const char*		nameHeader;
+	std::string			(*getProcessedHeader)(const std::string &valueHeader);
+}		t_response_process;
+
 class ResponseGet : public Response {
 public:
 	ResponseGet();
@@ -13,17 +18,19 @@ public:
 	~ResponseGet();
 
 private:
-	std::string		createHead(Request *request);
-	std::string		createBody(const std::string& body);
+	static const	t_response_process _arrProcessHeaders[];
+	void		createHead(Request *request);
+	void		createBody(const std::string& body);
 	std::string		createContentLengthHeader(std::string body);
 	std::string		createHeadHeader(std::string status);
 
 
 	std::string		processHeader(const std::string& headerName, const std::string& headerValue);
-	std::string		handlerMethod(const std::string& method);
-	std::string		handlerHost(const std::string& host);
-	std::string		handlerLocation(const std::string& location);
-	std::string		handlerProtocol(const std::string& protocol);
+
+	static std::string		getProcessedMethod(const std::string& method);
+	static std::string		getProcessedHost(const std::string& host);
+	static std::string		getProcessedLocation(const std::string& location);
+	static std::string		getProcessedProtocol(const std::string& protocol);
 
 
 };
