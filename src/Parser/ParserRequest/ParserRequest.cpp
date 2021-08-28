@@ -56,7 +56,7 @@ bool		ParserRequest::handleEndOfBody(RequestData& data, std::string& buffer) {
 	return false;
 }
 
-bool	ParserRequest::handleEndOfBoundaryBody(RequestData& data, std::string& buffer) {
+bool		ParserRequest::handleEndOfBoundaryBody(RequestData& data, std::string& buffer) {
 	size_t		contentLength = std::stoi(data.header["content-length"]);
 	std::string contentType = data.header["content-type"];
 
@@ -73,7 +73,7 @@ bool	ParserRequest::handleEndOfBoundaryBody(RequestData& data, std::string& buff
 	return false;
 }
 
-bool	ParserRequest::handleEndOfChunkedBody(RequestData& data, std::string& buffer) {
+bool		ParserRequest::handleEndOfChunkedBody(RequestData& data, std::string& buffer) {
 	if (data.header["transfer-encoding"] == "chunked") {
 		data.body = parseBody(buffer);
 		return true;
@@ -81,7 +81,7 @@ bool	ParserRequest::handleEndOfChunkedBody(RequestData& data, std::string& buffe
 	return false;
 }
 
-bool	ParserRequest::handleEndOfBodyWithContentLengt(RequestData& data, std::string& buffer) {
+bool		ParserRequest::handleEndOfBodyWithContentLengt(RequestData& data, std::string& buffer) {
 	size_t		contentLength = std::stoi(data.header["content-length"]);
 
 	if (buffer.length() >= contentLength) {
@@ -175,7 +175,7 @@ std::string ParserRequest::parseBoundaryChunk(std::string& chunk) {
 ** Parse header
 */
 
-void	ParserRequest::parseCommonHeaderData(std::string& data, requestHeaderStruct& header) {
+void		ParserRequest::parseCommonHeaderData(std::string& data, requestHeaderStruct& header) {
 	size_t 		index;
 	std::string seporator = " ";
 
@@ -188,7 +188,7 @@ void	ParserRequest::parseCommonHeaderData(std::string& data, requestHeaderStruct
 	}
 }
 
-void	ParserRequest::parseHeaderData(std::string& data, requestHeaderStruct& header) {
+void		ParserRequest::parseHeaderData(std::string& data, requestHeaderStruct& header) {
 	std::pair<std::string, std::string> headerParam;
 	size_t start = 0;
 	size_t end = 0;
