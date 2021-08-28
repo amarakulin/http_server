@@ -22,10 +22,10 @@ class Request {
 		Request(const Request& other);
 		~Request();
 
-		void	addRequestChunk(std::string chunk);
-		void	resetRequest();
+		void		addRequestChunk(std::string chunk);
+		void		resetRequest();
 
-		bool	isDone();
+		bool		isDone();
 
 		int			getStatus() const;
 		RequestData& getData();
