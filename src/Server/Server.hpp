@@ -19,6 +19,7 @@
 # include "Listener.hpp"
 # include "Sockets.hpp"
 # include "ResponseCreator.hpp"
+# include "Exceptions.hpp"
 
 # include "utils.hpp"
 

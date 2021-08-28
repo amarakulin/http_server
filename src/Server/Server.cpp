@@ -154,8 +154,13 @@ void				Server::processingRequest(int clientSocket, Client& client) {
 		closeClientConnection(clientSocket);
 		return ;
 	}
-
-	client.getRequest()->addRequestChunk(buf);
+	try {
+		client.getRequest()->addRequestChunk(buf);
+	} catch (BadRequestException& e) {
+		//TODO
+		// client.setResponse(_responseCreator.createResponse(400));
+		// client.resetRequest();
+	}
 	bzero(buf, MB);
 
 	std::cout << "/* Client in */ "  << std::endl;
