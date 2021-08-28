@@ -222,7 +222,7 @@ void	ParserConfig::setMethodsToLocation(std::string data,
 	std::vector<std::string> methods;
 	std::vector<std::string>::iterator it;
 
-	methods = split(data);
+	methods = split(data.substr(0, data.find(";")), " ");
 	it = methods.begin();
 	// hostData->location[currentLocation].httpMethods = methods;
 	for (; it != methods.end(); it++) {
