@@ -24,14 +24,15 @@ ResponseGet &ResponseGet::operator=(const ResponseGet &assign) {
 }
 
 ResponseGet::ResponseGet(Request *request) : Response(request) {
-	createHead(request);
-	createBody(request->getData().body);
+	std::string body = "Hello world";
+	createHead(request, body);
+	createBody(body);
 //	TODO delete hardcode
 //	_dataToSend = "HTTP/1.1 200 OK\r\nContent-length: 436\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta http-equiv='X-UA-Compatible' content='IE=edge'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>Document</title><link rel='stylesheet' href='index.css'></head><body><h2>Hello</h2><form method='POST' action='127.0.0.1'><input name='value' value='key' placeholder='TEST'><button>POST</button></form><script src='index.js'></script></body></html>";
 //	_dataToSend = "HTTP/1.1 200 OK\r\nContent-length: 318\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta http-equiv='X-UA-Compatible' content='IE=edge'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>Document</title><link rel='stylesheet' href='index.css'></head><body><h2>Hello</h2><script src='index.js'></script></body></html>";
-	std::string a = "HTTP/1.1 200 OK\r\nContent-length: 5\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n12345";
+//	std::string a = "HTTP/1.1 200 OK\r\nContent-length: 5\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n12345";
 	std::cout << "$$$$$ DATA TO SEND: " << "|" <<_dataToSend << "|" << std::endl;
-	std::cout << "$$$$$ AAAA TO SEND: " << "|"  << a << "|" << std::endl;
+//	std::cout << "$$$$$ AAAA TO SEND: " << "|"  << a << "|" << std::endl;
 
 	_leftBytesToSend = _dataToSend.length();
 
@@ -39,7 +40,7 @@ ResponseGet::ResponseGet(Request *request) : Response(request) {
 
 ResponseGet::~ResponseGet() {}
 
-void ResponseGet::createHead(Request *request){
+void ResponseGet::createHead(Request *request, const std::string& body){
 	requestHeaderStruct headers = request->getData().header;
 	requestHeaderStruct::const_iterator it;
 	std::cout << "HEAD" << std::endl;
@@ -48,7 +49,7 @@ void ResponseGet::createHead(Request *request){
 		_dataToSend += processHeader(it->first, it->second);
 	}
 	std::string head = createHeadHeader("status");
-//	_dataToSend += createContentLengthHeader(request->getData().body);
+	_dataToSend += createContentLengthHeader(body);
 	_dataToSend = head + _dataToSend;
 }
 
@@ -56,7 +57,7 @@ void ResponseGet::createBody(const std::string& body) {
 
 	std::cout << "Body: " << body << std::endl;
 	_dataToSend += "\r\n";
-	_dataToSend += "12345";
+	_dataToSend += body;
 }
 
 std::string ResponseGet::processHeader(const std::string &headerName, const std::string &headerValue){
@@ -80,7 +81,7 @@ std::string ResponseGet::getProcessedMethod(std::string method){
 }
 
 std::string ResponseGet::getProcessedHost(std::string host){
-	return "Content-length: 5";
+	return "";
 }
 
 std::string ResponseGet::getProcessedLocation(std::string location){
@@ -93,7 +94,10 @@ std::string ResponseGet::getProcessedProtocol(std::string protocol){
 }
 
 std::string ResponseGet::createContentLengthHeader(std::string body){
-	return "";
+	std::string processedStr = "Content-length: ";
+	processedStr += std::to_string(body.length());
+	processedStr += "\r\n";// TODO change
+	return processedStr;
 }
 
 std::string ResponseGet::createHeadHeader(std::string status){

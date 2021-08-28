@@ -19,7 +19,7 @@ public:
 
 private:
 	static const	t_response_process _arrProcessHeaders[];
-	void		createHead(Request *request);
+	void		createHead(Request *request, const std::string& body);
 	void		createBody(const std::string& body);
 	std::string		createContentLengthHeader(std::string body);
 	std::string		createHeadHeader(std::string status);
