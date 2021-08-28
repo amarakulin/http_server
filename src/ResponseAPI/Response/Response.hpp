@@ -11,6 +11,7 @@ class Response {
 private:
 	static const	t_response_process _arrProcessHeaders[];
 
+	void			createHead(Request *request);
 	std::string		createContentLengthHeader(std::string location);
 	std::string		createHeadHeader(std::string status);
 	std::string		processHeader(const std::string& headerName, const std::string& headerValue);
@@ -20,8 +21,6 @@ protected:
 	size_t		_leftBytesToSend;
 	std::string	_dataToSend;
 	int			_state;
-
-	virtual void		createHead(Request *request);
 
 public:
 	Response();

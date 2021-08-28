@@ -13,7 +13,7 @@ public:
 	~ResponseGet();
 
 private:
-	void		createBody(const std::string& body);
+	void		createBody(Request *request);
 
 
 };
