@@ -5,9 +5,12 @@
 
 # include "Host.hpp"
 # include "Request.hpp"
-# include "ResponseGet.hpp"
-# include "ResponseDelete.hpp"
-# include "ResponsePost.hpp"
+//# include "ResponseGet.hpp"
+//# include "ResponseDelete.hpp"
+//# include "ResponsePost.hpp"
+#include "../ResponseAPI/ResponsePost/ResponsePost.hpp"
+#include "../ResponseAPI/ResponseGet/ResponseGet.hpp"
+#include "../ResponseAPI/ResponseDelete/ResponseDelete.hpp"
 #include "../ResponseAPI/Response/Response.hpp"
 
 class Client {
@@ -27,7 +30,7 @@ public:
 	Response*	getResponse() const;
 	int			getSocket() const;
 	int			getRequestStatus() const;
-	int			getResponseStatus() const;
+//	int			getResponseStatus() const;
 
 	bool		hasResponse() const;
 	bool		hasRequest() const;
@@ -36,7 +39,6 @@ public:
 
 	void		resetRequest();
 	void		resetResponse();
-	int			sendResponse();
 };
 
 #endif

@@ -3,24 +3,56 @@
 
 # include <iostream>
 # include "Request.hpp"
+# include "../../Types/ResponseTypes.hpp"
 
 // Здесь понадобиться fork и excve???
 
 class Response {
+private:
+	static const	t_response_process _arrProcessHeaders[];
+
+	std::string		createContentLengthHeader(std::string location);
+	std::string		createHeadHeader(std::string status);
+	std::string		processHeader(const std::string& headerName, const std::string& headerValue);
+	static std::string		getProcessedMethod(std::string method);
+	static std::string		getProcessedHost(std::string host);
+	static std::string		getProcessedLocation(std::string location);
+	static std::string		getProcessedProtocol(std::string protocol);
+	static std::string		getProcessedAccept(std::string accept);
+
 protected:
-	size_t		_leftDataToSend;
+	size_t		_leftBytesToSend;
 	std::string	_dataToSend;
+	int			_state;
+
+	virtual void		createHead(Request *request);
 
 public:
 	Response();
 	Response(const Response& other);
-	Response(const Request* request);
+	Response(Request *request);
+	Response& operator=(const Response &assign);
 	virtual ~Response();
 
-	virtual std::string		createBody();
-	virtual std::string		createHead();
+//TODO
+//	0. Create status code
+//	1. Find file by location
+//	2. Count data by the location -> create Content-Length
+//	3. Process another headers
 
-	const std::string &getDataToSend() const;
+	bool					isDone();
+	void					countSendedData(int byteSended);
+
+/*
+** Getters
+*/
+	virtual size_t			getLeftBytesToSend() const;
+	const std::string		&getDataToSend() const;
+	virtual int				getStatus() const;
+
+/*
+** Setters
+*/
 };
 
 #endif

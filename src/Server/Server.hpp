@@ -16,12 +16,19 @@
 # include "Request.hpp"
 # include "Host.hpp"
 # include "Client.hpp"
-# include "Listener.hpp"
+//# include "Listener.hpp"
 # include "Sockets.hpp"
 # include "ResponseCreator.hpp"
 # include "Exceptions.hpp"
+# include "Global.hpp"
+//# include "ResponseCreator.hpp"
 
-# include "utils.hpp"
+//# include "utils.hpp"
+
+#include "../Listener/Listener.hpp"
+#include "../ResponseAPI/ResponseCreator/ResponseCreator.hpp"
+#include "../utils/utils.hpp"
+
 
 # define MB 1048576
 
@@ -59,6 +66,7 @@ class Server {
 		Server();
 
 		Client& getClientByFD(std::vector<Client>& clients, int fd);
+		size_t countBytesToSend(size_t leftBytesToSend);
 
 	public:
 		Server(const Config* config);
