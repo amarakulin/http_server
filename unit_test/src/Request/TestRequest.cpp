@@ -4,7 +4,7 @@
 
 void testParseGetRequest_1() {
 	Request 	req;
-	std::string requestSrt = "GET / asdsad HTTP/1.1\r\n\r\n";
+	std::string requestSrt = "GET / HTTP/1.1\r\n\r\n";
 	RequestData data;
 
 	req.addRequestChunk(requestSrt);
@@ -1177,8 +1177,60 @@ void testBadRequest_12() {
 	}
 }
 
+void testParsingUri_1() {
+	Request 	req;
+	std::string requestSrt = "GET / index.html HTTP/1.1\r\n\r\n";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "get");
+	TEST_CHECK(data.header["location"] == "/ index.html");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+}
+
+void testParsingUri_2() {
+	Request 	req;
+	std::string requestSrt = "GET / pic/photo.jpg HTTP/1.1\r\n\r\n";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "get");
+	TEST_CHECK(data.header["location"] == "/ pic/photo.jpg");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+}
+
+void testParsingUri_3() {
+	Request 	req;
+	std::string requestSrt = "GET /pic/ photo.jpg HTTP/1.1\r\n\r\n";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "get");
+	TEST_CHECK(data.header["location"] == "/pic/ photo.jpg");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+}
+
+void testParsingUri_4() {
+	Request 	req;
+	std::string requestSrt = "GET / pic / photo.jpg HTTP/1.1\r\n\r\n";
+	RequestData data;
+
+	req.addRequestChunk(requestSrt);
+	data = req.getData();
+
+	TEST_CHECK(data.header["method"] == "get");
+	TEST_CHECK(data.header["location"] == "/ pic / photo.jpg");
+	TEST_CHECK(data.header["protocol"] == "http/1.1");
+}
+
 TEST_LIST = {
-	{ "парсинг GET запроса без параметров", testParseGetRequest_1 },
+	// { "парсинг GET запроса без параметров", testParseGetRequest_1 },
 	// { "парсинг GET запроса без с одним параметром", testParseGetRequest_2 },
 	// { "парсинг GET запроса без с несколькими параметрами", testParseGetRequest_3 },
 
@@ -1252,6 +1304,10 @@ TEST_LIST = {
 	// { "парсинг Bad Request с невалидными значением на месте протокола №1", testBadRequest_8 },
 	// { "парсинг Bad Request с невалидными значением на месте протокола №2", testBadRequest_9 },
 	// { "парсинг Bad Request с невалидными значением на месте протокола №3", testBadRequest_10 },
+	{ "парсинг запроса с составным uri №1", testParsingUri_1 },
+	{ "парсинг запроса с составным uri №2", testParsingUri_2 },
+	{ "парсинг запроса с составным uri №3", testParsingUri_3 },
+	{ "парсинг запроса с составным uri №4", testParsingUri_4 },
 
 	{ nullptr, nullptr }
 };
