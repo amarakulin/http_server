@@ -10,7 +10,7 @@
 class ResponsePost : public Response {
 	public:
 		ResponsePost();
-		ResponsePost(const Request* other);
+		ResponsePost(Request* other);
 		ResponsePost(const ResponsePost& other);
 		~ResponsePost();
 
