@@ -21,16 +21,20 @@ void	splitFirstArgiment(std::string s, std::string *key, std::string *value) {
 	*value = s.substr(delim + 1, s.length());
 }
 
-std::vector<std::string>	split(std::string value) {
+std::vector<std::string>	split(std::string value, std::string delim) {
 	std::vector<std::string> tmp;
-	std::string buf;
+	size_t start = 0;
+	size_t end = 0;
 
-	for (int i = 0; i < value.length(); i++) {
-		if (value[i] == ' ' || value[i] == ';') {
-			tmp.push_back(buf);
-			buf = "";
+	while (end <= value.length()) {
+		end = value.find(delim, start);
+
+		if (end == std::string::npos) {
+			tmp.push_back(value.substr(start, end - start));
 		} else {
-			buf += value[i];
+			if (start - end != 0)
+				tmp.push_back(value.substr(start, end - start));
+			start = end + delim.length();
 		}
 	}
 	return tmp;
