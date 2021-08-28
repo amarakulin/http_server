@@ -254,5 +254,8 @@ requestHeaderStruct ParserRequest::parseHeader(std::string data) {
 	toLowerCase(data);
 	parseHeaderData(data, header);
 
+	if (header.find("host") == header.end())
+		throw BadRequestException();
+
 	return header;
 }
