@@ -160,6 +160,10 @@ void				Server::processingRequest(int clientSocket, Client& client) {
 		//TODO
 		// client.setResponse(_responseCreator.createResponse(400));
 		// client.resetRequest();
+	} catch (NotAllowedException& e) {
+		//TODO
+		// client.setResponse(_responseCreator.createResponse(405));
+		// client.resetRequest();
 	}
 	bzero(buf, MB);
 
