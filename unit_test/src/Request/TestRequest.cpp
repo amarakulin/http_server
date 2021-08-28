@@ -1,5 +1,6 @@
 #include "../../include/acutest.hpp"
 #include "../../../src/Request/Request.hpp"
+#include "../../../src/Exceptions/Exceptions.hpp"
 
 void testParseGetRequest_1() {
 	Request 	req;
@@ -942,6 +943,84 @@ void testParseSeveralRequest_32() {
 	TEST_CHECK(data.body == "Mozilla Frontend_Develo ");
 }
 
+void testNotAllowed_1() {
+	Request 	req;
+	std::string requestSrt = "GETA / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	try {
+		req.addRequestChunk(requestSrt);
+		TEST_CHECK(false);
+	} catch (NotAllowedException& e) {
+		TEST_CHECK(true);
+	}
+}
+
+void testNotAllowed_2() {
+	Request 	req;
+	std::string requestSrt = "PUTT / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	try {
+		req.addRequestChunk(requestSrt);
+		TEST_CHECK(false);
+	} catch (NotAllowedException& e) {
+		TEST_CHECK(true);
+	}
+}
+
+void testNotAllowed_3() {
+	Request 	req;
+	std::string requestSrt = "PPOST / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	try {
+		req.addRequestChunk(requestSrt);
+		TEST_CHECK(false);
+	} catch (NotAllowedException& e) {
+		TEST_CHECK(true);
+	}
+}
+
+void testNotAllowed_4() {
+	Request 	req;
+	std::string requestSrt = "DELETEE / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	try {
+		req.addRequestChunk(requestSrt);
+		TEST_CHECK(false);
+	} catch (NotAllowedException& e) {
+		TEST_CHECK(true);
+	}
+}
+
+void testNotAllowed_5() {
+	Request 	req;
+	std::string requestSrt = "GETTER        /          HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	try {
+		req.addRequestChunk(requestSrt);
+		TEST_CHECK(false);
+	} catch (NotAllowedException& e) {
+		TEST_CHECK(true);
+	}
+}
+
+void testBadRequest_1() {
+	Request 	req;
+	std::string requestSrt = " GET / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	try {
+		req.addRequestChunk(requestSrt);
+		TEST_CHECK(false);
+	} catch (BadRequestException& e) {
+		TEST_CHECK(true);
+	}
+}
+
 TEST_LIST = {
 	{ "парсинг GET запроса без параметров", testParseGetRequest_1 },
 	{ "парсинг GET запроса без с одним параметром", testParseGetRequest_2 },
@@ -999,7 +1078,12 @@ TEST_LIST = {
 	{ "парсинг двух последовательных запросов (POST(CNUNKED) -> POST(GET)) с несколькими параметрами и body", testParseSeveralRequest_31 },
 	{ "парсинг двух последовательных запросов (POST(GET) -> POST(CNUNKED)) с несколькими параметрами и body", testParseSeveralRequest_32 },
 
-	//TODO дбавить POST(BOUNDARY) -> POST(CHUNKED), POST(CHUNKED) -> POST(BOUNDARY) и эти комбинации с GET
+	{ "парсинг Not Allowed с несуществующим методом №1", testNotAllowed_1 },
+	{ "парсинг Not Allowed с несуществующим методом №2", testNotAllowed_2 },
+	{ "парсинг Not Allowed с несуществующим методом №3", testNotAllowed_3 },
+	{ "парсинг Not Allowed с несуществующим методом №4", testNotAllowed_4 },
+	{ "парсинг Bad Request с невалидными символами перед методом", testBadRequest_1 },
+	// { "парсинг Not Allowed с ", testNotAllowed_2 },
 
 	{ nullptr, nullptr }
 };
