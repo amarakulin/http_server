@@ -40,6 +40,7 @@ void	ParserConfig::readConfigFile(char *configFilePath, std::list<std::string> *
 	input.open(configFilePath);
 	if (!input.is_open()) {
 		std::cout << "File open error" << std::endl;
+		throw ParserConfigException();
 	}
 	while (std::getline(input, buf)) {
 		(*config).push_back(buf);
@@ -52,27 +53,44 @@ void	ParserConfig::readConfigFile(char *configFilePath, std::list<std::string> *
 */
 
 void	ParserConfig::enterDataToHostDataStruct(std::string const &key, std::string const &value, HostData *hostData) {
-	if (key == "listen") {
-		// TODO validation
-		setListenData(value, hostData);
-	} else if (key == "server_name") {
-		// TODO validation
-		setServerNameData(value, hostData);
-	} else if (key == "root") {
-		// TODO
-		setRootData(value, hostData);
-	} else if (key == "error_page") {
-		// TODO
-		setErrorPageData(value, hostData);
-	} else if (key == "client_max_body_size") {
-		// TODO
-		setClientMaxBodySizeData(value, hostData);
-	} else if (key == "location") {
-		// TODO
-		setLocationWayData(value, hostData);
-	} else if (key == "...") {
-		// TODO
-		setLocationDetailsData(value, hostData);
+	try {
+		if (isSomeSymbolInTheEnd(value, ';')) {
+			if (key == "listen") {
+				// TODO validation
+				setListenData(value.substr(0, value.length() - 1), hostData);
+			} else if (key == "server_name") {
+				// TODO validation
+				setServerNameData(value.substr(0, value.length() - 1), hostData);
+			} else if (key == "root") {
+				// TODO
+				setRootData(value.substr(0, value.length() - 1), hostData);
+			} else if (key == "error_page") {
+				// TODO
+				setErrorPageData(value.substr(0, value.length() - 1), hostData);
+			} else if (key == "client_max_body_size") {
+				// TODO
+				setClientMaxBodySizeData(value.substr(0, value.length() - 1), hostData);
+			} else if (key == "...") {
+				// TODO
+				setLocationDetailsData(value.substr(0, value.length() - 1), hostData);
+			} else {
+				std::cout << "enterDataToHostDataStruct error" << std::endl;
+				throw ParserConfigException();
+			}
+		} else if (isSomeSymbolInTheEnd(value, ':')) {
+			if (key == "location") {
+				// TODO
+				setLocationWayData(value.substr(0, value.length() - 1), hostData);
+			} else {
+				std::cout << "enterDataToHostDataStruct error" << std::endl;
+				throw ParserConfigException();
+			}
+		} else if (key.length() > 0){
+			std::cout << "enterDataToHostDataStruct error" << std::endl;
+			throw ParserConfigException();
+		}
+	} catch (ParserConfigException e) {
+		throw ParserConfigException();
 	}
 }
 
@@ -83,20 +101,25 @@ void	ParserConfig::enterDataToHostDataStruct(std::string const &key, std::string
 
 void	ParserConfig::setListenData(std::string data, HostData *hostData) {
 	const int delim = data.find_first_of(':');
-	const char *port;
+	std::string host;
+	const char *portStr;
+	size_t		port;
 	char *remainder;
 
-	if (!(delim > 0 && delim < data.size())) {
-		std::cout << "Error!!!" << std::endl;
+	if (delim == std::string::npos) {
+		std::cout << "setListenData error!!!" << std::endl;
+	} else {
+		host = data.substr(0, delim);
+		portStr = data.substr(delim + 1, data.length()).c_str();
+		port = std::strtoll(portStr, &remainder, 0);
+		if (!remainder[0]) {
+			hostData->host = host;
+			hostData->port = port;
+		} else {
+			std::cout << remainder << std::endl;
+			throw ParserConfigException();
+		}
 	}
-
-	hostData->host = data.substr(0, delim);
-	port = data.substr(delim + 1, data.length()).c_str();
-	hostData->port = std::strtoll(port, &remainder, 0);
-	if (!isSomeSymbolInTheEnd(remainder, ';')) {
-		std::cout << "error!" << std::endl;
-	}
-	// std::cout << data << std::endl;
 }
 
 /*
@@ -104,10 +127,7 @@ void	ParserConfig::setListenData(std::string data, HostData *hostData) {
 */
 
 void	ParserConfig::setServerNameData(std::string data, HostData *hostData) {
-	if (isSomeSymbolInTheEnd(data, ';')) {
-		hostData->serverName = data.substr(0, data.length() - 1);
-	}
-	// std::cout << data << std::endl;
+	hostData->serverName = data;
 }
 
 /*
@@ -115,10 +135,7 @@ void	ParserConfig::setServerNameData(std::string data, HostData *hostData) {
 */
 
 void	ParserConfig::setRootData(std::string data, HostData *hostData) {
-	if (isSomeSymbolInTheEnd(data, ';')) {
-		hostData->root = data.substr(0, data.length() - 1);
-	}
-	// std::cout << data << std::endl;
+	hostData->root = data;
 }
 
 /*
@@ -127,15 +144,26 @@ void	ParserConfig::setRootData(std::string data, HostData *hostData) {
 
 void	ParserConfig::setErrorPageData(std::string data, HostData *hostData) {
 	const int delim = data.find_first_of(' ');
+	size_t errorNumber;
+	std::string errorPage;
 	const char *port;
 	char *remainder;
 
-	if (isSomeSymbolInTheEnd(data, ';')) {
+	if (delim != std::string::npos) {
 		port = data.substr(0, delim).c_str();
-		hostData->errorPage.errorNumber = std::strtoll(port, &remainder, 0);
-		hostData->errorPage.locationOfErrorPage = data.substr(delim + 1, data.length() - delim - 2);
+		errorNumber = std::strtoll(port, &remainder, 0);
+		errorPage = data.substr(delim + 1, data.length() - delim - 1);
+		if (errorPage.find_first_of(' ') == std::string::npos) {
+			hostData->errorPage.errorNumber = errorNumber;
+			hostData->errorPage.locationOfErrorPage = errorPage;
+		} else {
+			std::cout << "setErrorPageData error!" << std::endl;
+			throw ParserConfigException();
+		}
+	} else {
+		std::cout << "setErrorPageData error!" << std::endl;
+		throw ParserConfigException();
 	}
-	// std::cout << data << std::endl;
 }
 
 /*
@@ -143,24 +171,19 @@ void	ParserConfig::setErrorPageData(std::string data, HostData *hostData) {
 */
 
 void	ParserConfig::setClientMaxBodySizeData(std::string data, HostData *hostData) {
-	if (isSomeSymbolInTheEnd(data, ';')) {
-		hostData->clientMaxBodySize = data.substr(0, data.length() - 1);
-	}
-	// std::cout << data << std::endl;
+	hostData->clientMaxBodySize = data.substr(0, data.length() - 1);
 }
 
 /*
 **	Set location->way to HostData structure
+** TODO: Validation
 */
 
 void	ParserConfig::setLocationWayData(std::string data, HostData *hostData) {
 	Location location;
 
-	if (isSomeSymbolInTheEnd(data, ':')) {
-		location.way = data.substr(0, data.length() - 1);
-		hostData->location.push_back(location);
-	}
-	// std::cout << data << std::endl;
+	location.way = data.substr(0, data.length() - 1);
+	hostData->location.push_back(location);
 }
 
 /*
@@ -172,28 +195,28 @@ void	ParserConfig::setLocationDetailsData(std::string data, HostData *hostData) 
 	std::string value;
 	int	currentLocation;
 
-	if (isSomeSymbolInTheEnd(data, ';')) {
-		currentLocation = hostData->location.size();
-		splitFirstArgiment(data, &key, &value);
-		if (key == "root") {
-			setRootDataToLocation(value, hostData, currentLocation);
-		} else if (key == "methods") {
-			setMethodsToLocation(value, hostData, currentLocation);
-		} else if (key == "autoindex") {
-			setAutoindexToLocation(value, hostData, currentLocation);
-		} else if (key == "index") {
-			setIndexToLocation(value, hostData, currentLocation);
-		} else if (key == "upload_enable") {
-			setUploadEnableToLocation(value, hostData, currentLocation);
-		} else if (key == "upload_path") {
-			setUploadPathToLocation(value, hostData, currentLocation);
-		} else if (key == "cgi_extencion") {
-			setCgiExtencionToLocation(value, hostData, currentLocation);
-		} else if (key == "cgi_path") {
-			setCgiPathToLocation(value, hostData, currentLocation);
-		}
+	currentLocation = hostData->location.size();
+	splitFirstArgiment(data, &key, &value);
+	if (key == "root") {
+		setRootDataToLocation(value, hostData, currentLocation);
+	} else if (key == "methods") {
+		setMethodsToLocation(value, hostData, currentLocation);
+	} else if (key == "autoindex") {
+		setAutoindexToLocation(value, hostData, currentLocation);
+	} else if (key == "index") {
+		setIndexToLocation(value, hostData, currentLocation);
+	} else if (key == "upload_enable") {
+		setUploadEnableToLocation(value, hostData, currentLocation);
+	} else if (key == "upload_path") {
+		setUploadPathToLocation(value, hostData, currentLocation);
+	} else if (key == "cgi_extencion") {
+		setCgiExtencionToLocation(value, hostData, currentLocation);
+	} else if (key == "cgi_path") {
+		setCgiPathToLocation(value, hostData, currentLocation);
+	} else {
+		std::cout << "setLocationDetailsData error" << std::endl;
+		throw ParserConfigException();
 	}
-	// std::cout << data << std::endl;
 }
 
 /*
@@ -222,11 +245,10 @@ void	ParserConfig::setMethodsToLocation(std::string data,
 	std::vector<std::string> methods;
 	std::vector<std::string>::iterator it;
 
-	methods = split(data.substr(0, data.find(";")), " ");
+	methods = split(data.substr(0, data.length() - 1), " ");
 	it = methods.begin();
 	// hostData->location[currentLocation].httpMethods = methods;
 	for (; it != methods.end(); it++) {
-		std::cerr << hostData->location[currentLocation].root << std::endl;
 		// hostData->location[currentLocation].httpMethods.push_back("123");
 		// hostData->location[currentLocation].httpMethods->push_back(*it);
 	}
@@ -234,6 +256,14 @@ void	ParserConfig::setMethodsToLocation(std::string data,
 
 void	ParserConfig::setAutoindexToLocation(std::string data, 
 		HostData *hostData, int currentLocation){
+	if (data == "on") {
+		hostData->location[currentLocation].autoindex = true;
+	} else if (data == "off") {
+		hostData->location[currentLocation].autoindex = false;
+	} else {
+		std::cout << "setAutoindexToLocation error" << std::endl;
+		throw ParserConfigException();
+	}
 
 }
 
