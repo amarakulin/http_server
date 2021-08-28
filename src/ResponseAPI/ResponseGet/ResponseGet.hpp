@@ -4,11 +4,6 @@
 # include "../Response/Response.hpp"
 #include "../Types/RequestTypes.hpp"
 
-typedef struct {
-	const char*		nameHeader;
-	std::string			(*getProcessedHeader)(std::string valueHeader);
-}		t_response_process;
-
 class ResponseGet : public Response {
 public:
 	ResponseGet();
