@@ -1,5 +1,14 @@
 #include "Response.hpp"
-#include "../../Types/ResponseTypes.hpp"
+
+const t_response_process Response::_arrProcessHeaders[] = {
+		{.nameHeader = "method", .getProcessedHeader = getProcessedMethod },
+		{.nameHeader = "host", .getProcessedHeader = getProcessedHost },
+		{.nameHeader = "location", .getProcessedHeader = getProcessedLocation },
+		{.nameHeader = "protocol", .getProcessedHeader = getProcessedProtocol },
+		{.nameHeader = "accept", .getProcessedHeader = getProcessedAccept },
+		{.nameHeader = "", .getProcessedHeader = nullptr},
+
+		};
 
 Response::Response() {
 	_state = NO_RESPONSE;
@@ -10,7 +19,8 @@ Response::Response(const Response& other) {
 	operator=(other);
 }
 
-Response::Response(const Request* request) {
+Response::Response(Request *request) {
+	createHead(request);
 	_state = SENDING;
 }
 
@@ -42,6 +52,79 @@ void Response::countSendedData(int byteSended){
 	_dataToSend.erase(_dataToSend.begin(), _dataToSend.begin() + byteSended);
 }
 
+void Response::createHead(Request *request){
+	requestHeaderStruct headers = request->getData().header;
+	requestHeaderStruct::const_iterator it;
+	std::cout << "HEAD" << std::endl;
+	std::string head = createHeadHeader("status");
+	_dataToSend = head + _dataToSend;
+	_dataToSend += createContentLengthHeader(headers.find("location")->second);
+	for (it = headers.begin(); it != headers.end(); it++){
+		_dataToSend += processHeader(it->first, it->second);
+	}
+
+
+
+}
+
+
+std::string Response::processHeader(const std::string &headerName, const std::string &headerValue){
+	std::cout << headerName << " : " << headerValue << std::endl;
+	std::string processedStrHeader = "";
+	for (int i = 0; _arrProcessHeaders[i].getProcessedHeader; i++){
+		if (_arrProcessHeaders[i].nameHeader == headerName){
+			processedStrHeader = _arrProcessHeaders[i].getProcessedHeader(headerValue);
+			break;
+		}
+	}
+	if (!processedStrHeader.empty()){
+		processedStrHeader += "\r\n";
+	}
+
+	return processedStrHeader;
+}
+
+std::string Response::getProcessedMethod(std::string method){
+	return "";
+}
+
+std::string Response::getProcessedHost(std::string host){
+	return "";
+}
+
+std::string Response::getProcessedLocation(std::string location){
+	return "";
+}
+
+std::string Response::getProcessedProtocol(std::string protocol){
+	return "";
+}
+
+std::string Response::createContentLengthHeader(std::string location){
+	std::string processedStr = "Content-length: ";
+	// TODO find location
+	// Count lenght of the file
+	// Add the lenght to the string;
+	std::string body = "Hello world";
+	processedStr += std::to_string(body.length());
+	processedStr += "\r\n";// TODO change
+	return processedStr;
+}
+
+std::string Response::createHeadHeader(std::string status){
+	return "HTTP/1.1 200 OK\r\n";
+}
+
+std::string Response::getProcessedAccept(std::string accept){
+	std::string processedStr = "Content-type: ";//TODO handle Accept-Charset here
+	long found = static_cast<long> (accept.find(','));
+	if (found != std::string::npos){
+		accept.erase(accept.begin() + found, accept.end());
+	}
+	processedStr += accept;
+	return processedStr;
+
+}
 
 /*
 ** Getters
@@ -57,10 +140,6 @@ const std::string &Response::getDataToSend() const{
 
 int Response::getStatus() const {
 	return _state;
-}
-
-void Response::createHead(){
-
 }
 
 /*
