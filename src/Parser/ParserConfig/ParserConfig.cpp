@@ -56,22 +56,16 @@ void	ParserConfig::enterDataToHostDataStruct(std::string const &key, std::string
 	try {
 		if (isSomeSymbolInTheEnd(value, ';')) {
 			if (key == "listen") {
-				// TODO validation
 				setListenData(value.substr(0, value.length() - 1), hostData);
 			} else if (key == "server_name") {
-				// TODO validation
 				setServerNameData(value.substr(0, value.length() - 1), hostData);
 			} else if (key == "root") {
-				// TODO
 				setRootData(value.substr(0, value.length() - 1), hostData);
 			} else if (key == "error_page") {
-				// TODO
 				setErrorPageData(value.substr(0, value.length() - 1), hostData);
 			} else if (key == "client_max_body_size") {
-				// TODO
 				setClientMaxBodySizeData(value.substr(0, value.length() - 1), hostData);
 			} else if (key == "...") {
-				// TODO
 				setLocationDetailsData(value.substr(0, value.length() - 1), hostData);
 			} else {
 				std::cout << "enterDataToHostDataStruct error" << std::endl;
@@ -79,7 +73,6 @@ void	ParserConfig::enterDataToHostDataStruct(std::string const &key, std::string
 			}
 		} else if (isSomeSymbolInTheEnd(value, ':')) {
 			if (key == "location") {
-				// TODO
 				setLocationWayData(value.substr(0, value.length() - 1), hostData);
 			} else {
 				std::cout << "enterDataToHostDataStruct error" << std::endl;
