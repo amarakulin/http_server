@@ -41,3 +41,12 @@ bool	hasLowerCaseLetter(std::string& str) {
 	}
 	return false;
 }
+
+bool	hasUpperCaseLetter(std::string& str) {
+	size_t len = str.length();
+	for (size_t i = 0; i < len; i++) {
+		if (isupper(str[i]))
+			return true;
+	}
+	return false;
+}
