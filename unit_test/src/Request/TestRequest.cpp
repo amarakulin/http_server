@@ -1242,6 +1242,58 @@ void testParsingUri_5() {
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 }
 
+void testParsingWithWrongProtocol_1() {
+	Request 	req;
+	std::string requestSrt = "GET / Http/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	try {
+		req.addRequestChunk(requestSrt);
+		TEST_CHECK(false);
+	} catch (BadRequestException& e) {
+		TEST_CHECK(true);
+	}
+}
+
+void testParsingWithWrongProtocol_2() {
+	Request 	req;
+	std::string requestSrt = "GET / HTtp/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	try {
+		req.addRequestChunk(requestSrt);
+		TEST_CHECK(false);
+	} catch (BadRequestException& e) {
+		TEST_CHECK(true);
+	}
+}
+
+void testParsingWithWrongProtocol_3() {
+	Request 	req;
+	std::string requestSrt = "GET / HTTp/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	try {
+		req.addRequestChunk(requestSrt);
+		TEST_CHECK(false);
+	} catch (BadRequestException& e) {
+		TEST_CHECK(true);
+	}
+}
+
+void testParsingWithWrongProtocol_4() {
+	Request 	req;
+	std::string requestSrt = "GET / HTTp/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	try {
+		req.addRequestChunk(requestSrt);
+		TEST_CHECK(false);
+	} catch (BadRequestException& e) {
+		TEST_CHECK(true);
+	}
+}
+
 TEST_LIST = {
 	{ "парсинг GET запроса без параметров", testParseGetRequest_1 },
 	{ "парсинг GET запроса без с одним параметром", testParseGetRequest_2 },
@@ -1322,6 +1374,10 @@ TEST_LIST = {
 	{ "парсинг запроса с составным uri №3", testParsingUri_3 },
 	{ "парсинг запроса с составным uri №4", testParsingUri_4 },
 	{ "парсинг запроса с составным uri, если протокол в нижнем регистре №4", testParsingUri_5 },
+	{ "парсинг запроса с невалидным форматом протокола №1", testParsingWithWrongProtocol_1 },
+	{ "парсинг запроса с невалидным форматом протокола №2", testParsingWithWrongProtocol_2 },
+	{ "парсинг запроса с невалидным форматом протокола №3", testParsingWithWrongProtocol_3 },
+	{ "парсинг запроса с невалидным форматом протокола №4", testParsingWithWrongProtocol_4 },
 
 	{ nullptr, nullptr }
 };
