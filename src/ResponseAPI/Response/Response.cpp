@@ -62,9 +62,6 @@ void Response::createHead(Request *request){
 	for (it = headers.begin(); it != headers.end(); it++){
 		_dataToSend += processHeader(it->first, it->second);
 	}
-
-
-
 }
 
 
@@ -105,9 +102,14 @@ std::string Response::createContentLengthHeader(std::string location){
 	// TODO find location
 	// Count lenght of the file
 	// Add the lenght to the string;
-	std::string body = "Hello world";
-	processedStr += std::to_string(body.length());
-	processedStr += "\r\n";// TODO change
+	location = "/Users/tilda/http_server/index.html";
+	long sizeFile = getSizeFile(location);
+	if (sizeFile == -1){
+		std::cout << "[-] Error can't count size file" << std::endl;
+		//TODO throw exception
+	}
+	processedStr += std::to_string(sizeFile);
+	processedStr += "\r\n";// TODO change hardcode
 	return processedStr;
 }
 
@@ -123,7 +125,6 @@ std::string Response::getProcessedAccept(std::string accept){
 	}
 	processedStr += accept;
 	return processedStr;
-
 }
 
 /*
