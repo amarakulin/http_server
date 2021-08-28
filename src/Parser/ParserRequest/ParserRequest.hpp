@@ -31,7 +31,10 @@ class ParserRequest {
 		** Парсит первую строчку header'а, в которой
 		** содержится method, locatian и protocol
 		*/
+		typedef std::vector<std::string> strVct;
+		typedef strVct::iterator		 strVctIt;
 		static void	parseCommonHeaderData(std::string& data, requestHeaderStruct& header);
+		static void	joinUriPartOfCommonHeaderData(strVctIt start, strVctIt end, strVct& data);
 		/*
 		** Парсит весь header и заполняет map<std::string, std::string>,
 		** где key - имя параметра, а value его значение

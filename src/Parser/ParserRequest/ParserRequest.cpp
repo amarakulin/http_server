@@ -178,6 +178,12 @@ void		ParserRequest::parseCommonHeaderData(std::string& data, requestHeaderStruc
 	std::vector<std::string>	tmp = split(data.substr(0, data.find("\r\n")), seporator);
 	std::string 				str = data.substr(0, data.find(seporator));
 
+	joinUriPartOfCommonHeaderData(tmp.begin() + 1, tmp.end() - 1, tmp);
+
+	for (std::vector<std::string>::iterator it = tmp.begin(); it != tmp.end(); it++) {
+		std::cout << "TMP: " << (*it) << std::endl;
+	}
+
 	if (PROCESSED_REQUESTS.find(str) == std::string::npos) {
 		if (!hasLowerCaseLetter(str)) {
 			throw NotAllowedException();
@@ -199,6 +205,19 @@ void		ParserRequest::parseCommonHeaderData(std::string& data, requestHeaderStruc
 		header.insert(std::make_pair(COMMON_HEADE_DATA[i], value));
 	}
 	data.erase(0, data.find("\r\n", 0) + 2);
+}
+
+void	ParserRequest::joinUriPartOfCommonHeaderData(strVctIt start, strVctIt end, strVct& data) {
+	std::vector<std::string> locationVct(start, end);
+	std::string location;
+	
+	for (std::vector<std::string>::iterator it = locationVct.begin(); it != locationVct.end(); it++) {
+		location += (*it);
+		if (it + 1 != locationVct.end())
+			location += " ";
+	}
+	data.erase(start, end);
+	data.insert(start, location);
 }
 
 void		ParserRequest::parseHeaderData(std::string& data, requestHeaderStruct& header) {
