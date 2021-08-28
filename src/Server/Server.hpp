@@ -18,6 +18,7 @@
 # include "Client.hpp"
 //# include "Listener.hpp"
 # include "Sockets.hpp"
+# include "Global.hpp"
 //# include "ResponseCreator.hpp"
 
 //# include "utils.hpp"

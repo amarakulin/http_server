@@ -149,7 +149,7 @@ void				Server::processingRequest(int clientSocket, Client& client) {
 	int s = recv(clientSocket, buf, sizeof(buf), 0);
 
 	if (s == -1)
-		std::cout << "Read error: " << s << std::endl;
+		logger.printMessage("/* Read error */");
 
 	if (s == 0) {
 		closeClientConnection(clientSocket);
@@ -159,7 +159,7 @@ void				Server::processingRequest(int clientSocket, Client& client) {
 	client.getRequest()->addRequestChunk(buf);
 	bzero(buf, MB);
 
-	std::cout << "/* Client in */ "  << std::endl;
+	logger.printMessage("/* Client in */");
 }
 
 void				Server::createResponse(Client& client) {
@@ -173,7 +173,7 @@ void				Server::sendResponse(int clientSocket, Client& client) {
 
 	int byteSended = send(clientSocket, response->getDataToSend().c_str(), sendByte, 0);
 	if (byteSended < 0){
-		std::cout << "Send error" << std::endl;
+		logger.printMessage("Send error");
 	}
 
 	response->countSendedData(byteSended);
