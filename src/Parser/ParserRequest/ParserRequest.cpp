@@ -183,15 +183,10 @@ void		ParserRequest::parseCommonHeaderData(std::string& data, requestHeaderStruc
 	else
 		joinUriPartOfCommonHeaderData(tmp.begin() + 1, tmp.end() - 1, tmp);
 
-	if (tmp.size() == 2)
+	if (tmp.size() == 2) // Если протокол представлен в виде "http/1.1", то подставляем дефолтное значение
 		tmp.push_back("http/1.1");
 
-
-	// for (std::vector<std::string>::iterator it = tmp.begin(); it != tmp.end(); it++) {
-	// 	std::cout << "TMP: " << (*it) << std::endl;
-	// }
-
-	if (PROCESSED_REQUESTS.find(str) == std::string::npos) {
+	if (PROCESSED_REQUESTS.find(str) == std::string::npos) { // если не один из обрабатываемых методов не подходит
 		if (!hasLowerCaseLetter(str)) {
 			throw NotAllowedException();
 		} else {
@@ -199,8 +194,8 @@ void		ParserRequest::parseCommonHeaderData(std::string& data, requestHeaderStruc
 		}
 	}
 
-	if (data.find(seporator) == 0
-		|| (hasLowerCaseLetter(tmp[2]) && hasUpperCaseLetter(tmp[2])))
+	if (data.find(seporator) == 0 // если в начале строки стоит пробел
+		|| (hasLowerCaseLetter(tmp[2]) && hasUpperCaseLetter(tmp[2]))) // если протокол представлен в виде "Http/1.1" | "HTTp/1.1"
 		throw BadRequestException();
 
 
