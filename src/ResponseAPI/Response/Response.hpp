@@ -12,12 +12,22 @@ protected:
 	std::string	_dataToSend;
 	int			_state;
 
+	virtual void		createHead();
+
 public:
 	Response();
 	Response(const Response& other);
 	Response(const Request* request);
 	Response& operator=(const Response &assign);
 	virtual ~Response();
+
+//TODO
+//	0. Create status code
+//	1. Find file by location
+//	2. Count data by the location -> create Content-Length
+//	3. Process another headers
+
+
 
 	bool					isDone();
 	void					countSendedData(int byteSended);

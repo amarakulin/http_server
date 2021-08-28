@@ -59,6 +59,10 @@ int Response::getStatus() const {
 	return _state;
 }
 
+void Response::createHead(){
+
+}
+
 /*
 ** Setters
 */
