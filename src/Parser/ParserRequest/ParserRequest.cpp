@@ -178,11 +178,18 @@ void		ParserRequest::parseCommonHeaderData(std::string& data, requestHeaderStruc
 	std::vector<std::string>	tmp = split(data.substr(0, data.find("\r\n")), seporator);
 	std::string 				str = data.substr(0, data.find(seporator));
 
-	joinUriPartOfCommonHeaderData(tmp.begin() + 1, tmp.end() - 1, tmp);
+	if (!hasUpperCaseLetter(*(tmp.end() - 1)))
+		joinUriPartOfCommonHeaderData(tmp.begin() + 1, tmp.end(), tmp);
+	else
+		joinUriPartOfCommonHeaderData(tmp.begin() + 1, tmp.end() - 1, tmp);
 
-	for (std::vector<std::string>::iterator it = tmp.begin(); it != tmp.end(); it++) {
-		std::cout << "TMP: " << (*it) << std::endl;
-	}
+	if (tmp.size() == 2)
+		tmp.push_back("http/1.1");
+
+
+	// for (std::vector<std::string>::iterator it = tmp.begin(); it != tmp.end(); it++) {
+	// 	std::cout << "TMP: " << (*it) << std::endl;
+	// }
 
 	if (PROCESSED_REQUESTS.find(str) == std::string::npos) {
 		if (!hasLowerCaseLetter(str)) {
@@ -193,7 +200,6 @@ void		ParserRequest::parseCommonHeaderData(std::string& data, requestHeaderStruc
 	}
 
 	if (data.find(seporator) == 0
-		|| tmp.size() != 3
 		|| (hasLowerCaseLetter(tmp[2]) && hasUpperCaseLetter(tmp[2])))
 		throw BadRequestException();
 
