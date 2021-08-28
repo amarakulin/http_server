@@ -2,6 +2,7 @@
 # define PARSER_REQUEST
 
 # include "RequestTypes.hpp"
+# include "Exceptions.hpp"
 # include "utils.hpp"
 
 # include <iostream>
@@ -21,6 +22,7 @@ static const std::string END_OF_LINE = "\r\n";
 static const std::string END_OF_HEADER = "\r\n\r\n";
 static const std::string END_OF_CHUNKED_BODY = "0\r\n\r\n";
 static const std::string REQUEST_WITH_BODY = "post put delete";
+static const std::string PROCESSED_REQUESTS = "get post put delete head";
 
 class ParserRequest {
 	private:

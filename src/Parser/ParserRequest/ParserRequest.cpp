@@ -178,12 +178,23 @@ void		ParserRequest::parseCommonHeaderData(std::string& data, requestHeaderStruc
 	std::string seporator = " ";
 
 	for (int i = 0; COMMON_HEADE_DATA[i].length(); i++) {
+		// for (int pos = 0; data[pos] != '\r'; pos++) {
+		// 	// if (pos == 0 && isalpha(data[pos]))
+		// 	// 	throw BadRequestException();
+		// }
 		if (COMMON_HEADE_DATA[i] == "protocol")
 			seporator = "\r\n";
 		index = data.find(seporator);
+		// if (index != 0)
+		// 	throw BadRequestException();
 		header.insert(std::make_pair(COMMON_HEADE_DATA[i], data.substr(0, index)));
 		data.erase(0, index + seporator.length());
 	}
+
+	if (PROCESSED_REQUESTS.find(header["method"]) == std::string::npos)
+		throw NotAllowedException();
+	else if (header["protocol"].find("http") == std::string::npos)
+		throw BadRequestException();
 }
 
 void		ParserRequest::parseHeaderData(std::string& data, requestHeaderStruct& header) {
