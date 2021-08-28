@@ -12,7 +12,7 @@ typedef enum { WITH_CONTENT_LEN, CHUNKED, BOUNDARY } BodyParseType;
 
 static const std::string COMMON_HEADE_DATA[] = {
 	"method",
-	"location",
+	"location",//TODO rename to uri
 	"protocol",
 	""
 };
@@ -22,7 +22,8 @@ static const std::string END_OF_LINE = "\r\n";
 static const std::string END_OF_HEADER = "\r\n\r\n";
 static const std::string END_OF_CHUNKED_BODY = "0\r\n\r\n";
 static const std::string REQUEST_WITH_BODY = "post put delete";
-static const std::string PROCESSED_REQUESTS = "get post put delete head";
+// static const std::string PROCESSED_REQUESTS = "get post put delete head";
+static const std::string PROCESSED_REQUESTS = "GET POST PUT DELETE HEAD";
 
 class ParserRequest {
 	private:
@@ -73,27 +74,3 @@ class ParserRequest {
 };
 
 #endif
-
-// # include "typedef.hpp"
-// # include "utils.hpp"
-
-
-// static const char* SPLIT_STRING = ": ";
-// static const char END_OF_LINE = '\n';
-
-// class Request;
-
-// class ParserRequest {
-// 	private:
-// 		// void	parseMethod(std::string& data, requestHeaderStruct& header);
-// 		// void	parseLocation(std::string& data, requestHeaderStruct& header);
-// 		// void	parseProtocol(std::string& data, requestHeaderStruct& header);
-	
-// 	public:
-// 		ParserRequest();
-// 		ParserRequest(const ParserRequest& other);
-// 		~ParserRequest();
-
-// 		requestHeaderStruct	parseHeader(std::string data);
-// 		// Request& parse();
-// };

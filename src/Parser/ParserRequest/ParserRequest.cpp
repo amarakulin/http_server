@@ -174,27 +174,31 @@ std::string ParserRequest::parseBoundaryChunk(std::string& chunk) {
 */
 
 void		ParserRequest::parseCommonHeaderData(std::string& data, requestHeaderStruct& header) {
-	size_t 		index;
-	std::string seporator = " ";
+	std::string 				seporator = " ";
+	std::vector<std::string>	tmp = split(data.substr(0, data.find("\r\n")), seporator);
+	std::string 				str = data.substr(0, data.find(seporator));
 
-	for (int i = 0; COMMON_HEADE_DATA[i].length(); i++) {
-		// for (int pos = 0; data[pos] != '\r'; pos++) {
-		// 	// if (pos == 0 && isalpha(data[pos]))
-		// 	// 	throw BadRequestException();
-		// }
-		if (COMMON_HEADE_DATA[i] == "protocol")
-			seporator = "\r\n";
-		index = data.find(seporator);
-		// if (index != 0)
-		// 	throw BadRequestException();
-		header.insert(std::make_pair(COMMON_HEADE_DATA[i], data.substr(0, index)));
-		data.erase(0, index + seporator.length());
+	if (PROCESSED_REQUESTS.find(str) == std::string::npos) {
+		if (!hasLowerCaseLetter(str)) {
+			throw NotAllowedException();
+		} else {
+			throw BadRequestException();
+		}
 	}
 
-	if (PROCESSED_REQUESTS.find(header["method"]) == std::string::npos)
-		throw NotAllowedException();
-	else if (header["protocol"].find("http") == std::string::npos)
+	if (data.find(seporator) == 0
+		|| tmp.size() != 3
+		|| (hasLowerCaseLetter(tmp[2]) && hasUpperCaseLetter(tmp[2])))
 		throw BadRequestException();
+
+
+	for (int i = 0; COMMON_HEADE_DATA[i].length(); i++) {
+		std::string value = tmp[i];
+		if (COMMON_HEADE_DATA[i] != "location")
+			toLowerCase(value);
+		header.insert(std::make_pair(COMMON_HEADE_DATA[i], value));
+	}
+	data.erase(0, data.find("\r\n", 0) + 2);
 }
 
 void		ParserRequest::parseHeaderData(std::string& data, requestHeaderStruct& header) {
@@ -225,9 +229,9 @@ void		ParserRequest::parseHeaderData(std::string& data, requestHeaderStruct& hea
 
 requestHeaderStruct ParserRequest::parseHeader(std::string data) {
 	requestHeaderStruct header;
-	toLowerCase(data);
 
 	parseCommonHeaderData(data, header);
+	toLowerCase(data);
 	parseHeaderData(data, header);
 
 	return header;

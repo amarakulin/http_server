@@ -4,7 +4,7 @@
 
 void testParseGetRequest_1() {
 	Request 	req;
-	std::string requestSrt = "GET / HTTP/1.1\r\n\r\n";
+	std::string requestSrt = "GET / asdsad HTTP/1.1\r\n\r\n";
 	RequestData data;
 
 	req.addRequestChunk(requestSrt);
@@ -1008,9 +1008,165 @@ void testNotAllowed_5() {
 	}
 }
 
+void testNotAllowed_6() {
+	Request 	req;
+	std::string requestSrt = "ASD        /          HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	try {
+		req.addRequestChunk(requestSrt);
+		TEST_CHECK(false);
+	} catch (NotAllowedException& e) {
+		TEST_CHECK(true);
+	}
+}
+
 void testBadRequest_1() {
 	Request 	req;
-	std::string requestSrt = " GET / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	std::string requestSrt = " GET / HTTP/1.1\r\nHost: 127.0.0.1:8000\r\n\r\n";
+	RequestData data;
+
+	try {
+		req.addRequestChunk(requestSrt);
+		TEST_CHECK(false);
+	} catch (BadRequestException& e) {
+		TEST_CHECK(true);
+	}
+}
+
+void testBadRequest_2() {
+	Request 	req;
+	std::string requestSrt = "aas GET / HTTP/1.1\r\nHost: 127.0.0.1:8000\r\n\r\n";
+	RequestData data;
+
+	try {
+		req.addRequestChunk(requestSrt);
+		TEST_CHECK(false);
+	} catch (BadRequestException& e) {
+		TEST_CHECK(true);
+	}
+}
+
+void testBadRequest_3() {
+	Request 	req;
+	std::string requestSrt = "     aas GET / HTTP/1.1\r\nHost: 127.0.0.1:8000\r\n\r\n";
+	RequestData data;
+
+	try {
+		req.addRequestChunk(requestSrt);
+		TEST_CHECK(false);
+	} catch (BadRequestException& e) {
+		TEST_CHECK(true);
+	}
+}
+
+void testBadRequest_4() {
+	Request 	req;
+	std::string requestSrt = "      GET / HTTP/1.1\r\nHost: 127.0.0.1:8000\r\n\r\n";
+	RequestData data;
+
+	try {
+		req.addRequestChunk(requestSrt);
+		TEST_CHECK(false);
+	} catch (BadRequestException& e) {
+		TEST_CHECK(true);
+	}
+}
+
+void testBadRequest_5() {
+	Request 	req;
+	std::string requestSrt = "Asd / HTTP/1.1\r\nHost: 127.0.0.1:8000\r\n\r\n";
+	RequestData data;
+
+	try {
+		req.addRequestChunk(requestSrt);
+		TEST_CHECK(false);
+	} catch (BadRequestException& e) {
+		TEST_CHECK(true);
+	}
+}
+
+void testBadRequest_6() {
+	Request 	req;
+	std::string requestSrt = "aSD / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	try {
+		req.addRequestChunk(requestSrt);
+		TEST_CHECK(false);
+	} catch (BadRequestException& e) {
+		TEST_CHECK(true);
+	}
+}
+
+void testBadRequest_7() {
+	Request 	req;
+	std::string requestSrt = "asd / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	try {
+		req.addRequestChunk(requestSrt);
+		TEST_CHECK(false);
+	} catch (BadRequestException& e) {
+		TEST_CHECK(true);
+	}
+}
+
+void testBadRequest_8() {
+	Request 	req;
+	std::string requestSrt = "GET / HTTp/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	try {
+		req.addRequestChunk(requestSrt);
+		TEST_CHECK(false);
+	} catch (BadRequestException& e) {
+		TEST_CHECK(true);
+	}
+}
+
+void testBadRequest_9() {
+	Request 	req;
+	std::string requestSrt = "GET / Http/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	try {
+		req.addRequestChunk(requestSrt);
+		TEST_CHECK(false);
+	} catch (BadRequestException& e) {
+		TEST_CHECK(true);
+	}
+}
+
+void testBadRequest_10() {
+	Request 	req;
+	std::string requestSrt = "GET / HTtp/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	try {
+		req.addRequestChunk(requestSrt);
+		TEST_CHECK(false);
+	} catch (BadRequestException& e) {
+		TEST_CHECK(true);
+	}
+}
+
+void testBadRequest_11() {
+	Request 	req;
+	std::string requestSrt = "  asd / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
+	RequestData data;
+
+	try {
+		req.addRequestChunk(requestSrt);
+		TEST_CHECK(false);
+	} catch (BadRequestException& e) {
+		TEST_CHECK(true);
+	}
+}
+
+void testBadRequest_12() {
+	Request 	req;
+	std::string requestSrt = "  ASD / HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n\r\n";
 	RequestData data;
 
 	try {
@@ -1023,67 +1179,79 @@ void testBadRequest_1() {
 
 TEST_LIST = {
 	{ "парсинг GET запроса без параметров", testParseGetRequest_1 },
-	{ "парсинг GET запроса без с одним параметром", testParseGetRequest_2 },
-	{ "парсинг GET запроса без с несколькими параметрами", testParseGetRequest_3 },
+	// { "парсинг GET запроса без с одним параметром", testParseGetRequest_2 },
+	// { "парсинг GET запроса без с несколькими параметрами", testParseGetRequest_3 },
 
-	{ "парсинг POST запроса без параметров", testParsePostRequest_1 },
-	{ "парсинг POST запроса с одним параметром в body (CL + CT)", testParsePostRequest_2 },
-	{ "парсинг POST запроса с одним параметром в body (без Content-Type)", testParsePostRequest_3 },
-	{ "парсинг CHUNKED POST запрос", testParsePostRequest_4 },
-	{ "парсинг BOUNDARY POST запрос", testParsePostRequest_5 },
+	// { "парсинг POST запроса без параметров", testParsePostRequest_1 },
+	// { "парсинг POST запроса с одним параметром в body (CL + CT)", testParsePostRequest_2 },
+	// { "парсинг POST запроса с одним параметром в body (без Content-Type)", testParsePostRequest_3 },
+	// { "парсинг CHUNKED POST запрос", testParsePostRequest_4 },
+	// { "парсинг BOUNDARY POST запрос", testParsePostRequest_5 },
 
-	{ "парсинг двух одновременных пустых запросов", testParseSeveralRequest_1 },
-	{ "парсинг двух одновременных запросов с одним параметром", testParseSeveralRequest_2 },
-	{ "парсинг двух одновременных запросов с несколькими параметрами", testParseSeveralRequest_3 },
+	// { "парсинг двух одновременных пустых запросов", testParseSeveralRequest_1 },
+	// { "парсинг двух одновременных запросов с одним параметром", testParseSeveralRequest_2 },
+	// { "парсинг двух одновременных запросов с несколькими параметрами", testParseSeveralRequest_3 },
 
-	{ "парсинг двух последовательных запросов с несколькими параметрами", testParseSeveralRequest_4 },
-	{ "парсинг двух последовательных запросов с одним параметром", testParseSeveralRequest_5 },
-	{ "парсинг двух последовательных запросов с несколькими параметрами", testParseSeveralRequest_6 },
+	// { "парсинг двух последовательных запросов с несколькими параметрами", testParseSeveralRequest_4 },
+	// { "парсинг двух последовательных запросов с одним параметром", testParseSeveralRequest_5 },
+	// { "парсинг двух последовательных запросов с несколькими параметрами", testParseSeveralRequest_6 },
 
-	{ "парсинг двух одновременных запросов (GET -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_7 },
-	{ "парсинг двух одновременных запросов (POST(CL) -> GET) с несколькими параметрами и body", testParseSeveralRequest_8 },
-	{ "парсинг двух одновременных запросов (POST(CL) -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_9 },
+	// { "парсинг двух одновременных запросов (GET -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_7 },
+	// { "парсинг двух одновременных запросов (POST(CL) -> GET) с несколькими параметрами и body", testParseSeveralRequest_8 },
+	// { "парсинг двух одновременных запросов (POST(CL) -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_9 },
 
-	{ "парсинг двух одновременных запросов (POST(CL) -> POST(CNUNKED)) с несколькими параметрами и body", testParseSeveralRequest_10 },
-	{ "парсинг двух одновременных запросов (POST(CNUNKED) -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_11 },
+	// { "парсинг двух одновременных запросов (POST(CL) -> POST(CNUNKED)) с несколькими параметрами и body", testParseSeveralRequest_10 },
+	// { "парсинг двух одновременных запросов (POST(CNUNKED) -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_11 },
 
-	{ "парсинг двух одновременных запросов (POST(CL) -> POST(BOUNDARY)) с несколькими параметрами и body", testParseSeveralRequest_12 },
-	{ "парсинг двух одновременных запросов (POST(BOUNDARY) -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_13 },
+	// { "парсинг двух одновременных запросов (POST(CL) -> POST(BOUNDARY)) с несколькими параметрами и body", testParseSeveralRequest_12 },
+	// { "парсинг двух одновременных запросов (POST(BOUNDARY) -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_13 },
 
-	{ "парсинг двух одновременных запросов (POST(BOUNDARY) -> POST(CNUNKED)) с несколькими параметрами и body", testParseSeveralRequest_14 },
-	{ "парсинг двух одновременных запросов (POST(CNUNKED) -> POST(BOUNDARY)) с несколькими параметрами и body", testParseSeveralRequest_15 },
+	// { "парсинг двух одновременных запросов (POST(BOUNDARY) -> POST(CNUNKED)) с несколькими параметрами и body", testParseSeveralRequest_14 },
+	// { "парсинг двух одновременных запросов (POST(CNUNKED) -> POST(BOUNDARY)) с несколькими параметрами и body", testParseSeveralRequest_15 },
 
-	{ "парсинг двух одновременных запросов (POST(BOUNDARY) -> POST(GET)) с несколькими параметрами и body", testParseSeveralRequest_16 },
-	{ "парсинг двух одновременных запросов (POST(GET) -> POST(BOUNDARY)) с несколькими параметрами и body", testParseSeveralRequest_17 },
+	// { "парсинг двух одновременных запросов (POST(BOUNDARY) -> POST(GET)) с несколькими параметрами и body", testParseSeveralRequest_16 },
+	// { "парсинг двух одновременных запросов (POST(GET) -> POST(BOUNDARY)) с несколькими параметрами и body", testParseSeveralRequest_17 },
 	
-	{ "парсинг двух одновременных запросов (POST(CNUNKED) -> POST(GET)) с несколькими параметрами и body", testParseSeveralRequest_18 },
-	{ "парсинг двух одновременных запросов (POST(GET) -> POST(CNUNKED)) с несколькими параметрами и body", testParseSeveralRequest_19 },
+	// { "парсинг двух одновременных запросов (POST(CNUNKED) -> POST(GET)) с несколькими параметрами и body", testParseSeveralRequest_18 },
+	// { "парсинг двух одновременных запросов (POST(GET) -> POST(CNUNKED)) с несколькими параметрами и body", testParseSeveralRequest_19 },
 
-	{ "парсинг двух последовательных запросов (GET -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_20 },
-	{ "парсинг двух последовательных запросов (POST(CL) -> GET) с несколькими параметрами и body", testParseSeveralRequest_21 },
-	{ "парсинг двух последовательных запросов (POST(CL) -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_22 },
+	// { "парсинг двух последовательных запросов (GET -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_20 },
+	// { "парсинг двух последовательных запросов (POST(CL) -> GET) с несколькими параметрами и body", testParseSeveralRequest_21 },
+	// { "парсинг двух последовательных запросов (POST(CL) -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_22 },
 
-	{ "парсинг двух последовательных запросов (POST(CL) -> POST(CNUNKED)) с несколькими параметрами и body", testParseSeveralRequest_23 },
-	{ "парсинг двух последовательных запросов (POST(CNUNKED) -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_24 },
+	// { "парсинг двух последовательных запросов (POST(CL) -> POST(CNUNKED)) с несколькими параметрами и body", testParseSeveralRequest_23 },
+	// { "парсинг двух последовательных запросов (POST(CNUNKED) -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_24 },
 
-	{ "парсинг двух последовательных запросов (POST(CL) -> POST(BOUNDARY)) с несколькими параметрами и body", testParseSeveralRequest_25 },
-	{ "парсинг двух последовательных запросов (POST(BOUNDARY) -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_26 },
+	// { "парсинг двух последовательных запросов (POST(CL) -> POST(BOUNDARY)) с несколькими параметрами и body", testParseSeveralRequest_25 },
+	// { "парсинг двух последовательных запросов (POST(BOUNDARY) -> POST(CL)) с несколькими параметрами и body", testParseSeveralRequest_26 },
 
-	{ "парсинг двух последовательных запросов (POST(BOUNDARY) -> POST(CNUNKED)) с несколькими параметрами и body", testParseSeveralRequest_27 },
-	{ "парсинг двух последовательных запросов (POST(CNUNKED) -> POST(BOUNDARY)) с несколькими параметрами и body", testParseSeveralRequest_28 },
+	// { "парсинг двух последовательных запросов (POST(BOUNDARY) -> POST(CNUNKED)) с несколькими параметрами и body", testParseSeveralRequest_27 },
+	// { "парсинг двух последовательных запросов (POST(CNUNKED) -> POST(BOUNDARY)) с несколькими параметрами и body", testParseSeveralRequest_28 },
 
-	{ "парсинг двух последовательных запросов (POST(BOUNDARY) -> POST(GET)) с несколькими параметрами и body", testParseSeveralRequest_29 },
-	{ "парсинг двух последовательных запросов (POST(GET) -> POST(BOUNDARY)) с несколькими параметрами и body", testParseSeveralRequest_30 },
+	// { "парсинг двух последовательных запросов (POST(BOUNDARY) -> POST(GET)) с несколькими параметрами и body", testParseSeveralRequest_29 },
+	// { "парсинг двух последовательных запросов (POST(GET) -> POST(BOUNDARY)) с несколькими параметрами и body", testParseSeveralRequest_30 },
 
-	{ "парсинг двух последовательных запросов (POST(CNUNKED) -> POST(GET)) с несколькими параметрами и body", testParseSeveralRequest_31 },
-	{ "парсинг двух последовательных запросов (POST(GET) -> POST(CNUNKED)) с несколькими параметрами и body", testParseSeveralRequest_32 },
+	// { "парсинг двух последовательных запросов (POST(CNUNKED) -> POST(GET)) с несколькими параметрами и body", testParseSeveralRequest_31 },
+	// { "парсинг двух последовательных запросов (POST(GET) -> POST(CNUNKED)) с несколькими параметрами и body", testParseSeveralRequest_32 },
 
-	{ "парсинг Not Allowed с несуществующим методом №1", testNotAllowed_1 },
-	{ "парсинг Not Allowed с несуществующим методом №2", testNotAllowed_2 },
-	{ "парсинг Not Allowed с несуществующим методом №3", testNotAllowed_3 },
-	{ "парсинг Not Allowed с несуществующим методом №4", testNotAllowed_4 },
-	{ "парсинг Bad Request с невалидными символами перед методом", testBadRequest_1 },
-	// { "парсинг Not Allowed с ", testNotAllowed_2 },
+	// { "парсинг Not Allowed с несуществующим методом №1", testNotAllowed_1 },
+	// { "парсинг Not Allowed с несуществующим методом №2", testNotAllowed_2 },
+	// { "парсинг Not Allowed с несуществующим методом №3", testNotAllowed_3 },
+	// { "парсинг Not Allowed с несуществующим методом №4", testNotAllowed_4 },
+	// { "парсинг Not Allowed с несуществующим методом №5", testNotAllowed_5 },
+	// { "парсинг Not Allowed с несуществующим методом №6", testNotAllowed_6 },
+	// { "парсинг Bad Request с невалидными символами перед методом №1", testBadRequest_1 },
+	// { "парсинг Bad Request с невалидными символами перед методом №2", testBadRequest_2 },
+	// { "парсинг Bad Request с невалидными символами перед методом №3", testBadRequest_3 },
+	// { "парсинг Bad Request с невалидными символами перед методом №4", testBadRequest_4 },
+	// { "парсинг Bad Request с невалидными значением на месте метода №1", testBadRequest_5 },
+	// { "парсинг Bad Request с невалидными значением на месте метода №2", testBadRequest_6 },
+	// { "парсинг Bad Request с невалидными значением на месте метода №3", testBadRequest_7 },
+	// { "парсинг Bad Request с невалидными значением на месте метода №4", testBadRequest_11 },
+	// { "парсинг Bad Request с невалидными значением на месте метода №5", testBadRequest_12 },
+	// { "парсинг Bad Request с невалидными значением на месте протокола №1", testBadRequest_8 },
+	// { "парсинг Bad Request с невалидными значением на месте протокола №2", testBadRequest_9 },
+	// { "парсинг Bad Request с невалидными значением на месте протокола №3", testBadRequest_10 },
 
 	{ nullptr, nullptr }
 };
