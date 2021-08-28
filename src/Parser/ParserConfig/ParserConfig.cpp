@@ -233,6 +233,8 @@ void	ParserConfig::setRootDataToLocation(std::string data,
 	hostData->location[currentLocation].root = data.substr(0, data.length() - 1);
 }
 
+// TODO: Seg Fault with this solution. Have to change strategy.
+
 void	ParserConfig::setMethodsToLocation(std::string data, 
 		HostData *hostData, int currentLocation){
 	std::vector<std::string> methods;
