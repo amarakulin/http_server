@@ -1,10 +1,6 @@
 #include "Response.hpp"
 
 const t_response_process Response::_arrProcessHeaders[] = {
-		{.nameHeader = "method", .getProcessedHeader = getProcessedMethod },
-		{.nameHeader = "host", .getProcessedHeader = getProcessedHost },
-		{.nameHeader = "location", .getProcessedHeader = getProcessedLocation },
-		{.nameHeader = "protocol", .getProcessedHeader = getProcessedProtocol },
 		{.nameHeader = "accept", .getProcessedHeader = getProcessedAccept },
 		{.nameHeader = "", .getProcessedHeader = nullptr},
 
@@ -81,21 +77,6 @@ std::string Response::processHeader(const std::string &headerName, const std::st
 	return processedStrHeader;
 }
 
-std::string Response::getProcessedMethod(std::string method){
-	return "";
-}
-
-std::string Response::getProcessedHost(std::string host){
-	return "";
-}
-
-std::string Response::getProcessedLocation(std::string location){
-	return "";
-}
-
-std::string Response::getProcessedProtocol(std::string protocol){
-	return "";
-}
 
 std::string Response::createContentLengthHeader(std::string location){
 	std::string processedStr = "Content-length: ";
