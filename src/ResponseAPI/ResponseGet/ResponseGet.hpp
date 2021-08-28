@@ -6,7 +6,7 @@
 
 typedef struct {
 	const char*		nameHeader;
-	std::string			(*getProcessedHeader)(const std::string &valueHeader);
+	std::string			(*getProcessedHeader)(std::string valueHeader);
 }		t_response_process;
 
 class ResponseGet : public Response {
@@ -27,10 +27,11 @@ private:
 
 	std::string		processHeader(const std::string& headerName, const std::string& headerValue);
 
-	static std::string		getProcessedMethod(const std::string& method);
-	static std::string		getProcessedHost(const std::string& host);
-	static std::string		getProcessedLocation(const std::string& location);
-	static std::string		getProcessedProtocol(const std::string& protocol);
+	static std::string		getProcessedMethod(std::string method);
+	static std::string		getProcessedHost(std::string host);
+	static std::string		getProcessedLocation(std::string location);
+	static std::string		getProcessedProtocol(std::string protocol);
+	static std::string		getProcessedAccept(std::string accept);
 
 
 };

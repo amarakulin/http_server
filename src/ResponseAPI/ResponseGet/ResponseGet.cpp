@@ -5,6 +5,7 @@ const t_response_process ResponseGet::_arrProcessHeaders[] = {
 		{.nameHeader = "host", .getProcessedHeader = getProcessedHost },
 		{.nameHeader = "location", .getProcessedHeader = getProcessedLocation },
 		{.nameHeader = "protocol", .getProcessedHeader = getProcessedProtocol },
+		{.nameHeader = "accept", .getProcessedHeader = getProcessedAccept },
 		{.nameHeader = "", .getProcessedHeader = nullptr},
 
 };
@@ -74,27 +75,38 @@ std::string ResponseGet::processHeader(const std::string &headerName, const std:
 	return processedStrHeader;
 }
 //"HTTP/1.1 200 OK\r\nContent-length: 5\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n12345";
-std::string ResponseGet::getProcessedMethod(const std::string &method){
+std::string ResponseGet::getProcessedMethod(std::string method){
 	return "";
 }
 
-std::string ResponseGet::getProcessedHost(const std::string &host){
+std::string ResponseGet::getProcessedHost(std::string host){
 	return "Content-length: 5";
 }
 
-std::string
-ResponseGet::getProcessedLocation(const std::string &location){
-	return "Content-type: text/html";
+std::string ResponseGet::getProcessedLocation(std::string location){
+	return "";
 }
 
-std::string ResponseGet::getProcessedProtocol(const std::string &protocol){
-	return "Date: Wed, 21 Oct 2015 07:28:00 GMT";
+std::string ResponseGet::getProcessedProtocol(std::string protocol){
+//	return "Date: Wed, 21 Oct 2015 07:28:00 GMT";
+	return "";
 }
 
 std::string ResponseGet::createContentLengthHeader(std::string body){
-	return std::string();
+	return "";
 }
 
 std::string ResponseGet::createHeadHeader(std::string status){
 	return "HTTP/1.1 200 OK\r\n";
+}
+
+std::string ResponseGet::getProcessedAccept(std::string accept){
+	std::string processedStr = "Content-type: ";//TODO handle Accept-Charset here
+	long found = static_cast<long> (accept.find(','));
+	if (found != std::string::npos){
+		accept.erase(accept.begin() + found, accept.end());
+	}
+	processedStr += accept;
+	return processedStr;
+
 }
