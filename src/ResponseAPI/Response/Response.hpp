@@ -14,10 +14,6 @@ private:
 	std::string		createContentLengthHeader(std::string location);
 	std::string		createHeadHeader(std::string status);
 	std::string		processHeader(const std::string& headerName, const std::string& headerValue);
-	static std::string		getProcessedMethod(std::string method);
-	static std::string		getProcessedHost(std::string host);
-	static std::string		getProcessedLocation(std::string location);
-	static std::string		getProcessedProtocol(std::string protocol);
 	static std::string		getProcessedAccept(std::string accept);
 
 protected:
