@@ -48,7 +48,7 @@ typedef struct {
 */
 
 typedef struct {
-	size_t						errorNumber;
+	size_t						errorNbr;
 	std::string					locationOfErrorPage;
 } ErrorPage;
 
