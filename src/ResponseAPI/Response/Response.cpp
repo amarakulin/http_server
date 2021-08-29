@@ -1,4 +1,5 @@
 #include "Response.hpp"
+# include "ResponseError.hpp"
 
 const t_response_process Response::_arrProcessHeaders[] = {
 		{.nameHeader = "accept", .getProcessedHeader = getProcessedAccept },
@@ -52,7 +53,7 @@ void Response::createHead(Request *request){
 	requestHeaderStruct headers = request->getData().header;
 	requestHeaderStruct::const_iterator it;
 	std::cout << "HEAD" << std::endl;
-	std::string head = createHeadHeader("status");
+	std::string head = createHeadHeader();
 	_dataToSend = head + _dataToSend;
 	_dataToSend += createContentLengthHeader(headers.find("location")->second);
 	for (it = headers.begin(); it != headers.end(); it++){
@@ -96,8 +97,16 @@ std::string Response::createContentLengthHeader(std::string location){
 	return processedStr;
 }
 
-std::string Response::createHeadHeader(std::string status){
-	return "HTTP/1.1 200 OK\r\n";
+std::string Response::createHeadHeader(){
+	std::string processedStr = "HTTP/1.1 ";
+	if (typeid(this)==typeid(ResponseError)){
+		processedStr += "400 Bad Request";
+	}
+	else {
+		processedStr += "200 OK";
+	}
+	processedStr += "\r\n";
+	return processedStr;
 }
 
 std::string Response::getProcessedAccept(std::string accept){

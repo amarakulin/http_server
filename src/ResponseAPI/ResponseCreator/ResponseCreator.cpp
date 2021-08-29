@@ -30,3 +30,7 @@ Response* createResponseDelete(Request* request) {
 	return new ResponseDelete(request);
 }
 
+Response* createResponseError(Request* request) {
+	std::cout << "ERROR" << std::endl;
+	return new ResponseError(request);
+}

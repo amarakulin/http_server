@@ -7,22 +7,26 @@
 //# include "ResponseDelete.hpp"
 //# include "Response.hpp"
 //# include "ResponseTypes.hpp"
-#include "../Response/Response.hpp"
-#include "../ResponseAPI/ResponseDelete/ResponseDelete.hpp"
-#include "../ResponseAPI/ResponseGet/ResponseGet.hpp"
-#include "../ResponseAPI/ResponsePost/ResponsePost.hpp"
+#include "Response.hpp"
+#include "ResponseDelete.hpp"
+#include "ResponseGet.hpp"
+#include "ResponsePost.hpp"
+#include "ResponseError.hpp"
+
 #include "../Types/ResponseTypes.hpp"
 
 //FOR Debug for lovely Clion
 
 Response*	createResponseGet(Request* request);
 Response*	createResponsePost(Request* request);
-Response* createResponseDelete(Request* request);
+Response*	createResponseDelete(Request* request);
+Response*	createResponseError(Request* request);
 
 static const ResponseCreatorList responseCreatorList[] ={
 	{"get", &createResponseGet}, 
 	{"post", &createResponsePost}, 
-	{"delete", &createResponseDelete}, 
+	{"delete", &createResponseDelete},
+	{"error", &createResponseError},
 	{"", nullptr}
 };
 

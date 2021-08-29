@@ -3,8 +3,9 @@
 
 # include <iostream>
 # include "Request.hpp"
-# include "../../Types/ResponseTypes.hpp"
-# include "../../utils/utils.hpp"
+
+# include "ResponseTypes.hpp"
+# include "utils.hpp"
 
 // Здесь понадобиться fork и excve???
 
@@ -14,7 +15,7 @@ private:
 
 	void			createHead(Request *request);
 	std::string		createContentLengthHeader(std::string location);
-	std::string		createHeadHeader(std::string status);
+	std::string		createHeadHeader();
 	std::string		processHeader(const std::string& headerName, const std::string& headerValue);
 	static std::string		getProcessedAccept(std::string accept);
 
