@@ -23,7 +23,7 @@ static const std::string locationKeys[SIZE_OF_LOCATION_KEYS] = {
 	"index",
 	"upload_enable",
 	"upload_path",
-	"cgi_extencion",
+	"cgi_extension",
 	"cgi_path",
 };
 
@@ -39,7 +39,7 @@ typedef struct {
 	bool						autoindex;
 	bool						uploadEnable;
 	std::string					uploadPath;
-	std::string					cgiExtencion;
+	std::string					cgiextension;
 	std::string					cgiPath;
 } Location;
 
