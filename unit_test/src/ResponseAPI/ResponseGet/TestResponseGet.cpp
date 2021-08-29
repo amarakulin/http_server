@@ -23,16 +23,20 @@
 void
 test_response_get(void)
 {
-	Request 	req;
-	std::string requestSrt = "GET /favicon.ico HTTP/1.1\r\nHost: 127.0.0.1:8000\r\nConnection: keep-alive\r\nPragma: no-cache\r\nCache-Control: no-cache\r\n\r\n";
-	req.addRequestChunk(requestSrt);
+	requestHeaderStruct header;
+	header.insert(std::pair<std::string, std::string>("location", "/index.html"));
+	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 
-	ResponseGet *responseGet = new ResponseGet(&req);
-	TEST_CHECK(!responseGet->isDone());
-	TEST_CHECK(responseGet->getStatus() == SENDING);
-	TEST_CHECK(responseGet->getDataToSend().length() == responseGet->getLeftBytesToSend());
+	RequestData requestData = {
+		.header = header, .body = "",
+	};
+	Request *request = new Request();
+	request->setData(requestData);
+	ResponseGet *response = new ResponseGet(request);
+	TEST_CHECK(!response->isDone());
 
-	delete responseGet;
+	delete response;
+	delete request;
 }
 
 
