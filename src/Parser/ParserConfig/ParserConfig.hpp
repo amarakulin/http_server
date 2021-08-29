@@ -43,7 +43,7 @@ public:
 	void	setIndexToLocation(std::string data, HostData *hostData, int currentLocation);
 	void	setUploadEnableToLocation(std::string data, HostData *hostData, int	currentLocation);
 	void	setUploadPathToLocation(std::string data, HostData *hostData, int currentLocation);
-	void	setCgiExtencionToLocation(std::string data, HostData *hostData, int	currentLocation);
+	void	setCgiExtensionToLocation(std::string data, HostData *hostData, int	currentLocation);
 	void	setCgiPathToLocation(std::string data, HostData *hostData, int currentLocation);
 
 	class ParserConfigException : public std::exception {
