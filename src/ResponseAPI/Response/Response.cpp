@@ -80,11 +80,13 @@ std::string Response::processHeader(const std::string &headerName, const std::st
 
 std::string Response::createContentLengthHeader(std::string location){
 	std::string processedStr = "Content-length: ";
-	// TODO find location
-	// Count lenght of the file
-	// Add the lenght to the string;
-	location = "./index.html";
-	long sizeFile = getSizeFile(location);
+	std::string filename = '.' + location;
+
+	if (filename == "./"){
+		filename += "index.html";
+	}
+	std::cout << "filename: " << filename << std::endl;
+	long sizeFile = getSizeFile(filename);
 	if (sizeFile == -1){
 		std::cout << "[-] Error can't count size file" << std::endl;
 		//TODO throw exception
