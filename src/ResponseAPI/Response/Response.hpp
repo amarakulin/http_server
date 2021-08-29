@@ -4,6 +4,7 @@
 # include <iostream>
 # include "Request.hpp"
 # include "../../Types/ResponseTypes.hpp"
+# include "../../utils/utils.hpp"
 
 // Здесь понадобиться fork и excve???
 

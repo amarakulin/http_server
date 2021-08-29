@@ -30,7 +30,7 @@ ResponseGet::ResponseGet(Request *request) : Response(request) {
 ResponseGet::~ResponseGet() {}
 
 void ResponseGet::createBody(Request *request) {
-	std::string body = getDataFileAsString("/Users/tilda/http_server/index.html");
+	std::string body = getDataFileAsString("./index.html");
 	std::cout << "Body: " << body << std::endl;
 	_dataToSend += "\r\n";
 	_dataToSend += body;

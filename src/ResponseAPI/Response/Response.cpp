@@ -83,7 +83,7 @@ std::string Response::createContentLengthHeader(std::string location){
 	// TODO find location
 	// Count lenght of the file
 	// Add the lenght to the string;
-	location = "/Users/tilda/http_server/index.html";
+	location = "./index.html";
 	long sizeFile = getSizeFile(location);
 	if (sizeFile == -1){
 		std::cout << "[-] Error can't count size file" << std::endl;
