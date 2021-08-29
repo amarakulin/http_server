@@ -52,7 +52,7 @@ void Response::countSendedData(int byteSended){
 void Response::createHead(Request *request){
 	requestHeaderStruct headers = request->getData().header;
 	requestHeaderStruct::const_iterator it;
-	std::cout << "HEAD" << std::endl;
+//	std::cout << "HEAD" << std::endl;
 	std::string head = createHeadHeader();
 	_dataToSend = head + _dataToSend;
 	_dataToSend += createContentLengthHeader(headers.find("location")->second);
@@ -63,7 +63,7 @@ void Response::createHead(Request *request){
 
 
 std::string Response::processHeader(const std::string &headerName, const std::string &headerValue){
-	std::cout << headerName << " : " << headerValue << std::endl;
+//	std::cout << headerName << " : " << headerValue << std::endl;
 	std::string processedStrHeader = "";
 	for (int i = 0; _arrProcessHeaders[i].getProcessedHeader; i++){
 		if (_arrProcessHeaders[i].nameHeader == headerName){
@@ -86,7 +86,7 @@ std::string Response::createContentLengthHeader(std::string location){
 	if (filename == "./"){
 		filename += "index.html";
 	}
-	std::cout << "filename: " << filename << std::endl;
+//	std::cout << "filename: " << filename << std::endl;
 	long sizeFile = getSizeFile(filename);
 	if (sizeFile == -1){
 		std::cout << "[-] Error can't count size file" << std::endl;

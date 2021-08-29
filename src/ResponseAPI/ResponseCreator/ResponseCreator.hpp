@@ -2,11 +2,6 @@
 # define RESPONSE_CREATOR
 
 # include <Request.hpp>
-//# include "ResponseGet.hpp"
-//# include "ResponsePost.hpp"
-//# include "ResponseDelete.hpp"
-//# include "Response.hpp"
-//# include "ResponseTypes.hpp"
 #include "Response.hpp"
 #include "ResponseDelete.hpp"
 #include "ResponseGet.hpp"
