@@ -83,23 +83,23 @@ testResponseGetEmptyFileInRootLocation(void)
 }
 
 void
-testResponseGetWithBigFile(void){
-//	requestHeaderStruct header;
-//	std::string filename = "/index.html";
-//	std::string body = getDataFileAsString('.' + filename);
-//	long sizeFile = getSizeFile('.' + filename);
-//	header.insert(std::pair<std::string, std::string>("location", filename));
-//	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
-//	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\nContent-type: text/html\r\n\r\n" + body;
-//	RequestData requestData = {.header = header, .body = ""};
-//	Request *request = new Request();
-//	request->setData(requestData);
-//	ResponseGet *response = new ResponseGet(request);
-//
-//	TEST_CHECK(response->getDataToSend() == expectedResponseData);
-//
-//	delete response;
-//	delete request;
+testResponseGetWithFile3MB(void){
+	requestHeaderStruct header;
+	std::string filename = "/test_files/text_3MB.txt";
+	std::string body = getDataFileAsString('.' + filename);
+	long sizeFile = getSizeFile('.' + filename);
+	header.insert(std::pair<std::string, std::string>("location", filename));
+	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
+	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\nContent-type: text/html\r\n\r\n" + body;
+	RequestData requestData = {.header = header, .body = ""};
+	Request *request = new Request();
+	request->setData(requestData);
+	ResponseGet *response = new ResponseGet(request);
+
+	TEST_CHECK(response->getDataToSend() == expectedResponseData);
+
+	delete response;
+	delete request;
 }
 
 void
@@ -244,7 +244,7 @@ testResponseGetWithoutTypeFile(void){
 
 void
 testResponseGetWithPicture(void){
-
+	TEST_CHECK(false);
 }
 
 TEST_LIST = {
@@ -252,7 +252,7 @@ TEST_LIST = {
 		{ "ResponseGet with CSS file", testResponseGetCSSFileInRootLocation },
 		{ "ResponseGet with EMPTY file", testResponseGetEmptyFileInRootLocation },
 
-		{ "ResponseGet with BIG file", testResponseGetWithBigFile },
+		{ "ResponseGet with 3 MB file", testResponseGetWithFile3MB },
 		{ "ResponseGet with ROOT LOCATION file", testResponseGetWithRootLocation },
 		{ "ResponseGet with NESTED LOCATION 1 file", testResponseGetWithFileInNestedLocation_1 },
 		{ "ResponseGet with NESTED LOCATION 2 file", testResponseGetWithFileInNestedLocation_2 },
