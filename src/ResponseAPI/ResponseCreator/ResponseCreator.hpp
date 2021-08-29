@@ -12,10 +12,8 @@
 #include "ResponseGet.hpp"
 #include "ResponsePost.hpp"
 #include "ResponseError.hpp"
+#include "ResponseTypes.hpp"
 
-#include "../Types/ResponseTypes.hpp"
-
-//FOR Debug for lovely Clion
 
 Response*	createResponseGet(Request* request);
 Response*	createResponsePost(Request* request);

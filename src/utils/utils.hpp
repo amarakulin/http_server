@@ -2,13 +2,10 @@
 # define UTILS
 
 # include <vector>
-# include <iostream>
 # include <fstream>
 # include <sstream>
 # include <sys/stat.h>
-
-//FOR Debug for lovely Clion
-#include "../Types/RequestTypes.hpp"
+#include "RequestTypes.hpp"
 
 void	toLowerCase(std::string& str);
 void	printRequest(RequestData request);

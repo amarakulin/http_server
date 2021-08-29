@@ -1,8 +1,8 @@
 #ifndef RESPONSE_GET
 # define RESPONSE_GET
 
-# include "../Response/Response.hpp"
-#include "../Types/RequestTypes.hpp"
+# include "Response.hpp"
+#include "RequestTypes.hpp"
 
 class ResponseGet : public Response {
 public:

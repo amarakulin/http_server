@@ -1,11 +1,7 @@
 #ifndef RESPONSE_Post
 # define RESPONSE_Post
 
-//# include "Response.hpp"
-
-
-//FOR Debug for lovely Clion
-#include "../Response/Response.hpp"
+#include "Response.hpp"
 
 class ResponsePost : public Response {
 	public:
