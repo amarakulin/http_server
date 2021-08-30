@@ -92,7 +92,7 @@ std::string Response::createContentLengthHeader(std::string uri){
 	long sizeFile = getSizeFile(filename);
 	if (sizeFile == -1){
 		std::cout << "[-] Error can't count size file" << std::endl;
-		//TODO throw exception
+		//TODO throw exception may be
 	}
 	processedStr += std::to_string(sizeFile);
 	processedStr += "\r\n";// TODO change hardcode
@@ -107,7 +107,6 @@ std::string Response::createHeadHeader(){//TODO think if got a error(5xx) while 
 	processStatus();
 	std::string processedStr = "HTTP/1.1 ";
 	processedStr += std::to_string(_status);
-	//TODO go throught loop with all status codes to get a string after given status
 	for (int i = 0; arrResponseStatuses[i].first ; i++){
 		if (arrResponseStatuses[i].first == _status){
 			processedStr += " " + arrResponseStatuses[i].second;
