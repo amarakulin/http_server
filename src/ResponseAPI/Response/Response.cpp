@@ -83,7 +83,7 @@ std::string Response::createContentLengthHeader(std::string location){
 	std::string processedStr = "Content-length: ";
 	std::string filename = '.' + location;
 
-	if (filename == "./"){
+	if (filename == "./"){//TODO needs to know default file if directory is given
 		filename += "index.html";
 	}
 //	std::cout << "filename: " << filename << std::endl;
