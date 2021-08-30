@@ -158,14 +158,16 @@ void				Server::processingRequest(int clientSocket, Client& client) {
 	try {
 		client.getRequest()->addRequestChunk(buf);
 	} catch (BadRequestException& e) {
-		//TODO
-		// client.setResponse(_responseCreator.createResponse(400));
-		// client.resetRequest();
+		 client.setResponse(_responseCreator.createResponse(400));
+		 client.resetRequest();
 	} catch (NotAllowedException& e) {
-		//TODO
-		// client.setResponse(_responseCreator.createResponse(405));
-		// client.resetRequest();
+		 client.setResponse(_responseCreator.createResponse(405));
+		 client.resetRequest();
+	} catch (NotFoundException& e) {
+		client.setResponse(_responseCreator.createResponse(404));
+		client.resetRequest();
 	}
+
 	bzero(buf, MB);
 
 	logger.printMessage("/* Client in */");
