@@ -18,6 +18,7 @@
 
 
 #include "Response.hpp"
+#include "Global.hpp"
 
 class ResponseError : public Response {
 public:
@@ -26,7 +27,7 @@ public:
 	ResponseError(const ResponseError& other);
 	~ResponseError();
 
-	std::string createBody();
+	void createBody(RequestData &requestData);
 };
 
 
