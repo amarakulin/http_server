@@ -30,7 +30,7 @@ ResponseGet::ResponseGet(Request *request) : Response(request) {
 ResponseGet::~ResponseGet() {}
 
 void ResponseGet::createBody(Request *request) {
-	std::string filename = request->getData().header.find("location")->second;
+	std::string filename = request->getData().header.find("uri")->second;
 	filename = '.' + filename;
 	if (filename == "./"){
 		filename += "index.html";

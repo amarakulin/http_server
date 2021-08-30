@@ -14,7 +14,7 @@ private:
 	static const	t_response_process _arrProcessHeaders[];
 
 	void			createHead(Request *request);
-	std::string		createContentLengthHeader(std::string location);
+	std::string		createContentLengthHeader(std::string uri);
 	std::string		createHeadHeader();
 	std::string		processHeader(const std::string& headerName, const std::string& headerValue);
 	static std::string		getProcessedAccept(std::string accept);
@@ -35,6 +35,12 @@ public:
 	Response(Request *request);
 	Response& operator=(const Response &assign);
 	virtual ~Response();
+
+//TODO
+//	0. Create status code
+//	1. Find file by uri
+//	2. Count data by the uri -> create Content-Length
+//	3. Process another headers
 
 	bool					isDone();
 	void					countSendedData(int byteSended);
