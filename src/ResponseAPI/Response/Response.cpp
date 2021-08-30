@@ -55,7 +55,7 @@ void Response::createHead(Request *request){
 	std::cout << "HEAD" << std::endl;
 	std::string head = createHeadHeader();
 	_dataToSend = head + _dataToSend;
-	_dataToSend += createContentLengthHeader(headers.find("location")->second);
+	_dataToSend += createContentLengthHeader(headers.find("uri")->second);
 	for (it = headers.begin(); it != headers.end(); it++){
 		_dataToSend += processHeader(it->first, it->second);
 	}
@@ -79,9 +79,9 @@ std::string Response::processHeader(const std::string &headerName, const std::st
 }
 
 
-std::string Response::createContentLengthHeader(std::string location){
+std::string Response::createContentLengthHeader(std::string uri){
 	std::string processedStr = "Content-length: ";
-	std::string filename = '.' + location;
+	std::string filename = '.' + uri;
 
 	if (filename == "./"){
 		filename += "index.html";

@@ -11,7 +11,7 @@ void testParseGetRequest_1() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 }
 
@@ -24,7 +24,7 @@ void testParseGetRequest_2() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/127.0.0.1");
+	TEST_CHECK(data.header["uri"] == "/127.0.0.1");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["host"] == "127.0.0.1:8000");
 }
@@ -39,7 +39,7 @@ void testParseGetRequest_3() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/favicon.ico");
+	TEST_CHECK(data.header["uri"] == "/favicon.ico");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["host"] == "127.0.0.1:8000");
 	TEST_CHECK(data.header["connection"] == "keep-alive");
@@ -56,7 +56,7 @@ void testParsePostRequest_1() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 }
 
@@ -69,7 +69,7 @@ void testParsePostRequest_2() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/127.0.0.1");
+	TEST_CHECK(data.header["uri"] == "/127.0.0.1");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-length"] == "9");
 	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
@@ -85,7 +85,7 @@ void testParsePostRequest_3() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/127.0.0.1");
+	TEST_CHECK(data.header["uri"] == "/127.0.0.1");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-length"] == "9");
 	TEST_CHECK(data.body == "value=key");
@@ -100,7 +100,7 @@ void testParsePostRequest_4() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "text/plain");
 	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
@@ -116,7 +116,7 @@ void testParsePostRequest_5() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
 	TEST_CHECK(data.header["content-length"] == "291");
@@ -132,7 +132,7 @@ void testParseSeveralRequest_1() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 
 	req.resetRequest();
@@ -140,7 +140,7 @@ void testParseSeveralRequest_1() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["uri"] == "/index.html");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 }
 
@@ -153,7 +153,7 @@ void testParseSeveralRequest_2() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["host"] == "127.0.0.1:8000");
 
@@ -162,7 +162,7 @@ void testParseSeveralRequest_2() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["uri"] == "/index.html");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
 }
@@ -176,7 +176,7 @@ void testParseSeveralRequest_3() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["host"] == "127.0.0.1:8000");
 	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
@@ -186,7 +186,7 @@ void testParseSeveralRequest_3() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["uri"] == "/index.html");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
 	TEST_CHECK(data.header["content-type"] == "text/plain");
@@ -201,7 +201,7 @@ void testParseSeveralRequest_4() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 
 	req.resetRequest();
@@ -209,7 +209,7 @@ void testParseSeveralRequest_4() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["uri"] == "/index.html");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 }
 
@@ -222,7 +222,7 @@ void testParseSeveralRequest_5() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["host"] == "127.0.0.1:8000");
 
@@ -231,7 +231,7 @@ void testParseSeveralRequest_5() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["uri"] == "/index.html");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
 }
@@ -245,7 +245,7 @@ void testParseSeveralRequest_6() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["host"] == "127.0.0.1:8000");
 	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
@@ -255,7 +255,7 @@ void testParseSeveralRequest_6() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["uri"] == "/index.html");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
 	TEST_CHECK(data.header["content-type"] == "text/plain");
@@ -270,7 +270,7 @@ void testParseSeveralRequest_7() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
 
@@ -279,7 +279,7 @@ void testParseSeveralRequest_7() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["uri"] == "/index.html");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
 	TEST_CHECK(data.header["content-length"] == "5");
@@ -295,7 +295,7 @@ void testParseSeveralRequest_8() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["uri"] == "/index.html");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
 	TEST_CHECK(data.header["content-length"] == "5");
@@ -306,7 +306,7 @@ void testParseSeveralRequest_8() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
 }
@@ -320,7 +320,7 @@ void testParseSeveralRequest_9() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["uri"] == "/index.html");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
 	TEST_CHECK(data.header["content-length"] == "5");
@@ -331,7 +331,7 @@ void testParseSeveralRequest_9() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "text/html");
 	TEST_CHECK(data.header["content-length"] == "7");
@@ -347,7 +347,7 @@ void testParseSeveralRequest_10() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["uri"] == "/index.html");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
 	TEST_CHECK(data.header["content-length"] == "5");
@@ -358,7 +358,7 @@ void testParseSeveralRequest_10() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "text/plain");
 	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
@@ -374,7 +374,7 @@ void testParseSeveralRequest_11() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "text/plain");
 	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
@@ -387,7 +387,7 @@ void testParseSeveralRequest_11() {
 
 	
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["uri"] == "/index.html");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
 	TEST_CHECK(data.header["content-length"] == "5");
@@ -403,7 +403,7 @@ void testParseSeveralRequest_12() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["uri"] == "/index.html");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
 	TEST_CHECK(data.header["content-length"] == "5");
@@ -415,7 +415,7 @@ void testParseSeveralRequest_12() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
 	TEST_CHECK(data.header["content-length"] == "291");
@@ -431,7 +431,7 @@ void testParseSeveralRequest_13() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
 	TEST_CHECK(data.header["content-length"] == "291");
@@ -442,7 +442,7 @@ void testParseSeveralRequest_13() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["uri"] == "/index.html");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
 	TEST_CHECK(data.header["content-length"] == "5");
@@ -458,7 +458,7 @@ void testParseSeveralRequest_14() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
 	TEST_CHECK(data.header["content-length"] == "291");
@@ -469,7 +469,7 @@ void testParseSeveralRequest_14() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "text/plain");
 	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
@@ -485,7 +485,7 @@ void testParseSeveralRequest_15() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "text/plain");
 	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
@@ -496,7 +496,7 @@ void testParseSeveralRequest_15() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
 	TEST_CHECK(data.header["content-length"] == "291");
@@ -512,7 +512,7 @@ void testParseSeveralRequest_16() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
 
@@ -521,7 +521,7 @@ void testParseSeveralRequest_16() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
 	TEST_CHECK(data.header["content-length"] == "291");
@@ -537,7 +537,7 @@ void testParseSeveralRequest_17() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
 	TEST_CHECK(data.header["content-length"] == "291");
@@ -548,7 +548,7 @@ void testParseSeveralRequest_17() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
 }
@@ -562,7 +562,7 @@ void testParseSeveralRequest_18() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "text/plain");
 	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
@@ -573,7 +573,7 @@ void testParseSeveralRequest_18() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
 }
@@ -587,7 +587,7 @@ void testParseSeveralRequest_19() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
 
@@ -596,7 +596,7 @@ void testParseSeveralRequest_19() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "text/plain");
 	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
@@ -612,7 +612,7 @@ void testParseSeveralRequest_20() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
 
@@ -621,7 +621,7 @@ void testParseSeveralRequest_20() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["uri"] == "/index.html");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
 	TEST_CHECK(data.header["content-length"] == "5");
@@ -637,7 +637,7 @@ void testParseSeveralRequest_21() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["uri"] == "/index.html");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
 	TEST_CHECK(data.header["content-length"] == "5");
@@ -648,7 +648,7 @@ void testParseSeveralRequest_21() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
 }
@@ -662,7 +662,7 @@ void testParseSeveralRequest_22() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["uri"] == "/index.html");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
 	TEST_CHECK(data.header["content-length"] == "5");
@@ -673,7 +673,7 @@ void testParseSeveralRequest_22() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "text/html");
 	TEST_CHECK(data.header["content-length"] == "7");
@@ -689,7 +689,7 @@ void testParseSeveralRequest_23() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["uri"] == "/index.html");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
 	TEST_CHECK(data.header["content-length"] == "5");
@@ -700,7 +700,7 @@ void testParseSeveralRequest_23() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "text/plain");
 	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
@@ -716,7 +716,7 @@ void testParseSeveralRequest_24() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "text/plain");
 	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
@@ -727,7 +727,7 @@ void testParseSeveralRequest_24() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["uri"] == "/index.html");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
 	TEST_CHECK(data.header["content-length"] == "5");
@@ -743,7 +743,7 @@ void testParseSeveralRequest_25() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["uri"] == "/index.html");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
 	TEST_CHECK(data.header["content-length"] == "5");
@@ -755,7 +755,7 @@ void testParseSeveralRequest_25() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
 	TEST_CHECK(data.header["content-length"] == "291");
@@ -771,7 +771,7 @@ void testParseSeveralRequest_26() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
 	TEST_CHECK(data.header["content-length"] == "291");
@@ -782,7 +782,7 @@ void testParseSeveralRequest_26() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/index.html");
+	TEST_CHECK(data.header["uri"] == "/index.html");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "application/x-www-form-urlencoded");
 	TEST_CHECK(data.header["content-length"] == "5");
@@ -798,7 +798,7 @@ void testParseSeveralRequest_27() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
 	TEST_CHECK(data.header["content-length"] == "291");
@@ -809,7 +809,7 @@ void testParseSeveralRequest_27() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "text/plain");
 	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
@@ -825,7 +825,7 @@ void testParseSeveralRequest_28() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "text/plain");
 	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
@@ -836,7 +836,7 @@ void testParseSeveralRequest_28() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
 	TEST_CHECK(data.header["content-length"] == "291");
@@ -852,7 +852,7 @@ void testParseSeveralRequest_29() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
 
@@ -861,7 +861,7 @@ void testParseSeveralRequest_29() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
 	TEST_CHECK(data.header["content-length"] == "291");
@@ -877,7 +877,7 @@ void testParseSeveralRequest_30() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "multipart/form-data; boundary=--------------------------130962363752115593144698");
 	TEST_CHECK(data.header["content-length"] == "291");
@@ -888,7 +888,7 @@ void testParseSeveralRequest_30() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
 }
@@ -902,7 +902,7 @@ void testParseSeveralRequest_31() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "text/plain");
 	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
@@ -913,7 +913,7 @@ void testParseSeveralRequest_31() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
 }
@@ -927,7 +927,7 @@ void testParseSeveralRequest_32() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
 
@@ -936,7 +936,7 @@ void testParseSeveralRequest_32() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "post");
-	TEST_CHECK(data.header["location"] == "/");
+	TEST_CHECK(data.header["uri"] == "/");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["content-type"] == "text/plain");
 	TEST_CHECK(data.header["transfer-encoding"] == "chunked");
@@ -1186,7 +1186,7 @@ void testParsingUri_1() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/ index.html");
+	TEST_CHECK(data.header["uri"] == "/ index.html");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 }
 
@@ -1199,7 +1199,7 @@ void testParsingUri_2() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/ pic/photo.jpg");
+	TEST_CHECK(data.header["uri"] == "/ pic/photo.jpg");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 }
 
@@ -1212,7 +1212,7 @@ void testParsingUri_3() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/pic/ photo.jpg");
+	TEST_CHECK(data.header["uri"] == "/pic/ photo.jpg");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 }
 
@@ -1225,7 +1225,7 @@ void testParsingUri_4() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/ pic / photo.jpg");
+	TEST_CHECK(data.header["uri"] == "/ pic / photo.jpg");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 }
 
@@ -1238,7 +1238,7 @@ void testParsingUri_5() {
 	data = req.getData();
 
 	TEST_CHECK(data.header["method"] == "get");
-	TEST_CHECK(data.header["location"] == "/ http/1.1");
+	TEST_CHECK(data.header["uri"] == "/ http/1.1");
 	TEST_CHECK(data.header["protocol"] == "http/1.1");
 	TEST_CHECK(data.header["host"] == "127.0.0.1:5000");
 }

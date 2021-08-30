@@ -201,7 +201,7 @@ void		ParserRequest::parseCommonHeaderData(std::string& data, requestHeaderStruc
 
 	for (int i = 0; COMMON_HEADE_DATA[i].length(); i++) {
 		std::string value = tmp[i];
-		if (COMMON_HEADE_DATA[i] != "location")
+		if (COMMON_HEADE_DATA[i] != "uri")
 			toLowerCase(value);
 		header.insert(std::make_pair(COMMON_HEADE_DATA[i], value));
 	}
@@ -209,16 +209,16 @@ void		ParserRequest::parseCommonHeaderData(std::string& data, requestHeaderStruc
 }
 
 void	ParserRequest::joinUriPartOfCommonHeaderData(strVctIt start, strVctIt end, strVct& data) {
-	std::vector<std::string> locationVct(start, end);
-	std::string location;
+	std::vector<std::string> uriVct(start, end);
+	std::string uri;
 	
-	for (std::vector<std::string>::iterator it = locationVct.begin(); it != locationVct.end(); it++) {
-		location += (*it);
-		if (it + 1 != locationVct.end())
-			location += " ";
+	for (std::vector<std::string>::iterator it = uriVct.begin(); it != uriVct.end(); it++) {
+		uri += (*it);
+		if (it + 1 != uriVct.end())
+			uri += " ";
 	}
 	data.erase(start, end);
-	data.insert(start, location);
+	data.insert(start, uri);
 }
 
 void		ParserRequest::parseHeaderData(std::string& data, requestHeaderStruct& header) {
