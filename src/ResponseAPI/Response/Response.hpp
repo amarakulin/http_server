@@ -13,7 +13,6 @@ class Response {
 private:
 	static const	t_response_process _arrProcessHeaders[];
 
-	void			createHead(RequestData& requestData);
 	std::string		createContentLengthHeader(std::string uri);
 	std::string		createHeadHeader();
 	std::string		processHeader(const std::string& headerName, const std::string& headerValue);
@@ -31,6 +30,8 @@ protected:
 	std::string	_dataToSend;
 	int			_state;
 	int			_status;
+
+	void			createHead(RequestData& requestData);
 
 public:
 	Response();

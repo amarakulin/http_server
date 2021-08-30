@@ -18,7 +18,6 @@ Response::Response(const Response& other) {
 
 Response::Response(RequestData& requestData) {
 	_status = 0;
-	_state = SENDING;
 	createHead(requestData);
 }
 
@@ -52,6 +51,7 @@ void Response::countSendedData(int byteSended){
 }
 
 void Response::createHead(RequestData& requestData){
+	_state = SENDING;
 	requestHeaderStruct headers = requestData.header;
 	requestHeaderStruct::const_iterator it;
 //	std::string head = createHeadHeader();
