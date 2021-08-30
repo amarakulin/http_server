@@ -31,14 +31,13 @@ testResponseGetHTMLFileInRootLocation(void)
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\nContent-type: text/html\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
-	Request *request = new Request();
-	request->setData(requestData);
-	ResponseGet *response = new ResponseGet(request);
+
+	ResponseGet *response = new ResponseGet(requestData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
-	delete request;
+
 }
 
 void testResponseGetCSSFileInRootLocation(void)
@@ -51,14 +50,13 @@ void testResponseGetCSSFileInRootLocation(void)
 	header.insert(std::pair<std::string, std::string>("accept", "text/css,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\nContent-type: text/css\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
-	Request *request = new Request();
-	request->setData(requestData);
-	ResponseGet *response = new ResponseGet(request);
+
+	ResponseGet *response = new ResponseGet(requestData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
-	delete request;
+
 }
 
 void
@@ -72,14 +70,13 @@ testResponseGetEmptyFileInRootLocation(void)
 	header.insert(std::pair<std::string, std::string>("accept", "*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\nContent-type: */*\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
-	Request *request = new Request();
-	request->setData(requestData);
-	ResponseGet *response = new ResponseGet(request);
+
+	ResponseGet *response = new ResponseGet(requestData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
-	delete request;
+
 }
 
 void
@@ -92,14 +89,13 @@ testResponseGetWithFile3MB(void){
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\nContent-type: text/html\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
-	Request *request = new Request();
-	request->setData(requestData);
-	ResponseGet *response = new ResponseGet(request);
+
+	ResponseGet *response = new ResponseGet(requestData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
-	delete request;
+
 }
 
 void
@@ -112,14 +108,13 @@ testResponseGetWithRootLocation(void){
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\nContent-type: text/html\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
-	Request *request = new Request();
-	request->setData(requestData);
-	ResponseGet *response = new ResponseGet(request);
+
+	ResponseGet *response = new ResponseGet(requestData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
-	delete request;
+
 }
 
 
@@ -133,14 +128,13 @@ testResponseGetWithFileInNestedLocation_1(void){
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\nContent-type: text/html\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
-	Request *request = new Request();
-	request->setData(requestData);
-	ResponseGet *response = new ResponseGet(request);
+
+	ResponseGet *response = new ResponseGet(requestData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
-	delete request;
+
 }
 
 void
@@ -153,14 +147,13 @@ testResponseGetWithFileInNestedLocation_2(void){
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\nContent-type: text/html\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
-	Request *request = new Request();
-	request->setData(requestData);
-	ResponseGet *response = new ResponseGet(request);
+
+	ResponseGet *response = new ResponseGet(requestData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
-	delete request;
+
 }
 
 void
@@ -173,14 +166,13 @@ testResponseGetWithOneTypeFile(void){
 	header.insert(std::pair<std::string, std::string>("accept", "text/html"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\nContent-type: text/html\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
-	Request *request = new Request();
-	request->setData(requestData);
-	ResponseGet *response = new ResponseGet(request);
+
+	ResponseGet *response = new ResponseGet(requestData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
-	delete request;
+
 }
 
 void
@@ -193,14 +185,13 @@ testResponseGetWithSeveralTypesFile(void){
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\nContent-type: text/html\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
-	Request *request = new Request();
-	request->setData(requestData);
-	ResponseGet *response = new ResponseGet(request);
+
+	ResponseGet *response = new ResponseGet(requestData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
-	delete request;
+
 }
 
 void
@@ -213,14 +204,13 @@ testResponseGetWithEmptyTypeFile(void){
 	header.insert(std::pair<std::string, std::string>("accept", ""));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\nContent-type: \r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
-	Request *request = new Request();
-	request->setData(requestData);
-	ResponseGet *response = new ResponseGet(request);
+
+	ResponseGet *response = new ResponseGet(requestData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
-	delete request;
+
 }
 
 void
@@ -232,14 +222,13 @@ testResponseGetWithoutTypeFile(void){
 	header.insert(std::pair<std::string, std::string>("uri", filename));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
-	Request *request = new Request();
-	request->setData(requestData);
-	ResponseGet *response = new ResponseGet(request);
+
+	ResponseGet *response = new ResponseGet(requestData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
-	delete request;
+
 }
 
 void
