@@ -81,9 +81,9 @@ std::string Response::processHeader(const std::string &headerName, const std::st
 
 std::string Response::createContentLengthHeader(std::string uri){
 	std::string processedStr = "Content-length: ";
-	std::string filename = '.' + uri;
+	std::string filename = uri;
 
-	if (filename == "./"){//TODO needs to know default file if directory is given
+	if (filename == "./"){//TODO needs to know default List<file> if directory is given from config
 		filename += "index.html";
 	}
 //	std::cout << "filename: " << filename << std::endl;

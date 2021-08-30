@@ -31,8 +31,8 @@ ResponseGet::~ResponseGet() {}
 
 void ResponseGet::createBody(Request *request) {
 	std::string filename = request->getData().header.find("uri")->second;
-	filename = '.' + filename;
-	if (filename == "./"){
+	filename = filename;
+	if (filename == "./"){//TODO needs to know default List<file> if directory is given from config
 		filename += "index.html";
 	}
 //	std::cout << "filename body: " << filename << std::endl;

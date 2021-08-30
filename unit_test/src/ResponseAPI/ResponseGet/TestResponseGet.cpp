@@ -24,10 +24,10 @@ void
 testResponseGetHTMLFileInRootLocation(void)
 {
 	requestHeaderStruct header;
-	std::string filename = "/index.html";
+	std::string filename = "./index.html";
 	std::string body = getDataFileAsString('.' + filename);
 	long sizeFile = getSizeFile('.' + filename);
-	header.insert(std::pair<std::string, std::string>("location", filename));
+	header.insert(std::pair<std::string, std::string>("uri", filename));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\nContent-type: text/html\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
@@ -44,10 +44,10 @@ testResponseGetHTMLFileInRootLocation(void)
 void testResponseGetCSSFileInRootLocation(void)
 {
 	requestHeaderStruct header;
-	std::string filename = "/index.css";
+	std::string filename = "./index.css";
 	std::string body = getDataFileAsString('.' + filename);
 	long sizeFile = getSizeFile('.' + filename);
-	header.insert(std::pair<std::string, std::string>("location", filename));
+	header.insert(std::pair<std::string, std::string>("uri", filename));
 	header.insert(std::pair<std::string, std::string>("accept", "text/css,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\nContent-type: text/css\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
@@ -65,10 +65,10 @@ void
 testResponseGetEmptyFileInRootLocation(void)
 {
 	requestHeaderStruct header;
-	std::string filename = "/index.js";
+	std::string filename = "./index.js";
 	std::string body = getDataFileAsString('.' + filename);
 	long sizeFile = getSizeFile('.' + filename);
-	header.insert(std::pair<std::string, std::string>("location", filename));
+	header.insert(std::pair<std::string, std::string>("uri", filename));
 	header.insert(std::pair<std::string, std::string>("accept", "*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\nContent-type: */*\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
@@ -85,10 +85,10 @@ testResponseGetEmptyFileInRootLocation(void)
 void
 testResponseGetWithFile3MB(void){
 	requestHeaderStruct header;
-	std::string filename = "/test_files/text_3MB.txt";
+	std::string filename = "./test_files/text_3MB.txt";
 	std::string body = getDataFileAsString('.' + filename);
 	long sizeFile = getSizeFile('.' + filename);
-	header.insert(std::pair<std::string, std::string>("location", filename));
+	header.insert(std::pair<std::string, std::string>("uri", filename));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\nContent-type: text/html\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
@@ -105,10 +105,10 @@ testResponseGetWithFile3MB(void){
 void
 testResponseGetWithRootLocation(void){
 	requestHeaderStruct header;
-	std::string filename = "/";
+	std::string filename = "./";
 	std::string body = getDataFileAsString('.' + filename);
 	long sizeFile = getSizeFile('.' + filename);
-	header.insert(std::pair<std::string, std::string>("location", filename));
+	header.insert(std::pair<std::string, std::string>("uri", filename));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\nContent-type: text/html\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
@@ -126,10 +126,10 @@ testResponseGetWithRootLocation(void){
 void
 testResponseGetWithFileInNestedLocation_1(void){
 	requestHeaderStruct header;
-	std::string filename = "/test_files/testIndex.html";
+	std::string filename = "./test_files/testIndex.html";
 	std::string body = getDataFileAsString('.' + filename);
 	long sizeFile = getSizeFile('.' + filename);
-	header.insert(std::pair<std::string, std::string>("location", filename));
+	header.insert(std::pair<std::string, std::string>("uri", filename));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\nContent-type: text/html\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
@@ -146,10 +146,10 @@ testResponseGetWithFileInNestedLocation_1(void){
 void
 testResponseGetWithFileInNestedLocation_2(void){
 	requestHeaderStruct header;
-	std::string filename = "/test_files/nestedDir/testNestesdIndex.html";
+	std::string filename = "./test_files/nestedDir/testNestesdIndex.html";
 	std::string body = getDataFileAsString('.' + filename);
 	long sizeFile = getSizeFile('.' + filename);
-	header.insert(std::pair<std::string, std::string>("location", filename));
+	header.insert(std::pair<std::string, std::string>("uri", filename));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\nContent-type: text/html\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
@@ -166,10 +166,10 @@ testResponseGetWithFileInNestedLocation_2(void){
 void
 testResponseGetWithOneTypeFile(void){
 	requestHeaderStruct header;
-	std::string filename = "/index.html";
+	std::string filename = "./index.html";
 	std::string body = getDataFileAsString('.' + filename);
 	long sizeFile = getSizeFile('.' + filename);
-	header.insert(std::pair<std::string, std::string>("location", filename));
+	header.insert(std::pair<std::string, std::string>("uri", filename));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\nContent-type: text/html\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
@@ -186,10 +186,10 @@ testResponseGetWithOneTypeFile(void){
 void
 testResponseGetWithSeveralTypesFile(void){
 	requestHeaderStruct header;
-	std::string filename = "/index.html";
+	std::string filename = "./index.html";
 	std::string body = getDataFileAsString('.' + filename);
 	long sizeFile = getSizeFile('.' + filename);
-	header.insert(std::pair<std::string, std::string>("location", filename));
+	header.insert(std::pair<std::string, std::string>("uri", filename));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\nContent-type: text/html\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
@@ -206,10 +206,10 @@ testResponseGetWithSeveralTypesFile(void){
 void
 testResponseGetWithEmptyTypeFile(void){
 	requestHeaderStruct header;
-	std::string filename = "/index.html";
+	std::string filename = "./index.html";
 	std::string body = getDataFileAsString('.' + filename);
 	long sizeFile = getSizeFile('.' + filename);
-	header.insert(std::pair<std::string, std::string>("location", filename));
+	header.insert(std::pair<std::string, std::string>("uri", filename));
 	header.insert(std::pair<std::string, std::string>("accept", ""));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\nContent-type: \r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
@@ -226,10 +226,10 @@ testResponseGetWithEmptyTypeFile(void){
 void
 testResponseGetWithoutTypeFile(void){
 	requestHeaderStruct header;
-	std::string filename = "/index.html";
+	std::string filename = "./index.html";
 	std::string body = getDataFileAsString('.' + filename);
 	long sizeFile = getSizeFile('.' + filename);
-	header.insert(std::pair<std::string, std::string>("location", filename));
+	header.insert(std::pair<std::string, std::string>("uri", filename));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 	Request *request = new Request();
