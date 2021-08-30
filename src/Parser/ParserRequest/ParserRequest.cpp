@@ -178,7 +178,7 @@ void		ParserRequest::parseCommonHeaderData(std::string& data, requestHeaderStruc
 	std::vector<std::string>	tmp = split(data.substr(0, data.find("\r\n")), seporator);
 	std::string 				str = data.substr(0, data.find(seporator));
 
-	if (!hasUpperCaseLetter(*(tmp.end() - 1)))
+	if (!hasUpperCaseLetter(*(tmp.end() - 1)))// Если протокол представлен в виде "http/1.1"
 		joinUriPartOfCommonHeaderData(tmp.begin() + 1, tmp.end(), tmp);
 	else
 		joinUriPartOfCommonHeaderData(tmp.begin() + 1, tmp.end() - 1, tmp);
@@ -210,7 +210,7 @@ void		ParserRequest::parseCommonHeaderData(std::string& data, requestHeaderStruc
 
 void	ParserRequest::joinUriPartOfCommonHeaderData(strVctIt start, strVctIt end, strVct& data) {
 	std::vector<std::string> uriVct(start, end);
-	std::string uri;
+	std::string uri = ".";
 	
 	for (std::vector<std::string>::iterator it = uriVct.begin(); it != uriVct.end(); it++) {
 		uri += (*it);
