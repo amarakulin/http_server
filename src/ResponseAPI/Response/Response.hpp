@@ -9,6 +9,28 @@
 
 // Здесь понадобиться fork и excve???
 
+static const std::pair<int, std::string> arrResponseStatuses [] = {
+		std::pair<int, std::string>(200, "OK"),
+		std::pair<int, std::string>(201, "Created"),
+		std::pair<int, std::string>(204, "No Content"),
+		std::pair<int, std::string>(300, "Multiple Choice"),
+		std::pair<int, std::string>(301, "Moved Permanently"),
+		std::pair<int, std::string>(302, "Found"),
+		std::pair<int, std::string>(303, "See Other"),
+		std::pair<int, std::string>(304, "Not Modified"),
+		std::pair<int, std::string>(400, "Bad Request"),
+		std::pair<int, std::string>(403, "Forbidden"),
+		std::pair<int, std::string>(404, "Not Found"),
+		std::pair<int, std::string>(405, "Method Not Allowed"),
+		std::pair<int, std::string>(500, "Internal Server Error"),
+		std::pair<int, std::string>(501, "Not Implemented"),
+		std::pair<int, std::string>(502, "Bad Gateway"),
+		std::pair<int, std::string>(505, "HTTP Version Not Supported"),
+
+
+		std::pair<int, std::string>(0, ""),
+};
+
 class Response {
 private:
 	static const	t_response_process _arrProcessHeaders[];

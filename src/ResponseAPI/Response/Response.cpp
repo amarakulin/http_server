@@ -108,17 +108,11 @@ std::string Response::createHeadHeader(){//TODO think if got a error(5xx) while 
 	std::string processedStr = "HTTP/1.1 ";
 	processedStr += std::to_string(_status);
 	//TODO go throught loop with all status codes to get a string after given status
-	if (_status < 300){
-		processedStr += " OK";
-	}
-	else if (_status < 400){
-		processedStr += " Redirect";
-	}
-	else if (_status < 500){
-		processedStr += " Bad Request";
-	}
-	else {
-		processedStr += " Internal Server Error";
+	for (int i = 0; arrResponseStatuses[i].first ; i++){
+		if (arrResponseStatuses[i].first == _status){
+			processedStr += " " + arrResponseStatuses[i].second;
+			break;
+		}
 	}
 	processedStr += "\r\n";
 	return processedStr;
