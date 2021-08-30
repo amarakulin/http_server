@@ -10,16 +10,14 @@
 #include "ResponseTypes.hpp"
 
 
-Response*	createResponseGet(Request* request);
-Response*	createResponsePost(Request* request);
-Response*	createResponseDelete(Request* request);
-Response*	createResponseError(Request* request);
+Response*	createResponseGet(RequestData& requestData);
+Response*	createResponsePost(RequestData& requestData);
+Response*	createResponseDelete(RequestData& requestData);
 
 static const ResponseCreatorList responseCreatorList[] ={
 	{"get", &createResponseGet}, 
 	{"post", &createResponsePost}, 
 	{"delete", &createResponseDelete},
-	{"error", &createResponseError},
 	{"", nullptr}
 };
 
@@ -28,7 +26,9 @@ class ResponseCreator {
 		ResponseCreator();
 		~ResponseCreator();
 
-		Response* createResponse(Request* request);
+		Response* createResponse(RequestData& requestData);
+		Response* createResponse(int status);
+
 };
 
 #endif

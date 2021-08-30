@@ -7,7 +7,7 @@ class ResponseDelete : public Response {
 	public:
 		ResponseDelete();
 		ResponseDelete(const ResponseDelete& other);
-		ResponseDelete(Request* other);
+		ResponseDelete(RequestData& requestData);
 		~ResponseDelete();
 
 		std::string createBody();

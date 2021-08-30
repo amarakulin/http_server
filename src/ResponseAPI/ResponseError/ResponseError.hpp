@@ -22,7 +22,7 @@
 class ResponseError : public Response {
 public:
 	ResponseError();
-	ResponseError(Request* other);
+	ResponseError(int status);//TODO add ErrorPage
 	ResponseError(const ResponseError& other);
 	~ResponseError();
 

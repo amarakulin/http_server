@@ -4,7 +4,7 @@ ResponseDelete::ResponseDelete() : Response() {}
 
 ResponseDelete::ResponseDelete(const ResponseDelete& other) : Response(other) {}
 
-ResponseDelete::ResponseDelete(Request* request) : Response(request) {}
+ResponseDelete::ResponseDelete(RequestData& requestData) : Response(requestData) {}
 
 ResponseDelete::~ResponseDelete() {}
 

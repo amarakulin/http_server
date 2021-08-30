@@ -19,7 +19,7 @@ ResponseError::ResponseError() : Response() {}
 
 ResponseError::ResponseError(const ResponseError& other) : Response(other) {}
 
-ResponseError::ResponseError(Request* request) : Response(request) {}
+ResponseError::ResponseError(int status) : Response() {}
 
 ResponseError::~ResponseError() {}
 

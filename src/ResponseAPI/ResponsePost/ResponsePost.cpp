@@ -4,7 +4,7 @@ ResponsePost::ResponsePost() : Response() {}
 
 ResponsePost::ResponsePost(const ResponsePost& other) : Response(other) {}
 
-ResponsePost::ResponsePost(Request* request) : Response(request) {}
+ResponsePost::ResponsePost(RequestData& requestData) : Response(requestData) {}
 
 ResponsePost::~ResponsePost() {}
 

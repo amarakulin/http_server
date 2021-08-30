@@ -4,33 +4,32 @@ ResponseCreator::ResponseCreator() {}
 
 ResponseCreator::~ResponseCreator() {}
 
-Response *ResponseCreator::createResponse(Request *request) {
-	std::string requestMethod = request->getMethod();
+Response *ResponseCreator::createResponse(RequestData& requestData) {
+	std::string requestMethod = requestData.header["method"];
 
 	for (int i = 0; responseCreatorList[i].createResponse; i++) {
 		if (requestMethod == responseCreatorList[i].method)
-			return responseCreatorList[i].createResponse(request);
+			return responseCreatorList[i].createResponse(requestData);
 	}
 	//TODO think about final return
 	return new Response;
 }
 
-Response*	createResponseGet(Request* request) {
+Response *ResponseCreator::createResponse(int status){
+	return new ResponseError(status);
+}
+
+Response*	createResponseGet(RequestData& requestData) {
 	std::cout << "GET" << std::endl;
-	return new ResponseGet(request);
+	return new ResponseGet(requestData);
 }
 
-Response*	createResponsePost(Request* request) {
+Response*	createResponsePost(RequestData& requestData) {
 	std::cout << "POST" << std::endl;
-	return new ResponsePost(request);
+	return new ResponsePost(requestData);
 }
 
-Response* createResponseDelete(Request* request) {
+Response* createResponseDelete(RequestData& requestData) {
 	std::cout << "DELETE" << std::endl;
-	return new ResponseDelete(request);
-}
-
-Response* createResponseError(Request* request) {
-	std::cout << "ERROR" << std::endl;
-	return new ResponseError(request);
+	return new ResponseDelete(requestData);
 }

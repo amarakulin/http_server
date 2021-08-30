@@ -16,16 +16,18 @@ Response::Response(const Response& other) {
 	operator=(other);
 }
 
-Response::Response(Request *request) {
-	createHead(request);
+Response::Response(RequestData& requestData) {
+	_status = 0;
 	_state = SENDING;
+	createHead(requestData);
 }
 
 Response &Response::operator=(const Response &assign){
 	if (this != &assign){
 		_leftBytesToSend = assign.getLeftBytesToSend();
 		_dataToSend = assign.getDataToSend();
-		_state = assign.getStatus();
+		_state = assign.getState();
+		_status = assign.getStatus();
 	}
 	return *this;
 }
@@ -49,16 +51,16 @@ void Response::countSendedData(int byteSended){
 	_dataToSend.erase(_dataToSend.begin(), _dataToSend.begin() + byteSended);
 }
 
-void Response::createHead(Request *request){
-	requestHeaderStruct headers = request->getData().header;
+void Response::createHead(RequestData& requestData){
+	requestHeaderStruct headers = requestData.header;
 	requestHeaderStruct::const_iterator it;
-//	std::cout << "HEAD" << std::endl;
-	std::string head = createHeadHeader();
-	_dataToSend = head + _dataToSend;
+//	std::string head = createHeadHeader();
+//	_dataToSend = head + _dataToSend;
 	_dataToSend += createContentLengthHeader(headers.find("uri")->second);
 	for (it = headers.begin(); it != headers.end(); it++){
 		_dataToSend += processHeader(it->first, it->second);
 	}
+	_dataToSend = createHeadHeader() + _dataToSend;
 }
 
 
@@ -97,16 +99,41 @@ std::string Response::createContentLengthHeader(std::string uri){
 	return processedStr;
 }
 
-std::string Response::createHeadHeader(){
+std::string Response::createHeadHeader(){//TODO think if got a error(5xx) while creating body. How to change 'head'?
+	//TODO if redirect 3xx
+	//TODO if client error 4xx
+	//TODO if server error 5xx
+	//TODO if ok 2xx
+	processStatus();
 	std::string processedStr = "HTTP/1.1 ";
-	if (typeid(this)==typeid(ResponseError)){
-		processedStr += "400 Bad Request";
+	processedStr += std::to_string(_status);
+	//TODO go throught loop with all status codes to get a string after given status
+	if (_status < 300){
+		processedStr += " OK";
+	}
+	else if (_status < 400){
+		processedStr += " Redirect";
+	}
+	else if (_status < 500){
+		processedStr += " Bad Request";
 	}
 	else {
-		processedStr += "200 OK";
+		processedStr += " Internal Server Error";
 	}
 	processedStr += "\r\n";
 	return processedStr;
+}
+
+void Response::processStatus(){
+	if (_status){//Already 3xx or 4xx or 5xx
+		return;
+	}
+	if (typeid(this) == typeid(ResponseError)){
+		_status = 400;
+	}
+	else {
+		_status = 200;
+	}
 }
 
 std::string Response::getProcessedAccept(std::string accept){
@@ -132,8 +159,17 @@ const std::string &Response::getDataToSend() const{
 }
 
 int Response::getStatus() const {
+	return _status;
+}
+
+int Response::getState() const{
 	return _state;
 }
+
+void Response::setStatus(int status){
+	_status = status;
+}
+
 
 /*
 ** Setters
