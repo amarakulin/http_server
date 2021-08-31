@@ -2,7 +2,8 @@
 # include "ResponseError.hpp"
 
 const t_response_process Response::_arrProcessHeaders[] = {
-		{.nameHeader = "accept", .getProcessedHeader = getProcessedAccept },
+		{.nameHeader = "uri", .getProcessedHeader = getContentLengthHeader },
+		{.nameHeader = "accept", .getProcessedHeader = getContentTypeHeader },
 		{.nameHeader = "", .getProcessedHeader = nullptr},
 
 		};
@@ -56,7 +57,7 @@ void Response::createHead(RequestData& requestData){
 	requestHeaderStruct::const_iterator it;
 //	std::string head = createHeadHeader();
 //	_dataToSend = head + _dataToSend;
-	_dataToSend += createContentLengthHeader(headers.find("uri")->second);
+//	_dataToSend += createContentLengthHeader(headers.find("uri")->second);
 	for (it = headers.begin(); it != headers.end(); it++){
 		_dataToSend += processHeader(it->first, it->second);
 	}
@@ -80,25 +81,6 @@ std::string Response::processHeader(const std::string &headerName, const std::st
 	return processedStrHeader;
 }
 
-
-std::string Response::createContentLengthHeader(std::string uri){
-	std::string processedStr = "Content-length: ";
-	std::string filename = uri;
-
-	if (filename == "./"){//TODO needs to know default List<file> if directory is given from config
-		filename += "index.html";
-	}
-//	std::cout << "filename: " << filename << std::endl;
-	long sizeFile = getSizeFile(filename);
-	if (sizeFile == -1){
-		std::cout << "[-] Error can't count size file" << std::endl;
-		//TODO throw exception may be
-	}
-	processedStr += std::to_string(sizeFile);
-	processedStr += "\r\n";// TODO change hardcode
-	return processedStr;
-}
-
 std::string Response::createHeadHeader(){//TODO think if got a error(5xx) while creating body. How to change 'head'?
 	//TODO if redirect 3xx
 	//TODO if client error 4xx
@@ -119,13 +101,30 @@ std::string Response::createHeadHeader(){//TODO think if got a error(5xx) while 
 	return processedStr;
 }
 
-std::string Response::getProcessedAccept(std::string accept){
+std::string Response::getContentTypeHeader(std::string accept){
 	std::string processedStr = "Content-type: ";//TODO handle Accept-Charset here
 	long found = static_cast<long> (accept.find(','));
 	if (found != std::string::npos){
 		accept.erase(accept.begin() + found, accept.end());
 	}
 	processedStr += accept;
+	return processedStr;
+}
+
+std::string Response::getContentLengthHeader(std::string uri){
+	std::string processedStr = "Content-length: ";
+	std::string filename = uri;
+
+	if (filename == "./"){//TODO needs to know default List<file> if directory is given from config
+		filename += "index.html";
+	}
+	//	std::cout << "filename: " << filename << std::endl;
+	long sizeFile = getSizeFile(filename);
+	if (sizeFile == -1){
+		std::cout << "[-] Error can't count size file" << std::endl;
+		//TODO throw exception may be
+	}
+	processedStr += std::to_string(sizeFile);
 	return processedStr;
 }
 

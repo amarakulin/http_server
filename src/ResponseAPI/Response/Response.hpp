@@ -35,11 +35,11 @@ class Response {
 private:
 	static const	t_response_process _arrProcessHeaders[];
 
-	std::string		createContentLengthHeader(std::string uri);
 	std::string		createHeadHeader();
 	std::string		processHeader(const std::string& headerName, const std::string& headerValue);
-	static std::string		getProcessedAccept(std::string accept);
-	static std::string		getProcessedRedirect(std::string accept); //TODO handle 3xx status code
+	static std::string		getContentTypeHeader(std::string accept);
+	static std::string		getContentLengthHeader(std::string uri);
+	static std::string		getProcessedRedirect(std::string value); //TODO handle 3xx status code
 
 	//TODO figure out how works redirect and how to understand if response has to be with status 3xx
 	//TODO figure out about root location (/) and if I got a dir_path in uri
