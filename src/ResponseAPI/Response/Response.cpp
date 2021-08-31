@@ -104,7 +104,9 @@ std::string Response::createHeadHeader(){//TODO think if got a error(5xx) while 
 	//TODO if client error 4xx
 	//TODO if server error 5xx
 	//TODO if ok 2xx
-	processStatus();
+	if (!_status){
+		_status = 200;//TODO may be different 2xx
+	}
 	std::string processedStr = "HTTP/1.1 ";
 	processedStr += std::to_string(_status);
 	for (int i = 0; arrResponseStatuses[i].first ; i++){
@@ -115,18 +117,6 @@ std::string Response::createHeadHeader(){//TODO think if got a error(5xx) while 
 	}
 	processedStr += "\r\n";
 	return processedStr;
-}
-
-void Response::processStatus(){
-	if (_status){//Already 3xx or 4xx or 5xx
-		return;
-	}
-	if (typeid(this) == typeid(ResponseError)){
-		_status = 400;
-	}
-	else {
-		_status = 200;
-	}
 }
 
 std::string Response::getProcessedAccept(std::string accept){

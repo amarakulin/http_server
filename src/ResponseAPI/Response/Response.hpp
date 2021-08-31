@@ -70,7 +70,6 @@ public:
 
 	bool					isDone();
 	void					countSendedData(int byteSended);
-	void					processStatus();
 
 /*
 ** Getters
