@@ -21,7 +21,18 @@
 #include <iostream>
 
 void testResponseIsDoneWhenStatusSended(void){
-	TEST_CHECK(false);
+	requestHeaderStruct header;
+	std::string filename = "./index.html";
+	header.insert(std::pair<std::string, std::string>("uri", filename));
+	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
+	RequestData requestData = {.header = header, .body = ""};
+
+	ResponseGet *response = new ResponseGet(requestData);
+	response->countSendedData(response->getDataToSend().length());
+
+	TEST_CHECK(response->isDone());
+
+	delete response;
 }
 
 void testResponseIsDoneWhenStatusNoResponse(void){
@@ -30,7 +41,18 @@ void testResponseIsDoneWhenStatusNoResponse(void){
 }
 
 void testResponseIsDoneWhenStatusSening(void){
-	TEST_CHECK(false);
+	requestHeaderStruct header;
+	std::string filename = "./index.html";
+	header.insert(std::pair<std::string, std::string>("uri", filename));
+	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
+	RequestData requestData = {.header = header, .body = ""};
+
+	ResponseGet *response = new ResponseGet(requestData);
+	response->countSendedData(response->getDataToSend().length() / 2);
+
+	TEST_CHECK(!response->isDone());
+
+	delete response;
 
 }
 
