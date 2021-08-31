@@ -8,6 +8,6 @@ ResponsePost::ResponsePost(RequestData& requestData) : Response(requestData) {}
 
 ResponsePost::~ResponsePost() {}
 
-std::string	ResponsePost::createBody() {
-	return "";
+void ResponsePost::createBody(const std::string &uri){
+	Response::createBody(uri);
 }

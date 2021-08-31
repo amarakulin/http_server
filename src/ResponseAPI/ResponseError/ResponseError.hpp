@@ -28,7 +28,9 @@ public:
 	ResponseError& operator=(const ResponseError &assign);
 	~ResponseError();
 
-	void createBody(RequestData &requestData);
+private:
+	using Response::createBody;
+	void createBody(const std::string uri);
 };
 
 

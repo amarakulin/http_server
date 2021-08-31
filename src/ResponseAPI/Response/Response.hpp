@@ -54,6 +54,7 @@ protected:
 	int			_status;
 
 	void			createHead(RequestData& requestData);
+	virtual void	createBody(const std::string& uri);
 
 public:
 	Response();

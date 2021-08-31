@@ -60,6 +60,15 @@ void Response::createHead(RequestData& requestData){
 	_dataToSend = createHeadHeader() + _dataToSend;
 }
 
+void Response::createBody(const std::string& uri){
+	std::string filename = uri;
+	if (uri == "./"){//TODO needs to know default List<file> if directory is given from config
+		filename += "index.html";
+	}
+	std::string body = getDataFileAsString(filename);
+	_dataToSend += "\r\n";
+	_dataToSend += body;
+}
 
 std::string Response::processHeader(const std::string &headerName, const std::string &headerValue){
 	std::string processedStrHeader = "";

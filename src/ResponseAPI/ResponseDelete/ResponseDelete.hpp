@@ -4,13 +4,15 @@
 #include "Response.hpp"
 
 class ResponseDelete : public Response {
-	public:
-		ResponseDelete();
-		ResponseDelete(const ResponseDelete& other);
-		ResponseDelete(RequestData& requestData);
-		~ResponseDelete();
+public:
+	ResponseDelete();
+	ResponseDelete(const ResponseDelete& other);
+	ResponseDelete(RequestData& requestData);
+	~ResponseDelete();
 
-		std::string createBody();
+private:
+	using Response::createBody;
+	void createBody(const std::string &uri);
 };
 
 #endif

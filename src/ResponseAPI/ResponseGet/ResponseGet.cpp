@@ -18,19 +18,12 @@ ResponseGet &ResponseGet::operator=(const ResponseGet &assign) {
 }
 
 ResponseGet::ResponseGet(RequestData& requestData) : Response(requestData) {
-	createBody(requestData);
+	Response::createBody(requestData.header["uri"]);
 	_leftBytesToSend = _dataToSend.length();//TODO set in one place
 }
 
 ResponseGet::~ResponseGet() {}
 
-void ResponseGet::createBody(RequestData& requestData) {
-	std::string filename = requestData.header.find("uri")->second;
-	filename = filename;
-	if (filename == "./"){//TODO needs to know default List<file> if directory is given from config
-		filename += "index.html";
-	}
-	std::string body = getDataFileAsString(filename);
-	_dataToSend += "\r\n";
-	_dataToSend += body;
+void ResponseGet::createBody(const std::string uri) {
+	Response::createBody(uri);
 }

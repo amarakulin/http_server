@@ -4,13 +4,15 @@
 #include "Response.hpp"
 
 class ResponsePost : public Response {
-	public:
-		ResponsePost();
-		ResponsePost(RequestData& requestData);
-		ResponsePost(const ResponsePost& other);
-		~ResponsePost();
+public:
+	ResponsePost();
+	ResponsePost(RequestData& requestData);
+	ResponsePost(const ResponsePost& other);
+	~ResponsePost();
 
-		std::string createBody();
+private:
+	using Response::createBody;
+	void createBody(const std::string &uri);
 };
 
 #endif

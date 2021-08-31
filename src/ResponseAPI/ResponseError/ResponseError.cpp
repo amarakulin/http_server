@@ -44,19 +44,12 @@ ResponseError::ResponseError(int status) {
 
 	_status = status;//TODO delete hardcode, get from ErrorPage
 	createHead(requestData);
-	createBody(requestData);
+	Response::createBody(requestData.header.find("uri")->second);
 	_leftBytesToSend = _dataToSend.length();//TODO set in one place
 }
 
 ResponseError::~ResponseError() {}
 
-void	ResponseError::createBody(RequestData &requestData) {//TODO may be change arg RequestData to std::string
-	std::string filename = requestData.header.find("uri")->second;
-	filename = filename;
-	if (filename == "./"){//TODO needs to know default List<file> if directory is given from config
-		filename += "index.html";
-	}
-	std::string body = getDataFileAsString(filename);
-	_dataToSend += "\r\n";
-	_dataToSend += body;
+void	ResponseError::createBody(const std::string uri) {
+	Response::createBody(uri);
 }
