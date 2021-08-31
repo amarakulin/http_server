@@ -1,5 +1,4 @@
 #include "Response.hpp"
-# include "ResponseError.hpp"
 
 const t_response_process Response::_arrProcessHeaders[] = {
 		{.nameHeader = "uri", .getProcessedHeader = getContentLengthHeader },
@@ -55,9 +54,6 @@ void Response::createHead(RequestData& requestData){
 	_state = SENDING;
 	requestHeaderStruct headers = requestData.header;
 	requestHeaderStruct::const_iterator it;
-//	std::string head = createHeadHeader();
-//	_dataToSend = head + _dataToSend;
-//	_dataToSend += createContentLengthHeader(headers.find("uri")->second);
 	for (it = headers.begin(); it != headers.end(); it++){
 		_dataToSend += processHeader(it->first, it->second);
 	}
@@ -66,7 +62,6 @@ void Response::createHead(RequestData& requestData){
 
 
 std::string Response::processHeader(const std::string &headerName, const std::string &headerValue){
-//	std::cout << headerName << " : " << headerValue << std::endl;
 	std::string processedStrHeader = "";
 	for (int i = 0; _arrProcessHeaders[i].getProcessedHeader; i++){
 		if (_arrProcessHeaders[i].nameHeader == headerName){
@@ -118,7 +113,6 @@ std::string Response::getContentLengthHeader(std::string uri){
 	if (filename == "./"){//TODO needs to know default List<file> if directory is given from config
 		filename += "index.html";
 	}
-	//	std::cout << "filename: " << filename << std::endl;
 	long sizeFile = getSizeFile(filename);
 	if (sizeFile == -1){
 		std::cout << "[-] Error can't count size file" << std::endl;
@@ -147,11 +141,6 @@ int Response::getStatus() const {
 int Response::getState() const{
 	return _state;
 }
-
-void Response::setStatus(int status){
-	_status = status;
-}
-
 
 /*
 ** Setters

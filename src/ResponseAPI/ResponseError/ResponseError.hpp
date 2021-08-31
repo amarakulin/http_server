@@ -25,6 +25,7 @@ public:
 	ResponseError();
 	ResponseError(int status);//TODO add ErrorPage
 	ResponseError(const ResponseError& other);
+	ResponseError& operator=(const ResponseError &assign);
 	~ResponseError();
 
 	void createBody(RequestData &requestData);

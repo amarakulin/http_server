@@ -17,7 +17,19 @@
 
 ResponseError::ResponseError() : Response() {}
 
-ResponseError::ResponseError(const ResponseError& other) : Response(other) {}
+ResponseError::ResponseError(const ResponseError& other) : Response(other) {
+	operator=(other);
+}
+
+ResponseError &ResponseError::operator=(const ResponseError &assign){
+	if (this != &assign){
+		_leftBytesToSend = assign.getLeftBytesToSend();
+		_dataToSend = assign.getDataToSend();
+		_state = assign.getState();
+		_status = assign.getStatus();
+	}
+	return *this;
+}
 
 ResponseError::ResponseError(int status) {
 	logger.printMessage("[+] ResponseError constructor with status: " + std::to_string(status));
@@ -44,9 +56,7 @@ void	ResponseError::createBody(RequestData &requestData) {//TODO may be change a
 	if (filename == "./"){//TODO needs to know default List<file> if directory is given from config
 		filename += "index.html";
 	}
-	//	std::cout << "filename body: " << filename << std::endl;
 	std::string body = getDataFileAsString(filename);
-	//	std::cout << "Body: " << body << std::endl;
 	_dataToSend += "\r\n";
 	_dataToSend += body;
 }

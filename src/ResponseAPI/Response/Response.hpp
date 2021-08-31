@@ -62,12 +62,6 @@ public:
 	Response& operator=(const Response &assign);
 	virtual ~Response();
 
-//TODO
-//	0. Create status code
-//	1. Find file by uri
-//	2. Count data by the uri -> create Content-Length
-//	3. Process another headers
-
 	bool					isDone();
 	void					countSendedData(int byteSended);
 
@@ -83,7 +77,6 @@ public:
 /*
 ** Setters
 */
-	void setStatus(int status);
 };
 
 #endif
