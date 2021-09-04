@@ -8,7 +8,7 @@ class Host;
 
 class Config {
 	private:
-		std::vector<Host> _hosts;
+		std::vector<Host*> _hosts;
 	
 	public:
 		Config();

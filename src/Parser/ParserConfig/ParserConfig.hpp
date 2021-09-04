@@ -1,7 +1,7 @@
 #ifndef PARSER_CONFIG
 # define PARSER_CONFIG
 
-// # include "Config.hpp"
+# include "Config.hpp"
 # include <iostream>
 # include <fstream>
 # include <map>
@@ -22,11 +22,12 @@ public:
 	// Config*					parse(char* configFilePath);
 	void 	parse(char *configFilePath);
 	void	readConfigFile(char *configFilePath, std::list<std::string> *config);
-	void	devideConfigToComponents(std::list<std::string> config, HostData *hostData);
+	std::vector<HostData*>	devideConfigToComponents(std::list<std::string> config);
 	bool	checkConfigString(std::string data);
 	void	fillHostData(HostData *host, std::list<std::string>::iterator *it);
 	void	checkHostData(HostData *host);
 	void	enterDataToHostDataStruct(std::string const &key, std::string const &value, HostData *hostData);
+	void	setDefaultHostValues(HostData *hostData);
 
 	/*			SETTERS			*/
 
@@ -46,9 +47,19 @@ public:
 	void	setCgiExtensionToLocation(std::string data, HostData *hostData, int	currentLocation);
 	void	setCgiPathToLocation(std::string data, HostData *hostData, int currentLocation);
 
+	void	setHostToServer(HostData *hostData, std::vector<HostData*> hosts);
+
 	class ParserConfigException : public std::exception {
+		private:
+			const char *msg;
 		public:
-			virtual const char *what() const throw();
+			ParserConfigException(const std::string message) {
+				msg = message.c_str();
+			}
+			
+			virtual const char *what() const throw() {
+				return msg;
+			}
 	};
 };
 
