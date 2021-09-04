@@ -8,15 +8,15 @@ class Host;
 
 class Config {
 	private:
-		std::vector<Host> _hosts;
+		std::vector<Host*> _hosts; 
 	
 	public:
 		Config();
 		Config(const Config& other);
 		~Config();
 
-		void				addNewHost(const Host& host);
-		std::vector<Host>	getHosts() const;
+		void				addNewHost(Host* host);
+		std::vector<Host*>	getHosts() const;
 };
 
 #endif

@@ -3,6 +3,7 @@
 
 int main(int , char** argv) {
 	Server server(ParserConfig().parse(argv[1]));
-	server.start();
+	// ParserConfig().parse(argv[1]);
+	server.start(); 
 	return 0;
 }

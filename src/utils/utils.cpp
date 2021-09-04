@@ -14,6 +14,13 @@ void	printRequest(RequestData request) {
 	std::cout << request.body << std::endl;
 }
 
+void	splitFirstArgiment(std::string s, std::string *key, std::string *value) {
+	const int delim = s.find_first_of(' ');
+
+	*key = s.substr(0, delim);
+	*value = s.substr(delim + 1, s.length());
+}
+
 std::vector<std::string>	split(std::string value, std::string delim) {
 	std::vector<std::string> tmp;
 	size_t start = 0;
@@ -64,4 +71,12 @@ std::string			getDataFileAsString(const std::string &filename){
 	//TODO test if not exist file
 	buffer << file.rdbuf();
 	return buffer.str();
+}
+
+bool	isSomeSymbolInTheEnd(std::string end, char symbol) {
+	if (end[end.length() - 1] == symbol && !end[end.length()]) {
+		return true;
+	} else {
+		return false;
+	}
 }

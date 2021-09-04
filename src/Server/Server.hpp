@@ -51,7 +51,7 @@ class Server {
 		void				closeClientConnection(int clientSocket);
 
 		void				createListeners();
-		struct sockaddr_in	createSockaddrStruct(const Host& host);
+		struct sockaddr_in	createSockaddrStruct(Host* host);
 		int					createListenerSocket(struct sockaddr_in addr);
 
 		void				handleListenerEvents();
