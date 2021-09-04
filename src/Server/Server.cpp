@@ -7,6 +7,11 @@
 Server::Server() {}
 
 Server::Server(const Config* config) : _config(config) {
+	
+	std::vector<Host*> hosts = _config->getHosts();
+	for (int i = 0; i < hosts.size(); ++i) {
+		std::cout << "Port: " << hosts[i]->getPort() << std::endl;
+	}
 	createListeners();
 }
 
@@ -23,8 +28,8 @@ Server::~Server() {
 */
 
 void				Server::createListeners() {
-	std::vector<Host>			hosts = _config->getHosts();
-	std::vector<Host>::iterator host = hosts.begin();
+	std::vector<Host*>			hosts = _config->getHosts();
+	std::vector<Host*>::iterator host = hosts.begin();
 
 	for (size_t i = 0; i < hosts.size(); i++, host++) {
 		_listeners.push_back(Listener(createListenerSocket(createSockaddrStruct(*host))));
@@ -32,12 +37,12 @@ void				Server::createListeners() {
 	}
 }
 
-struct sockaddr_in Server::createSockaddrStruct(const Host& host) {
+struct sockaddr_in Server::createSockaddrStruct(Host* host) {
 	struct sockaddr_in 	tmp;
 
 	tmp.sin_family = AF_INET;
-	tmp.sin_port = htons(host.getPort());
-	tmp.sin_addr.s_addr = inet_addr(host.getIp().c_str());
+	tmp.sin_port = htons(host->getPort());
+	tmp.sin_addr.s_addr = inet_addr(host->getIp().c_str());
 
 	return tmp;
 }

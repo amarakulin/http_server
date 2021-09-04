@@ -1,21 +1,26 @@
 #include "Host.hpp"
 
-Host::Host() {}
+Host::Host(HostData *hostData) : _data(hostData) {}
 
-Host::Host(std::string ip, size_t port, std::string hostName) {}
+Host::Host(std::string ip, size_t port, std::string serverName) {
+	_data = new HostData;
+	_data->ip = ip;
+	_data->port = port;
+	_data->serverName = serverName;
+}
 
 Host::Host(const Host& other) {}
 
 std::string		Host::getIp() const {
-	return _data.ip;
+	return _data->host;
 }
 
 size_t			Host::getPort() const {
-	return _data.port;
+	return _data->port;
 }
 
 std::string		Host::getHostName() const {
-	return _data.host;
+	return _data->serverName;
 	// return _hostName;
 }
 

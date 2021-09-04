@@ -2,14 +2,18 @@
 
 ParserConfig::ParserConfig() {}
 
-// Config* ParserConfig::parse(char* configFilePath) {
-void	ParserConfig::parse(char *configFilePath) {
+Config* ParserConfig::parse(char* configFilePath) {
+// void	ParserConfig::parse(char *configFilePath) {
 	std::vector<HostData*> hosts;
 	Config *config = new Config();
 	std::list<std::string> configFile;
 	try {
 		readConfigFile(configFilePath, &configFile);
 		hosts = devideConfigToComponents(configFile);
+		for (int i = 0; i < hosts.size(); i++) {
+			std::cout << "Port parse: " << hosts[i]->port << std::endl;
+		}
+		
 
 		// /*		STDOUT OF HOST		*/
 		// std::cout << "host: \t\t\t" << hostData.host << std::endl;
@@ -64,13 +68,13 @@ void	ParserConfig::parse(char *configFilePath) {
 	}
 
 	for (int i = 0; i < hosts.size(); i++) {
-		Host *host = new Host(*hosts[i]);
-		config->addNewHost(*host);
+		Host *host = new Host(hosts[i]);
+		config->addNewHost(host);
 	}
 
-	// config->setNewHost(Host("127.0.0.1", 8000, "localhost"));
+	// config->addNewHost(new Host("127.0.0.1", 8000, "localhost"));
 	// config->setNewHost(Host("400.2.3.1", 5050, "my-site.com"));
-	// return config;
+	return config;
 }
 
 /*
@@ -98,21 +102,25 @@ void	ParserConfig::readConfigFile(char *configFilePath, std::list<std::string> *
 std::vector<HostData*>	ParserConfig::devideConfigToComponents(std::list<std::string> config) {
 	std::list<std::string>::iterator it = config.begin();
 	std::vector<HostData*> hosts;
-	HostData hostData;
+	HostData *hostData = new HostData;
 	std::string key;
 	std::string value;
 
-	setDefaultHostValues(&hostData);
+	setDefaultHostValues(hostData);
 	for (; it != config.end(); it++) {
 		splitFirstArgiment(*it, &key, &value);
 		if (key == "***") {
 			std::cout << "New host" << std::endl;
-			hosts.push_back(&hostData);
-			setDefaultHostValues(&hostData);
+			hosts.push_back(hostData);
+			setDefaultHostValues(hostData);
 		} else {
-			enterDataToHostDataStruct(key, value, &hostData);
+			enterDataToHostDataStruct(key, value, hostData);
 		}
 	}
+	hosts.push_back(hostData);
+	for (int i = 0; i < hosts.size(); i++) {
+			std::cout << "Port parseConfig: " << hosts[i]->port << std::endl;
+		}
 	return hosts;
 }
 
