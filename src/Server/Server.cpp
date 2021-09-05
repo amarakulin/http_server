@@ -160,16 +160,21 @@ void				Server::processingRequest(int clientSocket, Client& client) {
 		closeClientConnection(clientSocket);
 		return ;
 	}
+	//TODO delete hardcode
+	BadRequestException badRequestException;
+	ErrorPage  errorPage;
+	errorPage.errorNbr = 400;
+	errorPage.errorPagePath = "./error.html";
 	try {
 		client.getRequest()->addRequestChunk(buf);
 	} catch (BadRequestException& e) {
-		 client.setResponse(_responseCreator.createResponse(400));
+		 client.setResponse(_responseCreator.createResponse(errorPage));
 		 client.resetRequest();
 	} catch (NotAllowedException& e) {
-		 client.setResponse(_responseCreator.createResponse(405));
+		 client.setResponse(_responseCreator.createResponse(errorPage));
 		 client.resetRequest();
 	} catch (NotFoundException& e) {
-		client.setResponse(_responseCreator.createResponse(404));
+		client.setResponse(_responseCreator.createResponse(errorPage));
 		client.resetRequest();
 	}
 

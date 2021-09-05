@@ -17,13 +17,14 @@
 # define RESPONSE_Error
 
 
+#include "HostTypes.hpp"
 #include "Response.hpp"
 #include "Global.hpp"
 
 class ResponseError : public Response {
 public:
 	ResponseError();
-	ResponseError(int status);//TODO add ErrorPage
+	ResponseError(const ErrorPage &errorPage);//TODO add ErrorPage
 	ResponseError(const ResponseError& other);
 	ResponseError& operator=(const ResponseError &assign);
 	~ResponseError();

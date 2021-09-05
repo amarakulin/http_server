@@ -31,18 +31,17 @@ ResponseError &ResponseError::operator=(const ResponseError &assign){
 	return *this;
 }
 
-ResponseError::ResponseError(int status) {
-	logger.printMessage("[+] ResponseError constructor with status: " + std::to_string(status));
-	std::string filename = "./error.html";//TODO delete hardcode, get from ErrorPage
+ResponseError::ResponseError(const ErrorPage &errorPage) {
+	logger.printMessage("[+] ResponseError constructor with status: " + std::to_string(errorPage.errorNbr));
 	RequestData requestData;
 	requestHeaderStruct headerStruct;
 
-	headerStruct.insert(std::make_pair("access", "text/html"));
-	headerStruct.insert(std::make_pair("uri", filename));
+	headerStruct.insert(std::make_pair("accept", "text/html"));
+	headerStruct.insert(std::make_pair("uri", errorPage.errorPagePath));
 	requestData.header = headerStruct;
 	requestData.body = "";
 
-	_status = status;//TODO delete hardcode, get from ErrorPage
+	_status = static_cast<int> (errorPage.errorNbr);//TODO delete hardcode, get from ErrorPage
 	createHead(requestData);
 	Response::createBody(requestData.header.find("uri")->second);
 	_leftBytesToSend = _dataToSend.length();//TODO set in one place

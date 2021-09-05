@@ -27,7 +27,7 @@ class ResponseCreator {
 		~ResponseCreator();
 
 		Response* createResponse(RequestData& requestData);
-		Response* createResponse(int status);
+		Response* createResponse(const ErrorPage &errorPage);
 
 };
 

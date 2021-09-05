@@ -15,8 +15,8 @@ Response *ResponseCreator::createResponse(RequestData& requestData) {
 	return new Response;
 }
 
-Response *ResponseCreator::createResponse(int status){
-	return new ResponseError(status);
+Response *ResponseCreator::createResponse(const ErrorPage &errorPage){
+	return new ResponseError(errorPage);
 }
 
 Response*	createResponseGet(RequestData& requestData) {
