@@ -13,8 +13,7 @@ public:
 	~ResponseGet();
 
 private:
-	using Response::createBody;
-	virtual void	createBody(const std::string uri);
+	virtual void	createBody(const std::string& uri);
 
 
 };

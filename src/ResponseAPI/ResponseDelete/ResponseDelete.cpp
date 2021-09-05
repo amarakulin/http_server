@@ -8,6 +8,6 @@ ResponseDelete::ResponseDelete(RequestData& requestData) : Response(requestData)
 
 ResponseDelete::~ResponseDelete() {}
 
-void ResponseDelete::createBody(const std::string &uri){
+void ResponseDelete::createBody(const std::string& uri){
 	Response::createBody(uri);
 }

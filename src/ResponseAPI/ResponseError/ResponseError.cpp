@@ -49,6 +49,6 @@ ResponseError::ResponseError(const ErrorPage &errorPage) {
 
 ResponseError::~ResponseError() {}
 
-void	ResponseError::createBody(const std::string uri) {
+void	ResponseError::createBody(const std::string& uri) {
 	Response::createBody(uri);
 }

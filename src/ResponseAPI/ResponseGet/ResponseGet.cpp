@@ -24,6 +24,6 @@ ResponseGet::ResponseGet(RequestData& requestData) : Response(requestData) {
 
 ResponseGet::~ResponseGet() {}
 
-void ResponseGet::createBody(const std::string uri) {
+void ResponseGet::createBody(const std::string& uri) {
 	Response::createBody(uri);
 }
