@@ -7,6 +7,7 @@ class ResponseDelete : public Response {
 public:
 	ResponseDelete();
 	ResponseDelete(const ResponseDelete& other);
+	ResponseDelete& operator=(const ResponseDelete &assign);
 	ResponseDelete(RequestData& requestData);
 	~ResponseDelete();
 
