@@ -30,7 +30,7 @@ public:
 	~ResponseError();
 
 private:
-	void createBody(const std::string& uri);
+	virtual void createBody(const std::string& uri);
 };
 
 
