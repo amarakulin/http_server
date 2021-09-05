@@ -3,74 +3,26 @@
 ParserConfig::ParserConfig() {}
 
 Config* ParserConfig::parse(char* configFilePath) {
-	std::vector<HostData*> hosts;
-	Config *config = new Config();
-	std::list<std::string> configFile;
+	std::list<std::string>	configFile;
+	std::vector<HostData*>	hosts;
+	Config					*config;
+
 	try {
 		readConfigFile(configFilePath, &configFile);
 		hosts = devideConfigToComponents(configFile);
 		for (int i = 0; i < hosts.size(); i++) {
 			std::cout << "Port parse: " << hosts[i]->port << std::endl;
 		}
-		
-
-		// /*		STDOUT OF HOST		*/
-		// std::cout << "host: \t\t\t" << hostData.host << std::endl;
-		// std::cout << "port: \t\t\t" << hostData.port << std::endl;
-		// std::cout << "serverName: \t\t" << hostData.serverName << std::endl;
-		// std::cout << "root: \t\t\t" << hostData.root << std::endl;
-		// // std::cout << "error page - err num: \t" << hostData.errorPage.errorNbr << std::endl;
-		// // std::cout << "error page - location: \t" << hostData.errorPage.errorPagePath << std::endl;
-		// std::cout << "client max body size: \t" << hostData.clientMaxBodySize << std::endl;
-
-		// /*		STDOUT OF ERROR PAGES		*/
-		// std::vector<ErrorPage*>::iterator it = hostData.errorPage.begin();
-		// for (; it != hostData.errorPage.end(); it++) {
-		// 	std::cout << "Error page: \t\t";
-		// 	std::cout << (*it)->errorNbr << " ";
-		// 	std::cout << (*it)->errorPagePath << std::endl;
-		// }
-		// std::cout << std::endl;
-
-		// /*		STDOUT OF LOCATION DETAILS		*/
-		// for (int i = 0; i < hostData.location.size(); i++) {
-		// 	std::cout << "\033[1m\033[31m" << "Location: " << i  << "\033[0m" << std::endl;
-		// 	std::cout << "way: \t\t\t" << hostData.location[i]->way << std::endl;
-		// 	std::cout << "root: \t\t\t" << hostData.location[i]->root << std::endl;
-		// 	std::cout << "authoindex: \t\t" << hostData.location[i]->autoindex << std::endl;
-
-		// 	/*		STDOUT OF METHODS		*/
-		// 	std::vector<std::string>::iterator it1 = hostData.location[i]->httpMethods.begin();
-		// 	std::cout << "Methods: \t\t";
-		// 	for (; it1 != hostData.location[i]->httpMethods.end(); it1++) {
-		// 		std::cout << *it1 << " ";
-		// 	}
-		// 	std::cout << std::endl;
-
-		// 	/*		STDOUT OF INDEX		*/
-		// 	std::vector<std::string>::iterator it2 = hostData.location[i]->index.begin();
-		// 	std::cout << "Index: \t\t\t";
-		// 	for (; it2 != hostData.location[i]->index.end(); it2++) {
-		// 		std::cout << *it2 << " ";
-		// 	}
-		// 	std::cout << std::endl;
-
-		// 	std::cout << "upload enable: \t\t" << hostData.location[i]->uploadEnable << std::endl;
-		// 	std::cout << "upload path: \t\t" << hostData.location[i]->uploadPath << std::endl;
-		// 	std::cout << "cgi extension: \t\t" << hostData.location[i]->cgiextension << std::endl;
-		// 	std::cout << "cgi path: \t\t" << hostData.location[i]->cgiPath << std::endl;
-		// 	std::cout << std::endl;
-		// }
-
 	} catch (std::exception& e) {
-		// std::cerr << e.what() << std::endl;
+		throw e;
 	}
 
+	config = new Config();
 	for (int i = 0; i < hosts.size(); i++) {
 		Host *host = new Host(hosts[i]);
 		config->addNewHost(host);
+		delete hosts[i];
 	}
-
 	return config;
 }
 
@@ -79,8 +31,8 @@ Config* ParserConfig::parse(char* configFilePath) {
 */
 
 void	ParserConfig::readConfigFile(char *configFilePath, std::list<std::string> *config) {
-	std::ifstream input;
-	std::string buf;
+	std::ifstream	input;
+	std::string		buf;
 
 	input.open(configFilePath);
 	if (!input.is_open()) {
@@ -97,13 +49,15 @@ void	ParserConfig::readConfigFile(char *configFilePath, std::list<std::string> *
 */
 
 std::vector<HostData*>	ParserConfig::devideConfigToComponents(std::list<std::string> config) {
-	std::list<std::string>::iterator it = config.begin();
-	std::vector<HostData*> hosts;
-	HostData *hostData = new HostData;
-	std::string key;
-	std::string value;
+	std::list<std::string>::iterator	it;
+	std::vector<HostData*>				hosts;
+	std::string							key;
+	std::string							value;
+	HostData							*hostData;
 
-	setDefaultHostValues(hostData);
+	hostData = new HostData;
+	it = config.begin();
+	// setDefaultHostValues(hostData);
 	for (; it != config.end(); it++) {
 		splitFirstArgiment(*it, &key, &value);
 		if (key == "***") {
@@ -174,24 +128,14 @@ void	ParserConfig::enterDataToHostDataStruct(std::string const &key, std::string
 	}
 }
 
-void	ParserConfig::setHostToServer(HostData *hostData, std::vector<HostData*> hosts) {
-	if (hostData->host.size() > 0 && hostData->port > 0) {
-		HostData *host = new HostData();
-		host = hostData;
-	} else {
-		throw ParserConfigException("setHostToServer error");
-	}
-}
-
-
 /*
 **	Set location detaits (Location structure) to HostData structure
 */
 
 void	ParserConfig::setLocationDetailsData(std::string data, HostData *hostData) {
-	std::string key;
-	std::string value;
-	int	currentLocation;
+	std::string	key;
+	std::string	value;
+	int			currentLocation;
 
 	currentLocation = hostData->location.size() - 1;
 	splitFirstArgiment(data, &key, &value);
@@ -269,10 +213,10 @@ void	ParserConfig::setRootData(std::string data, HostData *hostData) {
 
 void	ParserConfig::setErrorPageData(std::string data, HostData *hostData) {
 	int			delim;
-	size_t		errorNbr;
-	std::string	errorPagePath;
 	const char	*port;
-	ErrorPage*	errorPage = new ErrorPage();
+	std::string	errorPagePath;
+	ErrorPage	*errorPage;
+	size_t		errorNbr;
 	size_t		currentErrorPage;
 
 	currentErrorPage = hostData->errorPage.size();
@@ -282,9 +226,10 @@ void	ParserConfig::setErrorPageData(std::string data, HostData *hostData) {
 		errorNbr = std::strtoll(port, NULL, 0);
 		errorPagePath = data.substr(delim + 1, data.length() - delim - 1);
 		if (errorPagePath.find_first_of(' ') == std::string::npos) {
-			errorPage->errorNbr = errorNbr;
-			errorPage->errorPagePath = errorPagePath;
 			if (errorPagePath.find_first_of("/") == 0 && errorNbr != 0) {
+				errorPage = new ErrorPage();
+				errorPage->errorNbr = errorNbr;
+				errorPage->errorPagePath = errorPagePath;
 				hostData->errorPage.push_back(errorPage);
 			} else {
 				throw ParserConfigException("setErrorPageData error");
@@ -310,9 +255,10 @@ void	ParserConfig::setClientMaxBodySizeData(std::string data, HostData *hostData
 */
 
 void	ParserConfig::setLocationWayData(std::string data, HostData *hostData) {
-	Location *location = new Location();
+	Location	*location;
 
 	if (data.find_first_of("/") == 0) {
+		location = new Location();
 		location->way = data;
 		hostData->location.push_back(location);
 	} else {
@@ -338,9 +284,9 @@ void	ParserConfig::setRootDataToLocation(std::string data,
 
 void	ParserConfig::setMethodsToLocation(std::string data, 
 		HostData *hostData, int currentLocation){
-	std::vector<std::string> methods;
-	std::vector<std::string>::iterator it1;
-	std::vector<std::string>::iterator it2;
+	std::vector<std::string>::iterator	it1;
+	std::vector<std::string>::iterator	it2;
+	std::vector<std::string>			methods;
 
 	methods = split(data, " ");
 	hostData->location[currentLocation]->httpMethods = methods;
@@ -373,9 +319,9 @@ void	ParserConfig::setAutoindexToLocation(std::string data,
 
 void	ParserConfig::setIndexToLocation(std::string data, 
 		HostData *hostData, int currentLocation){
-	std::vector<std::string> index;
-	std::vector<std::string>::iterator it1;
-	std::vector<std::string>::iterator it2;
+	std::vector<std::string>::iterator	it1;
+	std::vector<std::string>::iterator	it2;
+	std::vector<std::string>			index;
 
 	index = split(data, " ");
 	hostData->location[currentLocation]->index = index;

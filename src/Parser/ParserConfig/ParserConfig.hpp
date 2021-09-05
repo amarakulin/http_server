@@ -46,8 +46,6 @@ class ParserConfig {
 		void	setCgiExtensionToLocation(std::string data, HostData *hostData, int	currentLocation);
 		void	setCgiPathToLocation(std::string data, HostData *hostData, int currentLocation);
 
-		void	setHostToServer(HostData *hostData, std::vector<HostData*> hosts);
-
 		class ParserConfigException : public std::exception {
 			private:
 				const char *msg;
