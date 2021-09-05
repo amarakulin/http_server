@@ -12,9 +12,9 @@
 /*                                                 <__________\______)\__)      */
 /* **************************************************************************** */
 
-// #include "../../include/acutest.hpp"
-// #include "../../../src/Host/Host.hpp"
-// #include <iostream>
+ #include "../../include/acutest.hpp"
+ #include "../../../src/Host/Host.hpp"
+ #include <iostream>
 
 // void
 // test_constructor_1(void)
