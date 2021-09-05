@@ -108,11 +108,13 @@ std::vector<HostData*>	ParserConfig::devideConfigToComponents(std::list<std::str
 		splitFirstArgiment(*it, &key, &value);
 		if (key == "***") {
 			std::cout << "New host" << std::endl;
-			hosts.push_back(hostData);
-			std::cout << "before: " << hostData->host << std::endl;
-			hostData = new HostData;
-			std::cout << "after: " << hostData->host << std::endl;
-			// setDefaultHostValues(hostData);
+			if (hostData->host.size() > 0 && hostData->port > 0) {
+				hosts.push_back(hostData);
+				hostData = new HostData;
+				// setDefaultHostValues(hostData);
+			} else {
+				throw ParserConfigException("devideConfigToComponents error");
+			}
 		} else {
 			enterDataToHostDataStruct(key, value, hostData);
 		}
@@ -140,7 +142,6 @@ void	ParserConfig::setDefaultHostValues(HostData *hostData) {
 */
 
 void	ParserConfig::enterDataToHostDataStruct(std::string const &key, std::string const &value, HostData *hostData) {
-	std::cout << key << " " << value << std::endl;
 	try {
 		if (isSomeSymbolInTheEnd(value, ';')) {
 			if (key == "listen") {
