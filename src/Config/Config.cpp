@@ -1,12 +1,14 @@
 #include "Config.hpp"
 
-Config::Config() : _hosts() {}
+Config::Config() : _hosts() {
+	
+}
 
 Config::Config(const Config& other) : _hosts(other._hosts) {}
 
 Config::~Config() {}
 
-void	Config::addNewHost(const Host& host) {
+void	Config::addNewHost(Host* host) {
 	_hosts.push_back(host);
 }
 
@@ -14,6 +16,6 @@ void	Config::addNewHost(const Host& host) {
 ** Getters
 */
 
-std::vector<Host>	Config::getHosts() const {
+std::vector<Host*>	Config::getHosts() const {
 	return _hosts;
 }
