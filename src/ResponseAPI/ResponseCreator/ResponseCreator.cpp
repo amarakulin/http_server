@@ -16,20 +16,26 @@ Response *ResponseCreator::createResponse(RequestData& requestData) {
 }
 
 Response *ResponseCreator::createResponse(const ErrorPage &errorPage){
+	logger.printMessage("[+] ResponseError with status code: " + std::to_string(errorPage.errorNbr));
 	return new ResponseError(errorPage);
 }
 
 Response*	createResponseGet(RequestData& requestData) {
-	std::cout << "GET" << std::endl;
+	logger.printMessage("[+] ResponseGet");
 	return new ResponseGet(requestData);
 }
 
 Response*	createResponsePost(RequestData& requestData) {
-	std::cout << "POST" << std::endl;
+	logger.printMessage("[+] ResponsePost");
 	return new ResponsePost(requestData);
 }
 
+Response*	createResponseHead(RequestData& requestData) {
+	logger.printMessage("[+] ResponseHead");
+	return new ResponseHead(requestData);
+}
+
 Response* createResponseDelete(RequestData& requestData) {
-	std::cout << "DELETE" << std::endl;
+	logger.printMessage("[+] ResponseDelete");
 	return new ResponseDelete(requestData);
 }
