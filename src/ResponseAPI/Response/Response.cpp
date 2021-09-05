@@ -93,7 +93,7 @@ std::string Response::createHeadHeader(){//TODO think if got a error(5xx) while 
 	if (!_status){
 		_status = 200;//TODO may be different 2xx
 	}
-	std::string processedStr = "HTTP/1.1 ";
+	std::string processedStr = VERSION_HTTP;
 	processedStr += std::to_string(_status);
 	for (int i = 0; arrResponseStatuses[i].first ; i++){
 		if (arrResponseStatuses[i].first == _status){
@@ -106,7 +106,7 @@ std::string Response::createHeadHeader(){//TODO think if got a error(5xx) while 
 }
 
 std::string Response::getContentTypeHeader(std::string accept){
-	std::string processedStr = "Content-type: ";//TODO handle Accept-Charset here
+	std::string processedStr = CONTENT_TYPE;//TODO handle Accept-Charset here
 	long found = static_cast<long> (accept.find(','));
 	if (found != std::string::npos){
 		accept.erase(accept.begin() + found, accept.end());
@@ -116,7 +116,7 @@ std::string Response::getContentTypeHeader(std::string accept){
 }
 
 std::string Response::getContentLengthHeader(std::string uri){
-	std::string processedStr = "Content-length: ";
+	std::string processedStr = CONTENT_LENGTH;
 	std::string filename = uri;
 
 	if (filename == "./"){//TODO needs to know default List<file> if directory is given from config
@@ -149,6 +149,23 @@ int Response::getStatus() const {
 
 int Response::getState() const{
 	return _state;
+}
+
+void Response::changeContentLength(size_t valueContentLength){
+	std::string search = CONTENT_LENGTH;
+	size_t pos = _dataToSend.find(search);
+	if (pos == std::string::npos){
+		return;
+	}
+	pos += search.length();
+	std::string::iterator itStart = _dataToSend.begin() + static_cast<long>(pos);
+	std::string::iterator itEnd = itStart;
+	std::string oldValueContentLength;
+	for (; *itEnd != std::string::npos && *itEnd != '\r' ; ++itEnd ){
+		oldValueContentLength += *itEnd;
+	}
+	_dataToSend.replace(pos, oldValueContentLength.length(), std::to_string(valueContentLength));
+
 }
 
 /*

@@ -55,6 +55,7 @@ protected:
 
 	void			createHead(RequestData& requestData);
 	virtual void	createBody(const std::string& uri);
+	void			changeContentLength(size_t valueContentLength);
 
 public:
 	Response();
