@@ -6,6 +6,9 @@
 class Response;
 class Request;
 
+#define CONTENT_LENGTH "Content-length: "
+#define CONTENT_TYPE "Content-type: "
+#define VERSION_HTTP "HTTP/1.1 "
 /*
 ** Структура для автоматического определения наследника класса Response
 */
