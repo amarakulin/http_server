@@ -3,7 +3,6 @@
 ParserConfig::ParserConfig() {}
 
 Config* ParserConfig::parse(char* configFilePath) {
-// void	ParserConfig::parse(char *configFilePath) {
 	std::vector<HostData*> hosts;
 	Config *config = new Config();
 	std::list<std::string> configFile;
@@ -72,8 +71,6 @@ Config* ParserConfig::parse(char* configFilePath) {
 		config->addNewHost(host);
 	}
 
-	// config->addNewHost(new Host("127.0.0.1", 8000, "localhost"));
-	// config->setNewHost(Host("400.2.3.1", 5050, "my-site.com"));
 	return config;
 }
 
@@ -112,15 +109,18 @@ std::vector<HostData*>	ParserConfig::devideConfigToComponents(std::list<std::str
 		if (key == "***") {
 			std::cout << "New host" << std::endl;
 			hosts.push_back(hostData);
-			setDefaultHostValues(hostData);
+			std::cout << "before: " << hostData->host << std::endl;
+			hostData = new HostData;
+			std::cout << "after: " << hostData->host << std::endl;
+			// setDefaultHostValues(hostData);
 		} else {
 			enterDataToHostDataStruct(key, value, hostData);
 		}
 	}
 	hosts.push_back(hostData);
 	for (int i = 0; i < hosts.size(); i++) {
-			std::cout << "Port parseConfig: " << hosts[i]->port << std::endl;
-		}
+		std::cout << "Port parseConfig: " << hosts[i]->port << std::endl;
+	}
 	return hosts;
 }
 
@@ -135,12 +135,12 @@ void	ParserConfig::setDefaultHostValues(HostData *hostData) {
 	hostData->location.clear();
 }
 
-
 /*
 **	Check and enter data to HostData structure
 */
 
 void	ParserConfig::enterDataToHostDataStruct(std::string const &key, std::string const &value, HostData *hostData) {
+	std::cout << key << " " << value << std::endl;
 	try {
 		if (isSomeSymbolInTheEnd(value, ';')) {
 			if (key == "listen") {
@@ -433,7 +433,3 @@ void	ParserConfig::setCgiPathToLocation(std::string data,
 		throw ParserConfigException("setCgiPathToLocation error");
 	}
 }
-
-// const char *ParserConfig::ParserConfigException::what() const throw() {
-// 	return msg;
-// }
