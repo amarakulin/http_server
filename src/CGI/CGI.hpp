@@ -31,10 +31,15 @@
 class CGI {
 	private:
 		std::string _pathToCGI;
+		std::string _extension;
+		std::string	_root; // ServerRoot + HostRoot
 		CGI();
 
 	public:
-		CGI(const std::string& path);
+		CGI(const std::string& path,
+			const std::string& extension,
+			const std::string& root);
+		
 		CGI(const CGI& other);
 		~CGI();
 
