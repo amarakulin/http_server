@@ -10,10 +10,10 @@
 
 class Host {
 	private:
-		HostData _data;
+		HostData *_data;
 	
 	public:
-		Host();
+		Host(HostData *hostData);
 		Host(const Host& other);
 		Host(std::string ip, size_t port, std::string hostName);
 

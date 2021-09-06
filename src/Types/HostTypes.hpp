@@ -49,15 +49,13 @@ typedef struct {
 
 typedef struct {
 	size_t						errorNbr;
-	std::string					locationOfErrorPage;
+	std::string					errorPagePath;
 } ErrorPage;
 
 /*
 *	Структура со всеми возможными данными из конфигурационного файла. Обязательные поля:
 *	- host;
 *	- port;
-*	- errorPage;
-*	- location;
 */
 
 typedef struct {
@@ -66,9 +64,9 @@ typedef struct {
 	std::string					serverName;
 	size_t						port;
 	std::string					root;
-	ErrorPage					errorPage;
+	std::vector<ErrorPage*>		errorPage;
 	std::string					clientMaxBodySize;
-	std::vector<Location>		location;
+	std::vector<Location*>		location;
 } HostData;
 
 #endif
