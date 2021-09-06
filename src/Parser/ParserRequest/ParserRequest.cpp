@@ -45,6 +45,7 @@ bool		ParserRequest::handleEndOfBody(RequestData& data, std::string& buffer) {
 			return handleEndOfChunkedBody(data, buffer);
 		}
 		else {
+			return true;
 			// TODO bad request or ???request without body???
 		}
 
