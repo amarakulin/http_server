@@ -14,5 +14,7 @@ bool	hasLowerCaseLetter(std::string& str);
 bool	hasUpperCaseLetter(std::string& str);
 long			getSizeFile(const std::string &filename);
 std::string		getDataFileAsString(const std::string &filename);
+void	splitFirstArgiment(std::string s, std::string *key, std::string *value);
+bool	isSomeSymbolInTheEnd(std::string end, char symbol);
 
 #endif
