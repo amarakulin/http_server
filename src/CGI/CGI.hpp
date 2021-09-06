@@ -3,6 +3,7 @@
 
 # include <iostream>
 # include "Request.hpp"
+// # include "HostTypes.hpp"
 
 /*
 ** CONTENT_LENGTH 						// Content-length из запроса или -1, если в запросее нет body
@@ -27,6 +28,46 @@
 // 'SCRIPT_FILENAME' => '/var/www/test.php',
 // 'SCRIPT_NAME' => '/test.php',
 
+typedef struct {
+	std::string					way;
+	std::string					root;
+	std::vector<std::string>	httpMethods;
+	std::vector<std::string>	index;
+	bool						autoindex;
+	bool						uploadEnable;
+	std::string					uploadPath;
+	std::string					cgiextension;
+	std::string					cgiPath;
+} Location;
+
+/*
+*	Структура-дополнение к HostData. Описывает ErrorPage.
+*/
+
+typedef struct {
+	size_t						errorNbr;
+	std::string					locationOfErrorPage;
+} ErrorPage;
+
+/*
+*	Структура со всеми возможными данными из конфигурационного файла. Обязательные поля:
+*	- host;
+*	- port;
+*	- errorPage;
+*	- location;
+*/
+
+typedef struct {
+	std::string					ip;
+	std::string					host;
+	std::string					serverName;
+	size_t						port;
+	std::string					root;
+	ErrorPage					errorPage;
+	std::string					clientMaxBodySize;
+	std::vector<Location>		location;
+} HostData;
+
 class CGI {
 	private:
 		std::string _pathToCGI;
@@ -37,7 +78,7 @@ class CGI {
 		CGI(const CGI& other);
 		~CGI();
 
-		void	createCGIEnv(const Request& request);
+		void	createCGIEnv(const Request& request, const HostData* hostData);
 };
 
 #endif
