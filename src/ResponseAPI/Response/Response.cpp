@@ -168,6 +168,16 @@ void Response::changeContentLength(size_t valueContentLength){
 
 }
 
+std::string Response::getLocationHeader(std::string uri){
+//	_status = 300;
+	return std::string(LOCATION) += uri;
+}
+
+std::string Response::createRedirectHeader(std::string value){
+	_status = 300;
+	return std::string(LOCATION) += value;
+}
+
 /*
 ** Setters
 */

@@ -36,10 +36,12 @@ private:
 	static const	t_response_process _arrProcessHeaders[];
 
 	std::string		createHeadHeader();
+	std::string		createRedirectHeader(std::string value); //TODO handle 3xx status code
 	std::string		processHeader(const std::string& headerName, const std::string& headerValue);
 	static std::string		getContentTypeHeader(std::string accept);
 	static std::string		getContentLengthHeader(std::string uri);
-	static std::string		getProcessedRedirect(std::string value); //TODO handle 3xx status code
+	static std::string		getLocationHeader(std::string uri);
+
 
 	//TODO figure out how works redirect and how to understand if response has to be with status 3xx
 	//TODO figure out about root location (/) and if I got a dir_path in uri
