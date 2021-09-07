@@ -26,8 +26,6 @@ class Request {
 		void		resetRequest();
 
 		bool		isDone();
-		// For tests
-		void setData(const RequestData &data);
 
 		int			getStatus() const;
 		RequestData& getData();

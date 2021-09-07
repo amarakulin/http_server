@@ -1,10 +1,10 @@
 /* **************************************************************************** */
 /*                                                                      .       */
-/*   ResponseError.cpp                                                        / V\     */
+/*   ResponseHead.cpp                                                        / V\     */
 /*                                                                   / `  /     */
 /*   By: tilda      <tilda@student.21-school.ru.fr>                 <<   |      */
 /*                                                                  /    |      */
-/*   Created: 8/29/21 by tilda                                    /      |      */
+/*   Created: 9/5/21 by tilda                                    /      |      */
 /*                                                              /        |      */
 /*                                                            /    \  \ /       */
 /*                                                           (      ) | |       */
@@ -13,15 +13,15 @@
 /* **************************************************************************** */
 
 
-#include "ResponseError.hpp"
+#include "ResponseHead.hpp"
 
-ResponseError::ResponseError() : Response() {}
+ResponseHead::ResponseHead() : Response() {}
 
-ResponseError::ResponseError(const ResponseError& other) : Response(other) {
+ResponseHead::ResponseHead(const ResponseHead& other) : Response(other) {
 	operator=(other);
 }
 
-ResponseError &ResponseError::operator=(const ResponseError &assign){
+ResponseHead &ResponseHead::operator=(const ResponseHead &assign) {
 	if (this != &assign){
 		_leftBytesToSend = assign.getLeftBytesToSend();
 		_dataToSend = assign.getDataToSend();
@@ -31,24 +31,13 @@ ResponseError &ResponseError::operator=(const ResponseError &assign){
 	return *this;
 }
 
-ResponseError::ResponseError(const ErrorPage &errorPage) {
-	logger.printMessage("[+] ResponseError constructor with status: " + std::to_string(errorPage.errorNbr));
-	RequestData requestData;
-	requestHeaderStruct headerStruct;
-
-	headerStruct.insert(std::make_pair("accept", "text/html"));
-	headerStruct.insert(std::make_pair("uri", errorPage.errorPagePath));
-	requestData.header = headerStruct;
-	requestData.body = "";
-
-	_status = static_cast<int> (errorPage.errorNbr);//TODO delete hardcode, get from ErrorPage
-	createHead(requestData);
-	Response::createBody(requestData.header.find("uri")->second);
+ResponseHead::ResponseHead(RequestData& requestData) : Response(requestData) {
+	ResponseHead::createBody(requestData.header["uri"]);
 	_leftBytesToSend = _dataToSend.length();//TODO set in one place
 }
 
-ResponseError::~ResponseError() {}
+ResponseHead::~ResponseHead() {}
 
-void	ResponseError::createBody(const std::string& uri) {
-	Response::createBody(uri);
+void ResponseHead::createBody(const std::string& uri) {
+	_dataToSend += "\r\n";
 }

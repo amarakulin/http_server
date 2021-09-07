@@ -1,10 +1,10 @@
 /* **************************************************************************** */
 /*                                                                      .       */
-/*   TestResponseGet.cpp                                                        / V\     */
+/*   TestResponseHead.cpp                                                        / V\     */
 /*                                                                   / `  /     */
 /*   By: tilda      <tilda@student.21-school.ru.fr>                 <<   |      */
 /*                                                                  /    |      */
-/*   Created: 8/24/21 by tilda                                    /      |      */
+/*   Created: 9/5/21 by tilda                                    /      |      */
 /*                                                              /        |      */
 /*                                                            /    \  \ /       */
 /*                                                           (      ) | |       */
@@ -12,90 +12,91 @@
 /*                                                 <__________\______)\__)      */
 /* **************************************************************************** */
 
+
 #include "../../../include/acutest.hpp"
 #include "../../../src/ResponseAPI/Response/Response.hpp"
-#include "../../../src/ResponseAPI/ResponseGet/ResponseGet.hpp"
+#include "../../../src/ResponseAPI/ResponseHead/ResponseHead.hpp"
 #include <iostream>
 
 void
-testResponseGetHTMLFileInRootLocation(void){
+testResponseHeadHTMLFileInRootLocation(void){
 	requestHeaderStruct header;
 	std::string filename = "./index.html";
-	std::string body = getDataFileAsString(filename);
+	std::string body = "";
 	long sizeFile = getSizeFile(filename);
 	header.insert(std::pair<std::string, std::string>("uri", filename));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	ResponseGet *response = new ResponseGet(requestData);
+	ResponseHead *response = new ResponseHead(requestData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
 }
 
-void testResponseGetCSSFileInRootLocation(void){
+void testResponseHeadCSSFileInRootLocation(void){
 	requestHeaderStruct header;
 	std::string filename = "./index.css";
-	std::string body = getDataFileAsString(filename);
+	std::string body = "";
 	long sizeFile = getSizeFile(filename);
 	header.insert(std::pair<std::string, std::string>("uri", filename));
 	header.insert(std::pair<std::string, std::string>("accept", "text/css,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/css\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
-
-	ResponseGet *response = new ResponseGet(requestData);
+	
+	ResponseHead *response = new ResponseHead(requestData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
 }
 
 void
-testResponseGetEmptyFileInRootLocation(void){
+testResponseHeadEmptyFileInRootLocation(void){
 	requestHeaderStruct header;
 	std::string filename = "./index.js";
-	std::string body = getDataFileAsString(filename);
+	std::string body = "";
 	long sizeFile = getSizeFile(filename);
 	header.insert(std::pair<std::string, std::string>("uri", filename));
 	header.insert(std::pair<std::string, std::string>("accept", "*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: */*\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	ResponseGet *response = new ResponseGet(requestData);
+	ResponseHead *response = new ResponseHead(requestData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
 }
 
 void
-testResponseGetWithFile3MB(void){
+testResponseHeadWithFile3MB(void){
 	requestHeaderStruct header;
 	std::string filename = "./test_files/text_3MB.txt";
-	std::string body = getDataFileAsString(filename);
+	std::string body = "";
 	long sizeFile = getSizeFile(filename);
 	header.insert(std::pair<std::string, std::string>("uri", filename));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	ResponseGet *response = new ResponseGet(requestData);
+	ResponseHead *response = new ResponseHead(requestData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
 }
 
 void
-testResponseGetWithRootLocation(void){
+testResponseHeadWithRootLocation(void){
 	requestHeaderStruct header;
 	std::string filename = "./";
-	std::string body = getDataFileAsString(filename + "index.html");//TODO Search for default file
+	std::string body = "";//TODO Search for default file
 	long sizeFile = getSizeFile(filename + "index.html");//TODO Search for default file
 	header.insert(std::pair<std::string, std::string>("uri", filename));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	ResponseGet *response = new ResponseGet(requestData);
+	ResponseHead *response = new ResponseHead(requestData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
@@ -103,125 +104,126 @@ testResponseGetWithRootLocation(void){
 
 
 void
-testResponseGetWithFileInNestedLocation_1(void){
+testResponseHeadWithFileInNestedLocation_1(void){
 	requestHeaderStruct header;
 	std::string filename = "./test_files/testIndex.html";
-	std::string body = getDataFileAsString(filename);
+	std::string body = "";
 	long sizeFile = getSizeFile(filename);
 	header.insert(std::pair<std::string, std::string>("uri", filename));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	ResponseGet *response = new ResponseGet(requestData);
+	ResponseHead *response = new ResponseHead(requestData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
 }
 
 void
-testResponseGetWithFileInNestedLocation_2(void){
+testResponseHeadWithFileInNestedLocation_2(void){
 	requestHeaderStruct header;
 	std::string filename = "./test_files/nestedDir/testNestesdIndex.html";
-	std::string body = getDataFileAsString(filename);
+	std::string body = "";
 	long sizeFile = getSizeFile(filename);
 	header.insert(std::pair<std::string, std::string>("uri", filename));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	ResponseGet *response = new ResponseGet(requestData);
+	ResponseHead *response = new ResponseHead(requestData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
 }
 
 void
-testResponseGetWithOneTypeFile(void){
+testResponseHeadWithOneTypeFile(void){
 	requestHeaderStruct header;
 	std::string filename = "./index.html";
-	std::string body = getDataFileAsString(filename);
+	std::string body = "";
 	long sizeFile = getSizeFile(filename);
 	header.insert(std::pair<std::string, std::string>("uri", filename));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	ResponseGet *response = new ResponseGet(requestData);
+	ResponseHead *response = new ResponseHead(requestData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
 }
 
 void
-testResponseGetWithSeveralTypesFile(void){
+testResponseHeadWithSeveralTypesFile(void){
 	requestHeaderStruct header;
 	std::string filename = "./index.html";
-	std::string body = getDataFileAsString(filename);
+	std::string body = "";
 	long sizeFile = getSizeFile(filename);
 	header.insert(std::pair<std::string, std::string>("uri", filename));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	ResponseGet *response = new ResponseGet(requestData);
+	ResponseHead *response = new ResponseHead(requestData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
 }
 
 void
-testResponseGetWithEmptyTypeFile(void){
+testResponseHeadWithEmptyTypeFile(void){
 	requestHeaderStruct header;
 	std::string filename = "./index.html";
-	std::string body = getDataFileAsString(filename);
+	std::string body = "";
 	long sizeFile = getSizeFile(filename);
 	header.insert(std::pair<std::string, std::string>("uri", filename));
 	header.insert(std::pair<std::string, std::string>("accept", ""));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: \r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	ResponseGet *response = new ResponseGet(requestData);
+	ResponseHead *response = new ResponseHead(requestData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
 }
 
 void
-testResponseGetWithoutTypeFile(void){
+testResponseHeadWithoutTypeFile(void){
 	requestHeaderStruct header;
 	std::string filename = "./index.html";
-	std::string body = getDataFileAsString(filename);
+	std::string body = "";
 	long sizeFile = getSizeFile(filename);
 	header.insert(std::pair<std::string, std::string>("uri", filename));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	ResponseGet *response = new ResponseGet(requestData);
+	ResponseHead *response = new ResponseHead(requestData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
 }
 
 void
-testResponseGetWithPicture(void){
+testResponseHeadWithPicture(void){
 	TEST_CHECK(false);
 }
 
 TEST_LIST = {
-		{ "ResponseGet with HTML file", testResponseGetHTMLFileInRootLocation },
-		{ "ResponseGet with CSS file", testResponseGetCSSFileInRootLocation },
-		{ "ResponseGet with EMPTY file", testResponseGetEmptyFileInRootLocation },
+		{ "ResponseHead with HTML file", testResponseHeadHTMLFileInRootLocation },
+		{ "ResponseHead with CSS file", testResponseHeadCSSFileInRootLocation },
+		{ "ResponseHead with EMPTY file", testResponseHeadEmptyFileInRootLocation },
 
-		{ "ResponseGet with 3 MB file", testResponseGetWithFile3MB },
-		{ "ResponseGet with ROOT LOCATION file", testResponseGetWithRootLocation },
-		{ "ResponseGet with NESTED LOCATION 1 file", testResponseGetWithFileInNestedLocation_1 },
-		{ "ResponseGet with NESTED LOCATION 2 file", testResponseGetWithFileInNestedLocation_2 },
-		{ "ResponseGet with ONE TYPE FILE file", testResponseGetWithOneTypeFile },
-		{ "ResponseGet with SEVERAL TYPE FILE file", testResponseGetWithSeveralTypesFile },
-		{ "ResponseGet with EMPTY TYPE FILE file", testResponseGetWithEmptyTypeFile },
-		{ "ResponseGet with WITHOUT TYPE FILE file", testResponseGetWithoutTypeFile },
+		{ "ResponseHead with 3 MB file", testResponseHeadWithFile3MB },
+		{ "ResponseHead with ROOT LOCATION file", testResponseHeadWithRootLocation },
+		{ "ResponseHead with NESTED LOCATION 1 file", testResponseHeadWithFileInNestedLocation_1 },
+		{ "ResponseHead with NESTED LOCATION 2 file", testResponseHeadWithFileInNestedLocation_2 },
+		{ "ResponseHead with ONE TYPE FILE file", testResponseHeadWithOneTypeFile },
+		{ "ResponseHead with SEVERAL TYPE FILE file", testResponseHeadWithSeveralTypesFile },
+		{ "ResponseHead with EMPTY TYPE FILE file", testResponseHeadWithEmptyTypeFile },
+		{ "ResponseHead with WITHOUT TYPE FILE file", testResponseHeadWithoutTypeFile },
 
 
 		{ nullptr, nullptr }
 };
+

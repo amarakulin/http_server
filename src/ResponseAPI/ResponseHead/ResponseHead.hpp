@@ -1,10 +1,10 @@
 /* **************************************************************************** */
 /*                                                                      .       */
-/*   ResponseError.hpp                                                        / V\     */
+/*   ResponseHead.hpp                                                        / V\     */
 /*                                                                   / `  /     */
 /*   By: tilda      <tilda@student.21-school.ru.fr>                 <<   |      */
 /*                                                                  /    |      */
-/*   Created: 8/29/21 by tilda                                    /      |      */
+/*   Created: 9/5/21 by tilda                                    /      |      */
 /*                                                              /        |      */
 /*                                                            /    \  \ /       */
 /*                                                           (      ) | |       */
@@ -13,25 +13,25 @@
 /* **************************************************************************** */
 
 
-#ifndef RESPONSE_Error
-# define RESPONSE_Error
+#ifndef HTTP_SERVER_RESPONSEHEAD_HPP
+#define HTTP_SERVER_RESPONSEHEAD_HPP
 
+# include "Response.hpp"
+#include "RequestTypes.hpp"
 
-#include "HostTypes.hpp"
-#include "Response.hpp"
-#include "Global.hpp"
-
-class ResponseError : public Response {
+class ResponseHead : public Response {
 public:
-	ResponseError();
-	ResponseError(const ErrorPage &errorPage);//TODO add ErrorPage
-	ResponseError(const ResponseError& other);
-	ResponseError& operator=(const ResponseError &assign);
-	~ResponseError();
+	ResponseHead();
+	ResponseHead(const ResponseHead& other);
+	ResponseHead(RequestData& requestData);
+	ResponseHead& operator=(const ResponseHead &assign);
+	~ResponseHead();
 
 private:
-	virtual void createBody(const std::string& uri);
+	virtual void	createBody(const std::string& uri);
+
+
 };
 
 
-#endif
+#endif //HTTP_SERVER_RESPONSEHEAD_HPP

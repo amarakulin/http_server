@@ -59,6 +59,3 @@ RequestData& Request::getData() {
 	return _data;
 }
 
-void Request::setData(const RequestData &data){
-	_data = data;
-}

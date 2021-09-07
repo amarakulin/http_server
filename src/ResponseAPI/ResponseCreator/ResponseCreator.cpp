@@ -4,33 +4,38 @@ ResponseCreator::ResponseCreator() {}
 
 ResponseCreator::~ResponseCreator() {}
 
-Response *ResponseCreator::createResponse(Request *request) {
-	std::string requestMethod = request->getMethod();
+Response *ResponseCreator::createResponse(RequestData& requestData) {
+	std::string requestMethod = requestData.header["method"];
 
 	for (int i = 0; responseCreatorList[i].createResponse; i++) {
 		if (requestMethod == responseCreatorList[i].method)
-			return responseCreatorList[i].createResponse(request);
+			return responseCreatorList[i].createResponse(requestData);
 	}
 	//TODO think about final return
 	return new Response;
 }
 
-Response*	createResponseGet(Request* request) {
-	std::cout << "GET" << std::endl;
-	return new ResponseGet(request);
+Response *ResponseCreator::createResponse(const ErrorPage &errorPage){
+	logger.printMessage("[+] ResponseError with status code: " + std::to_string(errorPage.errorNbr));
+	return new ResponseError(errorPage);
 }
 
-Response*	createResponsePost(Request* request) {
-	std::cout << "POST" << std::endl;
-	return new ResponsePost(request);
+Response*	createResponseGet(RequestData& requestData) {
+	logger.printMessage("[+] ResponseGet");
+	return new ResponseGet(requestData);
 }
 
-Response* createResponseDelete(Request* request) {
-	std::cout << "DELETE" << std::endl;
-	return new ResponseDelete(request);
+Response*	createResponsePost(RequestData& requestData) {
+	logger.printMessage("[+] ResponsePost");
+	return new ResponsePost(requestData);
 }
 
-Response* createResponseError(Request* request) {
-	std::cout << "ERROR" << std::endl;
-	return new ResponseError(request);
+Response*	createResponseHead(RequestData& requestData) {
+	logger.printMessage("[+] ResponseHead");
+	return new ResponseHead(requestData);
+}
+
+Response* createResponseDelete(RequestData& requestData) {
+	logger.printMessage("[+] ResponseDelete");
+	return new ResponseDelete(requestData);
 }

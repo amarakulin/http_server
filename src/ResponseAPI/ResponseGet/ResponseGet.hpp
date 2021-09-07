@@ -8,12 +8,12 @@ class ResponseGet : public Response {
 public:
 	ResponseGet();
 	ResponseGet(const ResponseGet& other);
-	ResponseGet(Request *request);
+	ResponseGet(RequestData& requestData);
 	ResponseGet& operator=(const ResponseGet &assign);
 	~ResponseGet();
 
 private:
-	void		createBody(Request *request);
+	virtual void	createBody(const std::string& uri);
 
 
 };
