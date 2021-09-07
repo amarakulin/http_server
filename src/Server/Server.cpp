@@ -131,16 +131,17 @@ void				Server::handleListenerEvents() {
 void				Server::handleClientEvents() {
 	for (size_t i = _listeners.size(); i < _sockets.size(); i++) {
 		struct pollfd clientPollStruct = *(_sockets.getAllSockets() + i);
-		Client client = getClientByFD(_clients, clientPollStruct.fd);
+		Client &client = getClientByFD(_clients, clientPollStruct.fd);
 
 		if ((clientPollStruct.revents & POLLIN) && !client.hasResponse()) // проверяем пришел ли запрос
 			processingRequest(clientPollStruct.fd, client);
 		
 		if (client.hasRequest() && !client.hasResponse()) //TODO pichkasik
 			createResponse(client);
+		if ((clientPollStruct.revents & POLLOUT) && client.hasResponse()){// проверяем можем ли мы отпраивть ответ
 
-		if ((clientPollStruct.revents & POLLOUT) && client.hasResponse())// проверяем можем ли мы отпраивть ответ
 			sendResponse(clientPollStruct.fd, client);
+		}
 	}
 }
 
@@ -153,39 +154,55 @@ void				Server::processingRequest(int clientSocket, Client& client) {
 	int s = recv(clientSocket, buf, sizeof(buf), 0);
 
 	if (s == -1)
-		std::cout << "Read error: " << s << std::endl;
+		logger.printMessage("/* Read error */");
 
 	if (s == 0) {
 		closeClientConnection(clientSocket);
 		return ;
 	}
+	//TODO delete hardcode
+	BadRequestException badRequestException;
+	ErrorPage  errorPage;
+	errorPage.errorNbr = 400;
+	errorPage.errorPagePath = "./error.html";
+	try {
+		client.getRequest()->addRequestChunk(buf);
+	} catch (BadRequestException& e) {
+		 client.setResponse(_responseCreator.createResponse(errorPage));
+		 client.resetRequest();
+	} catch (NotAllowedException& e) {
+		 client.setResponse(_responseCreator.createResponse(errorPage));
+		 client.resetRequest();
+	} catch (NotFoundException& e) {
+		client.setResponse(_responseCreator.createResponse(errorPage));
+		client.resetRequest();
+	}
 
-	client.getRequest()->addRequestChunk(buf);
 	bzero(buf, MB);
 
-	std::cout << "/* Client in */ "  << std::endl;
+	logger.printMessage("/* Client in */");
 }
 
 void				Server::createResponse(Client& client) {
-	client.setResponse(_responseCreator.createResponse(client.getRequest()));
+	client.setResponse(_responseCreator.createResponse(client.getRequest()->getData()));
 	client.resetRequest();
 }
 
 void				Server::sendResponse(int clientSocket, Client& client) {
-	// std::string response = "HTTP/1.1 200 OK\r\nContent-length: 436\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta http-equiv='X-UA-Compatible' content='IE=edge'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>Document</title><link rel='stylesheet' href='index.css'></head><body><h2>Hello</h2><form method='POST' action='127.0.0.1'><input name='value' value='key' placeholder='TEST'><button>POST</button></form><script src='index.js'></script></body></html>";
-	// std::string response = "HTTP/1.1 200 OK\r\nContent-length: 318\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta http-equiv='X-UA-Compatible' content='IE=edge'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>Document</title><link rel='stylesheet' href='index.css'></head><body><h2>Hello</h2><script src='index.js'></script></body></html>";
-	std::string response = "HTTP/1.1 200 OK\r\nContent-length: 5\r\nContent-type: text/html\r\nDate: Wed, 21 Oct 2015 07:28:00 GMT\r\n\r\n12345";
-	int s = send(clientSocket, response.c_str(), response.length(), 0);
-	// int s = client.sendResponse(); // отправка response //TODO pichkasik   Вот тут я чутка не понимаю как отправлять кусками
+	Response *response = client.getResponse();
+	size_t sendByte = countBytesToSend(response->getLeftBytesToSend());
 
-	if (s < 0)
-		std::cout << "Send error" << std::endl;
+	int byteSended = send(clientSocket, response->getDataToSend().c_str(), sendByte, 0);
+	if (byteSended < 0){
+		logger.printMessage("Send error");
+	}
 
-	// if (client.isResponseSended()){ // отчистка  //TODO pichkasik
-	// 	client.resetRequest();
-	client.resetResponse();
+	response->countSendedData(byteSended);
 
-	std::cout << "/* Client out */ " << clientSocket << " Sended: " << s << std::endl;
+	if (response->isDone()){
+		client.resetResponse();
+		std::cout << "/* Client out */ " << clientSocket << " Sended: " << byteSended << std::endl;
+	}
 }
 
 /*
@@ -200,6 +217,13 @@ Client& 			Server::getClientByFD(std::vector<Client>& clients, int fd) {
 			return *it;
 	}	
 	return *it;
+}
+
+size_t Server::countBytesToSend(size_t leftBytesToSend){
+	if (leftBytesToSend > MB){
+		leftBytesToSend = MB;
+	}
+	return leftBytesToSend;
 }
 
 /*
