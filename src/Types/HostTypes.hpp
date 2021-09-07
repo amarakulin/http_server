@@ -3,6 +3,9 @@
 
 # include <iostream>
 # include <vector>
+// # include <CGI.hpp>
+
+class CGI;
 
 static const int SIZE_OF_KEYS = 6;
 static const int SIZE_OF_LOCATION_KEYS = 8;
@@ -39,8 +42,10 @@ typedef struct {
 	bool						autoindex;
 	bool						uploadEnable;
 	std::string					uploadPath;
-	std::string					cgiextension;
-	std::string					cgiPath;
+	std::string					cgiExtension; //TODO
+	std::string					cgiPath; // TODO
+	CGI*						cgi;
+	//TODO добавить редирект
 } Location;
 
 /*
