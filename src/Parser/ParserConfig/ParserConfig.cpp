@@ -366,6 +366,11 @@ void	ParserConfig::setUploadPathToLocation(std::string data,
 
 void	ParserConfig::setCgiExtensionToLocation(std::string data, 
 		HostData *hostData, int currentLocation){
+	if (data == "php") {
+		hostData->location[currentLocation]->cgiextension = "php";
+	} else {
+		throw ParserConfigException("setCgiExtensionToLocation error");
+	}
 }
 
 /*
