@@ -42,12 +42,12 @@ private:
 	static std::string		getContentLengthHeader(std::string uri);
 	static std::string		getLocationHeader(std::string uri);
 
+	//TODO get a data from config to response -> rewrite main loop
+	//Workout default paths
+	//Workout redirection
+	//Workout data for CGI
+	//Put method
 
-	//TODO figure out how works redirect and how to understand if response has to be with status 3xx
-	//TODO figure out about root location (/) and if I got a dir_path in uri
-	//TODO Ask about another headers
-	//TODO 
-	//TODO CGI env variable
 
 protected:
 	size_t		_leftBytesToSend;
