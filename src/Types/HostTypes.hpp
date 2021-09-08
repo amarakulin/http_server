@@ -3,7 +3,6 @@
 
 # include <iostream>
 # include <vector>
-// # include <CGI.hpp>
 
 class CGI;
 
@@ -42,8 +41,8 @@ typedef struct {
 	bool						autoindex;
 	bool						uploadEnable;
 	std::string					uploadPath;
-	std::string					cgiExtension; //TODO
-	std::string					cgiPath; // TODO
+	// std::string					cgiExtension; //TODO
+	// std::string					cgiPath; // TODO
 	CGI*						cgi;
 	//TODO добавить редирект
 } Location;
