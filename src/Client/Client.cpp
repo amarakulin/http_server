@@ -1,6 +1,7 @@
 #include "Client.hpp"
 
-Client::Client(int socket) : _clientSocket(socket), _request(new Request), _response(nullptr) {}
+Client::Client(int socket, HostData *hostData)
+		: _clientSocket(socket), _request(new Request), _response(nullptr) {}
 
 Client::Client(const Client& other) : _clientSocket(other._clientSocket), _request(other._request), _response(other._response) {}
 

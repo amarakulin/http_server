@@ -15,11 +15,12 @@ private:
 	int				_clientSocket;
 	Request*		_request;
 	Response*		_response;
+	HostData*		_hostData;
 
 	Client();
 
 public:
-	Client(int socket);
+	Client(int socket, HostData *hostData);
 	Client(const Client& other);
 	~Client();
 
