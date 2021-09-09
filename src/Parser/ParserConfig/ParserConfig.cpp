@@ -56,22 +56,31 @@ std::vector<HostData*>	ParserConfig::devideConfigToComponents(std::list<std::str
 	hostData = new HostData;
 	it = config.begin();
 	// setDefaultHostValues(hostData);
-	for (; it != config.end(); it++) {
-		splitFirstArgiment(*it, &key, &value);
-		if (key == "***") {
-			if (hostData->host.size() > 0 && hostData->port > 0) {
-				hosts.push_back(hostData);
-				hostData = new HostData;
-				// setDefaultHostValues(hostData);
-			} else {
+	try {
+		for (; it != config.end(); it++) {
+			splitFirstArgiment(*it, &key, &value);
+			if (value.find_first_not_of(' ') != 0 && 
+				value.find_first_not_of(' ') != std::string::npos) {
 				throw ParserConfigException("devideConfigToComponents error");
 			}
-		} else {
-			enterDataToHostDataStruct(key, value, hostData);
+			if (key == "***") {
+				if (hostData->host.size() > 0 && hostData->port > 0) {
+					hosts.push_back(hostData);
+					hostData = new HostData;
+					// setDefaultHostValues(hostData);
+				} else {
+					throw ParserConfigException("devideConfigToComponents error");
+				}
+			} else {
+				enterDataToHostDataStruct(key, value, hostData);
+			}
 		}
+		hosts.push_back(hostData);
+		return hosts;
+	} catch(const std::exception& e) {
+		std::cout << e.what() << std::endl;
+		throw e;
 	}
-	hosts.push_back(hostData);
-	return hosts;
 }
 
 void	ParserConfig::setDefaultHostValues(HostData *hostData) {
@@ -81,7 +90,7 @@ void	ParserConfig::setDefaultHostValues(HostData *hostData) {
 	hostData->port = 0;
 	hostData->root = "";
 	hostData->errorPage.clear();
-	hostData->clientMaxBodySize = "";
+	hostData->clientMaxBodySize = 0;
 	hostData->location.clear();
 }
 
@@ -243,7 +252,24 @@ void	ParserConfig::setErrorPageData(std::string data, HostData *hostData) {
 */
 
 void	ParserConfig::setClientMaxBodySizeData(std::string data, HostData *hostData) {
-	hostData->clientMaxBodySize = data;
+	hostData->clientMaxBodySize = 0;
+	for (int i = 0; i < data.length() - 1; i++) {
+		if (data[i] >= '0' && data[i] <= '9') {
+			continue;
+		} else {
+			throw ParserConfigException("setClientMaxBodySizeData error");
+		}
+	}
+	if (data[data.length() - 1] == 'M') {
+		hostData->clientMaxBodySize = atoll(data.c_str()) * pow(1024, 2);
+	} else if (data[data.length() - 1] == 'K') {
+		hostData->clientMaxBodySize = atoll(data.c_str()) * 1024;
+	} else {
+		throw ParserConfigException("setClientMaxBodySizeData error");
+	}
+	if (hostData->clientMaxBodySize < 0) {
+		throw ParserConfigException("setClientMaxBodySizeData error");
+	}
 }
 
 /*

@@ -6,6 +6,7 @@
 # include <fstream>
 # include <map>
 # include <list>
+# include <cmath>
 # include <climits>
 # include "HostTypes.hpp"
 # include "utils.hpp"
