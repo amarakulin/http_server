@@ -43,7 +43,7 @@ ResponseError::ResponseError(const ErrorPage &errorPage, HostData *hostData)
 	requestData.body = "";
 
 	_status = static_cast<int> (errorPage.errorNbr);//TODO delete hardcode, get from ErrorPage
-	createHead(requestData);
+	createHead(requestData, hostData);
 	Response::createBody(requestData.header.find("uri")->second);
 	_leftBytesToSend = _dataToSend.length();//TODO set in one place
 }

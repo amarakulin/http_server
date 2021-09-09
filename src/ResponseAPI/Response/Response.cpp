@@ -18,8 +18,8 @@ Response::Response(const Response& other) {
 
 Response::Response(RequestData &requestData, HostData *hostData)
 {
-	_status = 0;
-	createHead(requestData);
+	_status = 0;≠
+	createHead(requestData, hostData);
 }
 
 Response &Response::operator=(const Response &assign){
@@ -51,13 +51,15 @@ void Response::countSendedData(int byteSended){
 	_dataToSend.erase(_dataToSend.begin(), _dataToSend.begin() + byteSended);
 }
 
-void Response::createHead(RequestData& requestData){
+void Response::createHead(RequestData &requestData, HostData *hostData)
+{
 	_state = SENDING;
 	requestHeaderStruct headers = requestData.header;
 	requestHeaderStruct::const_iterator it;
 	for (it = headers.begin(); it != headers.end(); it++){
 		_dataToSend += processHeader(it->first, it->second);
 	}
+	_dataToSend = createRedirectHeader(hostData);
 	_dataToSend = createHeadHeader() + _dataToSend;
 }
 
@@ -132,24 +134,12 @@ std::string Response::getContentLengthHeader(std::string uri){
 	return processedStr;
 }
 
-/*
-** Getters
-*/
-
-size_t Response::getLeftBytesToSend() const {
-	return _leftBytesToSend;
-}
-
-const std::string &Response::getDataToSend() const{
-	return _dataToSend;
-}
-
-int Response::getStatus() const {
-	return _status;
-}
-
-int Response::getState() const{
-	return _state;
+std::string Response::createRedirectHeader(HostData *hostData){
+	std::string processedStr = LOCATION;
+	processedStr += "";//TODO add a location form Config
+	processedStr += "\r\n";
+	_status = 300;//TODO add a location form Config
+	return "";
 }
 
 void Response::changeContentLength(size_t valueContentLength){
@@ -168,15 +158,24 @@ void Response::changeContentLength(size_t valueContentLength){
 	_dataToSend.replace(pos, oldValueContentLength.length(), std::to_string(valueContentLength));
 
 }
+/*
+** Getters
+*/
 
-std::string Response::getLocationHeader(std::string uri){
-//	_status = 300;
-	return std::string(LOCATION) += uri;
+size_t Response::getLeftBytesToSend() const {
+	return _leftBytesToSend;
 }
 
-std::string Response::createRedirectHeader(std::string value){
-	_status = 300;
-	return std::string(LOCATION) += value;
+const std::string &Response::getDataToSend() const{
+	return _dataToSend;
+}
+
+int Response::getStatus() const {
+	return _status;
+}
+
+int Response::getState() const{
+	return _state;
 }
 
 /*

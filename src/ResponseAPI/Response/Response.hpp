@@ -37,17 +37,15 @@ private:
 	static const	t_response_process _arrProcessHeaders[];
 
 	std::string		createHeadHeader();
-	std::string		createRedirectHeader(std::string value); //TODO handle 3xx status code
+	std::string		createRedirectHeader(HostData *hostData); //TODO handle 3xx status code
 	std::string		processHeader(const std::string& headerName, const std::string& headerValue);
 	static std::string		getContentTypeHeader(std::string accept);
 	static std::string		getContentLengthHeader(std::string uri);
-	static std::string		getLocationHeader(std::string uri);
 
-	//TODO get a data from config to response -> rewrite main loop
-	//Workout default paths
-	//Workout redirection
-	//Workout data for CGI
-	//Put method
+	//TODO Workout default paths
+	//TODO Workout redirection
+	//TODO Workout data for CGI
+	//TODO Put method
 
 
 protected:
@@ -56,7 +54,7 @@ protected:
 	int			_state;
 	int			_status;
 
-	void			createHead(RequestData& requestData);
+	void createHead(RequestData &requestData, HostData *hostData);
 	virtual void	createBody(const std::string& uri);
 	void			changeContentLength(size_t valueContentLength);
 
