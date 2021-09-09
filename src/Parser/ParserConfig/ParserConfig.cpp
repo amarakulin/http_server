@@ -143,7 +143,9 @@ void	ParserConfig::setLocationDetailsData(std::string data, HostData *hostData) 
 
 	currentLocation = hostData->location.size() - 1;
 	splitFirstArgiment(data, &key, &value);
-	if (key == "root") {
+	if (key == "return") {
+		setRedirectToLocation(value, hostData, currentLocation);
+	} else if (key == "root") {
 		setRootDataToLocation(value, hostData, currentLocation);
 	} else if (key == "methods") {
 		setMethodsToLocation(value, hostData, currentLocation);
@@ -270,6 +272,36 @@ void	ParserConfig::setClientMaxBodySizeData(std::string data, HostData *hostData
 	if (hostData->clientMaxBodySize < 0) {
 		throw ParserConfigException("setClientMaxBodySizeData error");
 	}
+}
+
+void	ParserConfig::setRedirectToLocation(std::string data, HostData *hostData, int currentLocation) {
+	Redirect *redirect = new Redirect;
+	int delim;
+	const char *tmp;
+	size_t statusCode;
+	std::string redirectPath;
+
+	delim = data.find_first_of(' ');
+	if (delim != std::string::npos) {
+		tmp = data.substr(0, delim).c_str();
+		statusCode = std::strtoll(tmp, NULL, 0);
+		redirectPath = data.substr(delim + 1, data.length() - delim - 1);
+		if (redirectPath.find_first_of(' ') == std::string::npos) {
+			if (redirectPath.find_first_of("/") == 0 && statusCode != 0) {
+				Redirect *redirect = new Redirect;
+				redirect->statusCode = statusCode;
+				redirect->path = redirectPath;
+				hostData->location[currentLocation]->redirect = redirect;
+			} else {
+				throw ParserConfigException("setErrorPageData error");
+			}
+		} else {
+			throw ParserConfigException("setErrorPageData error");
+		}
+	} else {
+		throw ParserConfigException("setErrorPageData error");
+	}
+	// hostData->location[currentLocation]->redirect
 }
 
 /*
