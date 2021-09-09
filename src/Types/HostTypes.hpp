@@ -6,28 +6,10 @@
 
 class CGI;
 
-static const int SIZE_OF_KEYS = 6;
-static const int SIZE_OF_LOCATION_KEYS = 8;
-
-static const std::string keys[SIZE_OF_KEYS] = {
-	"listen",
-	"server_name",
-	"root",
-	"error_page",
-	"client_max_body_size"
-	"location",
-};
-
-static const std::string locationKeys[SIZE_OF_LOCATION_KEYS] = {
-	"root",
-	"methods",
-	"autoindex",
-	"index",
-	"upload_enable",
-	"upload_path",
-	"cgi_extension",
-	"cgi_path",
-};
+typedef struct {
+	size_t						statusCode;
+	std::string					path;
+} Redirect;
 
 /*
 *	Структура-дополнение с HostData. Описывает location. Нет обязательных полей.
@@ -36,6 +18,7 @@ static const std::string locationKeys[SIZE_OF_LOCATION_KEYS] = {
 typedef struct {
 	std::string					way;
 	std::string					root;
+	Redirect*					redirect;
 	std::vector<std::string>	httpMethods;
 	std::vector<std::string>	index;
 	bool						autoindex;
