@@ -12,10 +12,10 @@
 #include "ResponseTypes.hpp"
 
 
-Response*	createResponseGet(RequestData& requestData);
-Response*	createResponsePost(RequestData& requestData);
-Response*	createResponseHead(RequestData& requestData);
-Response*	createResponseDelete(RequestData& requestData);
+Response *createResponseGet(RequestData &requestData, HostData *hostData);
+Response *createResponsePost(RequestData &requestData, HostData *hostData);
+Response *createResponseHead(RequestData &requestData, HostData *hostData);
+Response *createResponseDelete(RequestData &requestData, HostData *hostData);
 
 static const ResponseCreatorList responseCreatorList[] ={
 	{"get", &createResponseGet}, 
@@ -30,7 +30,7 @@ class ResponseCreator {
 		ResponseCreator();
 		~ResponseCreator();
 
-		Response* createResponse(RequestData& requestData);
+		Response *createResponse(RequestData &requestData, HostData *hostData);
 		Response* createResponse(const ErrorPage &errorPage);
 
 };

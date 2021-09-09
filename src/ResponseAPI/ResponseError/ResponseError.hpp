@@ -24,7 +24,7 @@
 class ResponseError : public Response {
 public:
 	ResponseError();
-	ResponseError(const ErrorPage &errorPage);//TODO add ErrorPage
+	ResponseError(const ErrorPage &errorPage, HostData *hostData);//TODO add ErrorPage
 	ResponseError(const ResponseError& other);
 	ResponseError& operator=(const ResponseError &assign);
 	~ResponseError();

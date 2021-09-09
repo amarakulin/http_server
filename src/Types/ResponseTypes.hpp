@@ -15,7 +15,7 @@ class Request;
 */
 typedef struct {
 	std::string method;
-	Response*	(*createResponse)(RequestData&);
+	Response*	(*createResponse)(RequestData&, HostData*);
 }	ResponseCreatorList;
 
 /*

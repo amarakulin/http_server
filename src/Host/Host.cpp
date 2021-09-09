@@ -24,6 +24,10 @@ std::string		Host::getHostName() const {
 	// return _hostName;
 }
 
+HostData *Host::getData() const{
+	return _data;
+}
+
 bool operator==(const Host &lhs, const Host &rhs) {
 	if (lhs.getIp() != rhs.getIp()
 		|| lhs.getPort() != rhs.getPort()
