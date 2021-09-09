@@ -8,7 +8,7 @@ class ResponseGet : public Response {
 public:
 	ResponseGet();
 	ResponseGet(const ResponseGet& other);
-	ResponseGet(RequestData& requestData);
+	ResponseGet(RequestData &requestData, HostData *hostData);
 	ResponseGet& operator=(const ResponseGet &assign);
 	~ResponseGet();
 

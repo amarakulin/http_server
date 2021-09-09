@@ -31,7 +31,8 @@ ResponseError &ResponseError::operator=(const ResponseError &assign){
 	return *this;
 }
 
-ResponseError::ResponseError(const ErrorPage &errorPage) {
+ResponseError::ResponseError(const ErrorPage &errorPage, HostData *hostData)
+{
 	logger.printMessage("[+] ResponseError constructor with status: " + std::to_string(errorPage.errorNbr));
 	RequestData requestData;
 	requestHeaderStruct headerStruct;

@@ -62,3 +62,7 @@ void Client::setResponse(Response *response) {
 	resetResponse();
 	_response = response;
 }
+
+HostData *Client::getHostData() const{
+	return _hostData;
+}

@@ -185,7 +185,8 @@ void				Server::processingRequest(int clientSocket, Client& client) {
 }
 
 void				Server::createResponse(Client& client) {
-	client.setResponse(_responseCreator.createResponse(client.getRequest()->getData()));
+	client.setResponse(_responseCreator.createResponse(
+			client.getRequest()->getData(), client.getHostData()));
 	client.resetRequest();
 }
 

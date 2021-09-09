@@ -31,7 +31,10 @@ ResponseHead &ResponseHead::operator=(const ResponseHead &assign) {
 	return *this;
 }
 
-ResponseHead::ResponseHead(RequestData& requestData) : Response(requestData) {
+ResponseHead::ResponseHead(RequestData &requestData, HostData *hostData)
+		: Response(requestData,
+				   NULL)
+{
 	ResponseHead::createBody(requestData.header["uri"]);
 	_leftBytesToSend = _dataToSend.length();//TODO set in one place
 }

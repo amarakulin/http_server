@@ -28,7 +28,7 @@ public:
 	Response*	getResponse() const;
 	int			getSocket() const;
 	int			getRequestStatus() const;
-//	int			getResponseStatus() const;
+	HostData	*getHostData() const;
 
 	bool		hasResponse() const;
 	bool		hasRequest() const;

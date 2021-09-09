@@ -16,7 +16,8 @@ Response::Response(const Response& other) {
 	operator=(other);
 }
 
-Response::Response(RequestData& requestData) {
+Response::Response(RequestData &requestData, HostData *hostData)
+{
 	_status = 0;
 	createHead(requestData);
 }
