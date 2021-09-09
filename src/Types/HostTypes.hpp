@@ -69,7 +69,7 @@ typedef struct {
 	size_t						port;
 	std::string					root;
 	std::vector<ErrorPage*>		errorPage;
-	std::string					clientMaxBodySize;
+	size_t						clientMaxBodySize;
 	std::vector<Location*>		location;
 } HostData;
 
