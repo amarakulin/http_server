@@ -16,6 +16,7 @@
 #include "../../../include/acutest.hpp"
 #include "../../../src/ResponseAPI/Response/Response.hpp"
 #include "../../../src/ResponseAPI/ResponseHead/ResponseHead.hpp"
+#include "../../../test_utils/MockHostData.hpp"
 #include <iostream>
 
 void
@@ -29,10 +30,12 @@ testResponseHeadHTMLFileInRootLocation(void){
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	ResponseHead *response = new ResponseHead(requestData);
+	HostData *hostData = MockHostData::createDefaultHostData();
+	ResponseHead *response = new ResponseHead(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
+	delete hostData;
 }
 
 void testResponseHeadCSSFileInRootLocation(void){
@@ -44,11 +47,13 @@ void testResponseHeadCSSFileInRootLocation(void){
 	header.insert(std::pair<std::string, std::string>("accept", "text/css,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/css\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
-	
-	ResponseHead *response = new ResponseHead(requestData);
+
+	HostData *hostData = MockHostData::createDefaultHostData();
+	ResponseHead *response = new ResponseHead(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
+	delete hostData;
 }
 
 void
@@ -62,10 +67,12 @@ testResponseHeadEmptyFileInRootLocation(void){
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: */*\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	ResponseHead *response = new ResponseHead(requestData);
+	HostData *hostData = MockHostData::createDefaultHostData();
+	ResponseHead *response = new ResponseHead(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
+	delete hostData;
 }
 
 void
@@ -79,10 +86,12 @@ testResponseHeadWithFile3MB(void){
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	ResponseHead *response = new ResponseHead(requestData);
+	HostData *hostData = MockHostData::createDefaultHostData();
+	ResponseHead *response = new ResponseHead(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
+	delete hostData;
 }
 
 void
@@ -96,10 +105,12 @@ testResponseHeadWithRootLocation(void){
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	ResponseHead *response = new ResponseHead(requestData);
+	HostData *hostData = MockHostData::createDefaultHostData();
+	ResponseHead *response = new ResponseHead(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
+	delete hostData;
 }
 
 
@@ -114,10 +125,12 @@ testResponseHeadWithFileInNestedLocation_1(void){
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	ResponseHead *response = new ResponseHead(requestData);
+	HostData *hostData = MockHostData::createDefaultHostData();
+	ResponseHead *response = new ResponseHead(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
+	delete hostData;
 }
 
 void
@@ -131,10 +144,12 @@ testResponseHeadWithFileInNestedLocation_2(void){
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	ResponseHead *response = new ResponseHead(requestData);
+	HostData *hostData = MockHostData::createDefaultHostData();
+	ResponseHead *response = new ResponseHead(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
+	delete hostData;
 }
 
 void
@@ -148,10 +163,12 @@ testResponseHeadWithOneTypeFile(void){
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	ResponseHead *response = new ResponseHead(requestData);
+	HostData *hostData = MockHostData::createDefaultHostData();
+	ResponseHead *response = new ResponseHead(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
+	delete hostData;
 }
 
 void
@@ -165,10 +182,12 @@ testResponseHeadWithSeveralTypesFile(void){
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	ResponseHead *response = new ResponseHead(requestData);
+	HostData *hostData = MockHostData::createDefaultHostData();
+	ResponseHead *response = new ResponseHead(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
+	delete hostData;
 }
 
 void
@@ -182,10 +201,12 @@ testResponseHeadWithEmptyTypeFile(void){
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: \r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	ResponseHead *response = new ResponseHead(requestData);
+	HostData *hostData = MockHostData::createDefaultHostData();
+	ResponseHead *response = new ResponseHead(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
+	delete hostData;
 }
 
 void
@@ -198,10 +219,12 @@ testResponseHeadWithoutTypeFile(void){
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	ResponseHead *response = new ResponseHead(requestData);
+	HostData *hostData = MockHostData::createDefaultHostData();
+	ResponseHead *response = new ResponseHead(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
+	delete hostData;
 }
 
 void

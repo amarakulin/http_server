@@ -6,7 +6,7 @@
 class ResponsePost : public Response {
 public:
 	ResponsePost();
-	ResponsePost(RequestData& requestData);
+	ResponsePost(RequestData &requestData, HostData *hostData);
 	ResponsePost(const ResponsePost& other);
 	ResponsePost& operator=(const ResponsePost &assign);
 	~ResponsePost();
