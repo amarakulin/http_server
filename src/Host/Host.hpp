@@ -24,6 +24,7 @@ class Host {
 		std::string	getRoot() const;
 		std::string	errorPage() const;
 		std::string	getClientMaxBodySize() const;
+		HostData* 	getData() const;
 };
 
 bool operator==(const Host& lhs, const Host& rhs);
