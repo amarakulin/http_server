@@ -44,12 +44,13 @@ ResponseError::ResponseError(const ErrorPage &errorPage, HostData *hostData)
 
 	_status = static_cast<int> (errorPage.errorNbr);//TODO delete hardcode, get from ErrorPage
 	createHead(requestData, hostData);
-	Response::createBody(requestData.header.find("uri")->second);
+	Response::createBody(requestData.header.find("uri")->second, NULL);
 	_leftBytesToSend = _dataToSend.length();//TODO set in one place
 }
 
 ResponseError::~ResponseError() {}
 
-void	ResponseError::createBody(const std::string& uri) {
-	Response::createBody(uri);
+void ResponseError::createBody(const std::string &uri, HostData *hostData)
+{
+	Response::createBody(uri, NULL);
 }

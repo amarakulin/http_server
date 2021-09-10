@@ -12,7 +12,7 @@ public:
 	~ResponsePost();
 
 private:
-	virtual void createBody(const std::string& uri);
+	virtual void createBody(const std::string &uri, HostData *hostData);
 	std::string getDataFromCGI(const std::string& uri);
 };
 

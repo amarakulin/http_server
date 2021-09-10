@@ -35,12 +35,13 @@ ResponseHead::ResponseHead(RequestData &requestData, HostData *hostData)
 		: Response(requestData,
 				   NULL)
 {
-	ResponseHead::createBody(requestData.header["uri"]);
+	ResponseHead::createBody(requestData.header["uri"], NULL);
 	_leftBytesToSend = _dataToSend.length();//TODO set in one place
 }
 
 ResponseHead::~ResponseHead() {}
 
-void ResponseHead::createBody(const std::string& uri) {
+void ResponseHead::createBody(const std::string &uri, HostData *hostData)
+{
 	_dataToSend += "\r\n";
 }

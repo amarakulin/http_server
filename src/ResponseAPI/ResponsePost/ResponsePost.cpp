@@ -20,13 +20,14 @@ ResponsePost::ResponsePost(RequestData &requestData, HostData *hostData)
 		: Response(requestData,
 				   NULL)
 {
-	ResponsePost::createBody(requestData.header["uri"]);
+	ResponsePost::createBody(requestData.header["uri"], NULL);
 	_leftBytesToSend = _dataToSend.length();//TODO set in one place
 }
 
 ResponsePost::~ResponsePost() {}
 
-void ResponsePost::createBody(const std::string& uri) {
+void ResponsePost::createBody(const std::string &uri, HostData *hostData)
+{
 	std::string dataFromCGI = getDataFromCGI(uri);
 	changeContentLength(dataFromCGI.length());
 	_dataToSend += "\r\n";

@@ -28,7 +28,7 @@ typedef enum { NO_RESPONSE, SENDING, SENDED } responseState;
 */
 typedef struct {
 	const char*		nameHeader;
-	std::string			(*getProcessedHeader)(std::string valueHeader);
+	std::string			(*getProcessedHeader)(std::string valueHeader, HostData *hostData);
 }		t_response_process;
 
 

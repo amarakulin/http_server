@@ -38,9 +38,11 @@ private:
 
 	std::string		createHeadHeader();
 	std::string		createRedirectHeader(HostData *hostData); //TODO handle 3xx status code
-	std::string		processHeader(const std::string& headerName, const std::string& headerValue);
-	static std::string		getContentTypeHeader(std::string accept);
-	static std::string		getContentLengthHeader(std::string uri);
+	std::string		processHeader(const std::string &headerName, const std::string &headerValue, HostData *hostData);
+	static std::string getContentTypeHeader(std::string accept, HostData *hostData);
+	static std::string getContentLengthHeader(std::string uri, HostData *hostData);
+
+	static std::string getFilePathFromHostData(const std::string &uri, HostData *hostData);
 
 	//TODO Workout default paths
 	//TODO Workout redirection
@@ -55,7 +57,7 @@ protected:
 	int			_status;
 
 	void createHead(RequestData &requestData, HostData *hostData);
-	virtual void	createBody(const std::string& uri);
+	virtual void createBody(const std::string &uri, HostData *hostData);
 	void			changeContentLength(size_t valueContentLength);
 
 public:

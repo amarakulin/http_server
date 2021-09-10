@@ -18,7 +18,18 @@ Response::Response(const Response& other) {
 
 Response::Response(RequestData &requestData, HostData *hostData)
 {
-	_status = 0;≠
+	_status = 0;
+	std::cerr << "1" << std::endl;
+	std::cerr << hostData->port << std::endl;
+	std::cerr << hostData->root << std::endl;
+	std::cerr << hostData->host << std::endl;
+	std::cerr << hostData->ip << std::endl;
+	std::cerr << hostData->port << std::endl;
+	std::cerr << hostData->serverName << std::endl;
+	std::cerr << hostData->clientMaxBodySize << std::endl;
+	std::cerr << hostData->root << std::endl;
+	std::cerr << hostData->location[0]->way << std::endl;
+
 	createHead(requestData, hostData);
 }
 
@@ -56,28 +67,33 @@ void Response::createHead(RequestData &requestData, HostData *hostData)
 	_state = SENDING;
 	requestHeaderStruct headers = requestData.header;
 	requestHeaderStruct::const_iterator it;
+	std::cerr << "3" << std::endl;
 	for (it = headers.begin(); it != headers.end(); it++){
-		_dataToSend += processHeader(it->first, it->second);
+		std::cerr << it->first << std::endl;
+
+		_dataToSend += processHeader(it->first, it->second, hostData);
 	}
+	std::cerr << "4" << std::endl;
 	_dataToSend = createRedirectHeader(hostData);
 	_dataToSend = createHeadHeader() + _dataToSend;
 }
 
-void Response::createBody(const std::string& uri){
-	std::string filename = uri;
-	if (uri == "./"){//TODO needs to know default List<file> if directory is given from config
-		filename += "index.html";
-	}
+void Response::createBody(const std::string &uri, HostData *hostData)
+{
+	std::string filename = getFilePathFromHostData(uri, hostData);
 	std::string body = getDataFileAsString(filename);
 	_dataToSend += "\r\n";
 	_dataToSend += body;
 }
 
-std::string Response::processHeader(const std::string &headerName, const std::string &headerValue){
+std::string Response::processHeader(const std::string &headerName,
+									const std::string &headerValue,
+									HostData *hostData)
+{
 	std::string processedStrHeader = "";
 	for (int i = 0; _arrProcessHeaders[i].getProcessedHeader; i++){
 		if (_arrProcessHeaders[i].nameHeader == headerName){
-			processedStrHeader = _arrProcessHeaders[i].getProcessedHeader(headerValue);
+			processedStrHeader = _arrProcessHeaders[i].getProcessedHeader(headerValue, hostData);
 			break;
 		}
 	}
@@ -108,7 +124,9 @@ std::string Response::createHeadHeader(){//TODO think if got a error(5xx) while 
 	return processedStr;
 }
 
-std::string Response::getContentTypeHeader(std::string accept){
+std::string
+Response::getContentTypeHeader(std::string accept, HostData *hostData)
+{
 	std::string processedStr = CONTENT_TYPE;//TODO handle Accept-Charset here
 	long found = static_cast<long> (accept.find(','));
 	if (found != std::string::npos){
@@ -118,13 +136,14 @@ std::string Response::getContentTypeHeader(std::string accept){
 	return processedStr;
 }
 
-std::string Response::getContentLengthHeader(std::string uri){
+std::string
+Response::getContentLengthHeader(std::string uri, HostData *hostData)
+{
 	std::string processedStr = CONTENT_LENGTH;
-	std::string filename = uri;
+	std::cerr << "55" << std::endl;
 
-	if (filename == "./"){//TODO needs to know default List<file> if directory is given from config
-		filename += "index.html";
-	}
+	std::string filename = getFilePathFromHostData(uri, hostData);
+	std::cerr << "5" << std::endl;
 	long sizeFile = getSizeFile(filename);
 	if (sizeFile == -1){
 		std::cout << "[-] Error can't count size file" << std::endl;
@@ -138,7 +157,7 @@ std::string Response::createRedirectHeader(HostData *hostData){
 	std::string processedStr = LOCATION;
 	processedStr += "";//TODO add a location form Config
 	processedStr += "\r\n";
-	_status = 300;//TODO add a location form Config
+//	_status = 300;//TODO add a location form Config
 	return "";
 }
 
@@ -156,7 +175,35 @@ void Response::changeContentLength(size_t valueContentLength){
 		oldValueContentLength += *itEnd;
 	}
 	_dataToSend.replace(pos, oldValueContentLength.length(), std::to_string(valueContentLength));
+}
+std::string
+Response::getFilePathFromHostData(const std::string &uri, HostData *hostData){
+	Location *tmpLocation;
+	std::cerr << "aaaaa: "   << std::endl;
+	std::cerr << hostData->root << std::endl;
+	std::string filePath = "." + hostData->root + uri;//TODO may be without root
+	std::cerr << "FilePath: " << filePath << std::endl;
+	std::string filename = uri.substr(uri.find_last_of("/\\") + 1);
+	std::cerr << "Filename: " << filename << std::endl;
+	std::cerr << "FilePath: " << filePath << std::endl;
+	if ( filename.find('.') != std::string::npos){
+		return filePath;
+	}
+	for(size_t i = 0; i < hostData->location.size(); ++i){
+		tmpLocation = hostData->location[i];
+		if ((tmpLocation->way + tmpLocation->root) == filePath){
+			break;
+		}
+	}
+	for (size_t i = 0; i < tmpLocation->index.size(); ++i){
+		if (isFileExist(filePath + tmpLocation->index[i])){
+			filePath += tmpLocation->index[i];
+		}
+	}
 
+	std::cout << "Filename: " << filename << std::endl;
+	std::cout << "FilePath: " << filePath << std::endl;
+	return filePath;
 }
 /*
 ** Getters

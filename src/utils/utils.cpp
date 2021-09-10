@@ -80,3 +80,9 @@ bool	isSomeSymbolInTheEnd(std::string end, char symbol) {
 		return false;
 	}
 }
+
+
+bool isFileExist (const std::string& filePath) {
+	struct stat buffer;
+	return (stat (filePath.c_str(), &buffer) == 0);
+}

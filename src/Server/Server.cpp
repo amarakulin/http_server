@@ -9,8 +9,15 @@ Server::Server() {}
 Server::Server(const Config* config) : _config(config) {
 	
 	std::vector<Host*> hosts = _config->getHosts();
+
+
 	for (int i = 0; i < hosts.size(); ++i) {
 		std::cout << "Port: " << hosts[i]->getPort() << std::endl;
+//		std::cerr << SOME "!!!!!!!!!!! Config !!!!!!!!" << std::endl;
+//		std::cerr << _config->getHosts()[i]->getData()->port << std::endl;
+//		std::cerr << _config->getHosts()[i]->getData()->root << std::endl;
+//		std::cerr << _config->getHosts()[i]->getData()->host << std::endl;
+//		std::cerr << "$$$$$$$$$$$$$$$$$$$$$$$$$" RESET << std::endl;
 	}
 	createListeners();
 }
@@ -77,6 +84,12 @@ void Server::createNewClient(int hostSocket, HostData *hostData)
 	
 	fcntl(sock, F_SETFL, O_NONBLOCK);
 
+//	std::cerr <<  GREEN "!!!!!!!!!!! Server !!!!!!!!" << std::endl;
+//	std::cerr << hostData->port << std::endl;
+//	std::cerr << hostData->root << std::endl;
+//	std::cerr << hostData->host << std::endl;
+//	std::cerr << "$$$$$$$$$$$$$$$$$$$$$$$$$" RESET << std::endl;
+
 	Client client(sock, hostData);
 
 	_sockets.addClientSocket(sock);
@@ -125,7 +138,14 @@ void				Server::handleListenerEvents() {
 		struct pollfd host = _sockets.getSocketByFD(_listeners[i].getSocket()); //TODO optimize!!!!!!!!!!!
 
 		if (host.revents & POLLIN)
+		{
+//			std::cerr << BOLDRED "!!!!!!!!!!! Config in SERVER!!!!!!!!" << std::endl;
+//			std::cerr << _config->getHosts()[i]->getData()->port << std::endl;
+//			std::cerr << _config->getHosts()[i]->getData()->root << std::endl;
+//			std::cerr << _config->getHosts()[i]->getData()->host << std::endl;
+//			std::cerr << "$$$$$$$$$$$$$$$$$$$$$$$$$" RESET << std::endl;
 			createNewClient(host.fd, _config->getHosts()[i]->getData());
+		}
 	}
 }
 
