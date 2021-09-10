@@ -205,6 +205,11 @@ void				Server::processingRequest(int clientSocket, Client& client) {
 }
 
 void				Server::createResponse(Client& client) {
+	std::cout << "Response Constructor" << std::endl;
+	std::cout << "Port: "<< client.getHostData()->port << std::endl;
+	std::cout << "Root: " << client.getHostData()->root << std::endl;
+	std::cout << "Host: " <<  client.getHostData()->host << std::endl;
+	std::cout << "ServName: "<< client.getHostData()->serverName << std::endl;
 	client.setResponse(_responseCreator.createResponse(
 			client.getRequest()->getData(), client.getHostData()));
 	client.resetRequest();

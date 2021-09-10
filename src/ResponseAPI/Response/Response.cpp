@@ -63,11 +63,13 @@ void Response::createHead(RequestData &requestData, HostData *hostData)
 	_state = SENDING;
 	requestHeaderStruct headers = requestData.header;
 	requestHeaderStruct::const_iterator it;
+	std::cout << "REQUEST" << std::endl;
+
 	for (it = headers.begin(); it != headers.end(); it++){
 
 		_dataToSend += processHeader(it->first, it->second, hostData);
 	}
-	_dataToSend = createRedirectHeader(hostData);
+//	_dataToSend = createRedirectHeader(hostData);
 	_dataToSend = createHeadHeader() + _dataToSend;
 }
 
@@ -84,8 +86,10 @@ std::string Response::processHeader(const std::string &headerName,
 									HostData *hostData)
 {
 	std::string processedStrHeader = "";
+
 	for (int i = 0; _arrProcessHeaders[i].getProcessedHeader; i++){
 		if (_arrProcessHeaders[i].nameHeader == headerName){
+			std::cerr << headerName << " : " << headerValue << std::endl;
 			processedStrHeader = _arrProcessHeaders[i].getProcessedHeader(headerValue, hostData);
 			break;
 		}
@@ -171,6 +175,7 @@ std::string
 Response::getFilePathFromHostData(const std::string &uri, HostData *hostData){
 	Location *tmpLocation;
 	std::string filePath = "." + hostData->root + uri;//TODO may be without root
+	std::cerr << "Uri: " << uri << std::endl;
 	std::string filename = uri.substr(uri.find_last_of("/\\") + 1);
 	std::cerr << "Filename: " << filename << std::endl;
 	std::cerr << "FilePath: " << filePath << std::endl;
