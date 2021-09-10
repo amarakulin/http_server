@@ -31,7 +31,7 @@ class ResponseCreator {
 		~ResponseCreator();
 
 		Response *createResponse(RequestData &requestData, HostData *hostData);
-		Response* createResponse(const ErrorPage &errorPage);
+		Response *createResponse(const ErrorPage &errorPage, HostData *hostData);
 
 };
 

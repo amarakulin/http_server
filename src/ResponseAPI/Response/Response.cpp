@@ -19,16 +19,12 @@ Response::Response(const Response& other) {
 Response::Response(RequestData &requestData, HostData *hostData)
 {
 	_status = 0;
-	std::cerr << "1" << std::endl;
-	std::cerr << hostData->port << std::endl;
-	std::cerr << hostData->root << std::endl;
-	std::cerr << hostData->host << std::endl;
-	std::cerr << hostData->ip << std::endl;
-	std::cerr << hostData->port << std::endl;
-	std::cerr << hostData->serverName << std::endl;
-	std::cerr << hostData->clientMaxBodySize << std::endl;
-	std::cerr << hostData->root << std::endl;
-	std::cerr << hostData->location[0]->way << std::endl;
+	std::cout << "Response Constructor" << std::endl;
+	std::cout << "Port: "<< hostData->port << std::endl;
+	std::cout << "Root: " << hostData->root << std::endl;
+	std::cout << "Host: " <<  hostData->host << std::endl;
+	std::cout << "ServName: "<< hostData->serverName << std::endl;
+//	std::cout << hostData->location[0]->way << std::endl;
 
 	createHead(requestData, hostData);
 }
@@ -67,13 +63,10 @@ void Response::createHead(RequestData &requestData, HostData *hostData)
 	_state = SENDING;
 	requestHeaderStruct headers = requestData.header;
 	requestHeaderStruct::const_iterator it;
-	std::cerr << "3" << std::endl;
 	for (it = headers.begin(); it != headers.end(); it++){
-		std::cerr << it->first << std::endl;
 
 		_dataToSend += processHeader(it->first, it->second, hostData);
 	}
-	std::cerr << "4" << std::endl;
 	_dataToSend = createRedirectHeader(hostData);
 	_dataToSend = createHeadHeader() + _dataToSend;
 }
@@ -140,10 +133,8 @@ std::string
 Response::getContentLengthHeader(std::string uri, HostData *hostData)
 {
 	std::string processedStr = CONTENT_LENGTH;
-	std::cerr << "55" << std::endl;
 
 	std::string filename = getFilePathFromHostData(uri, hostData);
-	std::cerr << "5" << std::endl;
 	long sizeFile = getSizeFile(filename);
 	if (sizeFile == -1){
 		std::cout << "[-] Error can't count size file" << std::endl;
@@ -179,10 +170,7 @@ void Response::changeContentLength(size_t valueContentLength){
 std::string
 Response::getFilePathFromHostData(const std::string &uri, HostData *hostData){
 	Location *tmpLocation;
-	std::cerr << "aaaaa: "   << std::endl;
-	std::cerr << hostData->root << std::endl;
 	std::string filePath = "." + hostData->root + uri;//TODO may be without root
-	std::cerr << "FilePath: " << filePath << std::endl;
 	std::string filename = uri.substr(uri.find_last_of("/\\") + 1);
 	std::cerr << "Filename: " << filename << std::endl;
 	std::cerr << "FilePath: " << filePath << std::endl;

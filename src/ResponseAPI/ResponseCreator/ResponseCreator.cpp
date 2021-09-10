@@ -1,3 +1,4 @@
+#include <Host.hpp>
 #include "ResponseCreator.hpp"
 
 ResponseCreator::ResponseCreator() {}
@@ -17,31 +18,32 @@ Response *ResponseCreator::createResponse(RequestData &requestData,
 	return new Response;
 }
 
-Response *ResponseCreator::createResponse(const ErrorPage &errorPage){
+Response *ResponseCreator::createResponse(const ErrorPage &errorPage, HostData *hostData)
+{
 	logger.printMessage("[+] ResponseError with status code: " + std::to_string(errorPage.errorNbr));
-	return new ResponseError(errorPage, NULL);
+	return new ResponseError(errorPage, hostData);
 }
 
 Response *createResponseGet(RequestData &requestData, HostData *hostData)
 {
 	logger.printMessage("[+] ResponseGet");
-	return new ResponseGet(requestData, NULL);
+	return new ResponseGet(requestData, hostData);
 }
 
 Response *createResponsePost(RequestData &requestData, HostData *hostData)
 {
 	logger.printMessage("[+] ResponsePost");
-	return new ResponsePost(requestData, NULL);
+	return new ResponsePost(requestData, hostData);
 }
 
 Response *createResponseHead(RequestData &requestData, HostData *hostData)
 {
 	logger.printMessage("[+] ResponseHead");
-	return new ResponseHead(requestData, NULL);
+	return new ResponseHead(requestData, hostData);
 }
 
 Response *createResponseDelete(RequestData &requestData, HostData *hostData)
 {
 	logger.printMessage("[+] ResponseDelete");
-	return new ResponseDelete(requestData, NULL);
+	return new ResponseDelete(requestData, hostData);
 }

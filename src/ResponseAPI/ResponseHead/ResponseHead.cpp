@@ -33,9 +33,9 @@ ResponseHead &ResponseHead::operator=(const ResponseHead &assign) {
 
 ResponseHead::ResponseHead(RequestData &requestData, HostData *hostData)
 		: Response(requestData,
-				   NULL)
+				   hostData)
 {
-	ResponseHead::createBody(requestData.header["uri"], NULL);
+	ResponseHead::createBody(requestData.header["uri"], hostData);
 	_leftBytesToSend = _dataToSend.length();//TODO set in one place
 }
 

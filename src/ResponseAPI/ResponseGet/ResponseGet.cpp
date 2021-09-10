@@ -18,9 +18,9 @@ ResponseGet &ResponseGet::operator=(const ResponseGet &assign) {
 }
 
 ResponseGet::ResponseGet(RequestData &requestData, HostData *hostData)
-		: Response(requestData, NULL)
+		: Response(requestData, hostData)
 {
-	Response::createBody(requestData.header["uri"], NULL);
+	Response::createBody(requestData.header["uri"], hostData);
 	_leftBytesToSend = _dataToSend.length();//TODO set in one place
 }
 
@@ -28,5 +28,5 @@ ResponseGet::~ResponseGet() {}
 
 void ResponseGet::createBody(const std::string &uri, HostData *hostData)
 {
-	Response::createBody(uri, NULL);
+	Response::createBody(uri, hostData);
 }
