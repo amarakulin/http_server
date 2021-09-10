@@ -5,6 +5,8 @@ webserver
 webserver.a
 unit_test/unit_test
 
+### Binar files ###
+**/logs
 
 ### IDEA directory/files ###
 .vscode

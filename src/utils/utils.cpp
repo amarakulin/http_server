@@ -26,11 +26,11 @@ std::vector<std::string>	split(std::string value, std::string delim) {
 	size_t start = 0;
 	size_t end = 0;
 
-	while (end <= value.length()) {
+	while (start != value.length() && end != std::string::npos) {
 		end = value.find(delim, start);
 
 		if (end == std::string::npos) {
-			tmp.push_back(value.substr(start, end - start));
+				tmp.push_back(value.substr(start, end - start));
 		} else {
 			if (start - end != 0)
 				tmp.push_back(value.substr(start, end - start));
@@ -38,6 +38,39 @@ std::vector<std::string>	split(std::string value, std::string delim) {
 		}
 	}
 	return tmp;
+}
+
+bool	hasLowerCaseLetter(std::string& str) {
+	size_t len = str.length();
+	for (size_t i = 0; i < len; i++) {
+		if (islower(str[i]))
+			return true;
+	}
+	return false;
+}
+
+bool	hasUpperCaseLetter(std::string& str) {
+	size_t len = str.length();
+	for (size_t i = 0; i < len; i++) {
+		if (isupper(str[i]))
+			return true;
+	}
+	return false;
+}
+
+long	getSizeFile(const std::string &filename){
+	struct stat stat_buf;
+	int rc = stat(filename.c_str(), &stat_buf);
+	//TODO test empty file, not exist file
+	return rc == 0 ? stat_buf.st_size : -1;
+}
+
+std::string			getDataFileAsString(const std::string &filename){
+	std::stringstream buffer;
+	std::ifstream file(filename);
+	//TODO test if not exist file
+	buffer << file.rdbuf();
+	return buffer.str();
 }
 
 bool	isSomeSymbolInTheEnd(std::string end, char symbol) {

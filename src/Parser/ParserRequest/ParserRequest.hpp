@@ -2,6 +2,7 @@
 # define PARSER_REQUEST
 
 # include "RequestTypes.hpp"
+# include "Exceptions.hpp"
 # include "utils.hpp"
 
 # include <iostream>
@@ -11,7 +12,7 @@ typedef enum { WITH_CONTENT_LEN, CHUNKED, BOUNDARY } BodyParseType;
 
 static const std::string COMMON_HEADE_DATA[] = {
 	"method",
-	"location",
+	"uri",//TODO rename to uri
 	"protocol",
 	""
 };
@@ -19,7 +20,10 @@ static const std::string COMMON_HEADE_DATA[] = {
 static const std::string SEPORATOR = ": ";
 static const std::string END_OF_LINE = "\r\n";
 static const std::string END_OF_HEADER = "\r\n\r\n";
-static const std::string END_OF_BOUNDARY_BODY = "\0\r\n\r\n";
+static const std::string END_OF_CHUNKED_BODY = "0\r\n\r\n";
+static const std::string REQUEST_WITH_BODY = "post put delete";
+// static const std::string PROCESSED_REQUESTS = "get post put delete head";
+static const std::string PROCESSED_REQUESTS = "GET POST PUT DELETE HEAD";
 
 class ParserRequest {
 	private:
@@ -27,7 +31,10 @@ class ParserRequest {
 		** Парсит первую строчку header'а, в которой
 		** содержится method, locatian и protocol
 		*/
+		typedef std::vector<std::string> strVct;
+		typedef strVct::iterator		 strVctIt;
 		static void	parseCommonHeaderData(std::string& data, requestHeaderStruct& header);
+		static void	joinUriPartOfCommonHeaderData(strVctIt start, strVctIt end, strVct& data);
 		/*
 		** Парсит весь header и заполняет map<std::string, std::string>,
 		** где key - имя параметра, а value его значение
@@ -38,6 +45,18 @@ class ParserRequest {
 		ParserRequest();
 		ParserRequest(const ParserRequest& other);
 		~ParserRequest();
+
+		/*
+		** Функции для определения конца body/header
+		** Если условия удовлетворяются, то body/header будет спаршен
+		*/
+
+		static bool					handleEndOfHeader(requestHeaderStruct& header, std::string& buffer);
+
+		static bool					handleEndOfBody(RequestData& data, std::string& buffer);
+		static bool					handleEndOfBoundaryBody(RequestData& data, std::string& buffer);
+		static bool					handleEndOfChunkedBody(RequestData& data, std::string& buffer);
+		static bool					handleEndOfBodyWithContentLengt(RequestData& data, std::string& buffer);
 
 		static requestHeaderStruct	parseHeader(std::string data);
 
@@ -58,27 +77,3 @@ class ParserRequest {
 };
 
 #endif
-
-// # include "typedef.hpp"
-// # include "utils.hpp"
-
-
-// static const char* SPLIT_STRING = ": ";
-// static const char END_OF_LINE = '\n';
-
-// class Request;
-
-// class ParserRequest {
-// 	private:
-// 		// void	parseMethod(std::string& data, requestHeaderStruct& header);
-// 		// void	parseLocation(std::string& data, requestHeaderStruct& header);
-// 		// void	parseProtocol(std::string& data, requestHeaderStruct& header);
-	
-// 	public:
-// 		ParserRequest();
-// 		ParserRequest(const ParserRequest& other);
-// 		~ParserRequest();
-
-// 		requestHeaderStruct	parseHeader(std::string data);
-// 		// Request& parse();
-// };

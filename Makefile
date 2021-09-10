@@ -72,6 +72,7 @@ fclean: clean
 	@echo
 
 test: create_lib
+	@rm -rf ./unit_test/src/obj
 	@make -C $(TEST_DIR)
 	@echo "\n\n"
 

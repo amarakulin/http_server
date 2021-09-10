@@ -4,28 +4,12 @@
 # include <iostream>
 # include <vector>
 
-static const int SIZE_OF_KEYS = 6;
-static const int SIZE_OF_LOCATION_KEYS = 8;
+class CGI;
 
-static const std::string keys[SIZE_OF_KEYS] = {
-	"listen",
-	"server_name",
-	"root",
-	"error_page",
-	"client_max_body_size"
-	"location",
-};
-
-static const std::string locationKeys[SIZE_OF_LOCATION_KEYS] = {
-	"root",
-	"methods",
-	"autoindex",
-	"index",
-	"upload_enable",
-	"upload_path",
-	"cgi_extension",
-	"cgi_path",
-};
+typedef struct {
+	size_t						statusCode;
+	std::string					path;
+} Redirect;
 
 /*
 *	Структура-дополнение с HostData. Описывает location. Нет обязательных полей.
@@ -34,13 +18,16 @@ static const std::string locationKeys[SIZE_OF_LOCATION_KEYS] = {
 typedef struct {
 	std::string					way;
 	std::string					root;
+	Redirect*					redirect;
 	std::vector<std::string>	httpMethods;
 	std::vector<std::string>	index;
 	bool						autoindex;
 	bool						uploadEnable;
 	std::string					uploadPath;
-	std::string					cgiextension;
-	std::string					cgiPath;
+	// std::string					cgiExtension; //TODO
+	// std::string					cgiPath; // TODO
+	CGI*						cgi;
+	//TODO добавить редирект
 } Location;
 
 /*
@@ -65,7 +52,7 @@ typedef struct {
 	size_t						port;
 	std::string					root;
 	std::vector<ErrorPage*>		errorPage;
-	std::string					clientMaxBodySize;
+	size_t						clientMaxBodySize;
 	std::vector<Location*>		location;
 } HostData;
 
