@@ -19,6 +19,7 @@ Config* ParserConfig::parse(char* configFilePath) {
 	for (int i = 0; i < hosts.size(); i++) {
 		Host *host = new Host(hosts[i]);
 		config->addNewHost(host);
+		// delete hosts[i];
 	}
 	return config;
 }

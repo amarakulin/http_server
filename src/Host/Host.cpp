@@ -1,6 +1,17 @@
 #include "Host.hpp"
 
-Host::Host(HostData *hostData) : _data(hostData) {}
+Host::Host(HostData *hostData) {
+	_data = hostData;
+	// if ((*this)._data != hostData) {
+	// 	(*this)._data = new HostData;
+	// 	(*this)._data->ip = hostData->ip;
+	// 	(*this)._data->serverName = hostData->serverName;
+	// 	(*this)._data->port = hostData->port;
+	// 	(*this)._data->errorPage = hostData->errorPage;
+	// 	(*this)._data->clientMaxBodySize = hostData->clientMaxBodySize;
+	// 	(*this)._data->location = hostData->location;
+	// }
+}
 
 Host::Host(std::string ip, size_t port, std::string serverName) {
 	_data = new HostData;

@@ -20,7 +20,7 @@ class Config;
 class ParserConfig {
 	public:
 		ParserConfig();
-		Config*					parse(char* configFilePath);
+		Config*	parse(char* configFilePath);
 		void	readConfigFile(char *configFilePath, std::list<std::string> *config);
 		std::vector<HostData*>	devideConfigToComponents(std::list<std::string> config);
 		bool	checkConfigString(std::string data);

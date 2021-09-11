@@ -1,8 +1,6 @@
 #include "Config.hpp"
 
-Config::Config() : _hosts() {
-	
-}
+Config::Config() : _hosts() {}
 
 Config::Config(const Config& other) : _hosts(other._hosts) {}
 
