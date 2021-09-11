@@ -10,6 +10,8 @@ class Request;
 #define CONTENT_TYPE "Content-type: "
 #define LOCATION "Location: "
 #define VERSION_HTTP "HTTP/1.1 "
+#define DEFAULT_ERROR_PAGE_PATH "./resources/errorPages/"
+
 /*
 ** Структура для автоматического определения наследника класса Response
 */
