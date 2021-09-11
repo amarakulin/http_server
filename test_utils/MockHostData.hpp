@@ -1,10 +1,10 @@
 /* **************************************************************************** */
 /*                                                                      .       */
-/*   ResponseHead.hpp                                                        / V\     */
+/*   MockHostData.hpp                                                        / V\     */
 /*                                                                   / `  /     */
 /*   By: tilda      <tilda@student.21-school.ru.fr>                 <<   |      */
 /*                                                                  /    |      */
-/*   Created: 9/5/21 by tilda                                    /      |      */
+/*   Created: 9/8/21 by tilda                                    /      |      */
 /*                                                              /        |      */
 /*                                                            /    \  \ /       */
 /*                                                           (      ) | |       */
@@ -13,25 +13,19 @@
 /* **************************************************************************** */
 
 
-#ifndef HTTP_SERVER_RESPONSEHEAD_HPP
-#define HTTP_SERVER_RESPONSEHEAD_HPP
+#ifndef HTTP_SERVER_MOCKHOSTDATA_HPP
+#define HTTP_SERVER_MOCKHOSTDATA_HPP
 
-# include "Response.hpp"
-#include "RequestTypes.hpp"
+#include "HostTypes.hpp"
 
-class ResponseHead : public Response {
+class MockHostData{
+
 public:
-	ResponseHead();
-	ResponseHead(const ResponseHead& other);
-	ResponseHead(RequestData &requestData, HostData *hostData);
-	ResponseHead& operator=(const ResponseHead &assign);
-	~ResponseHead();
-
-private:
-	virtual void	createBody(const std::string& uri);
-
-
+	MockHostData();
+	~MockHostData();
+	HostData *createDefaultHostDataNotStatic();
+	static HostData *createDefaultHostData();
 };
 
 
-#endif //HTTP_SERVER_RESPONSEHEAD_HPP
+#endif //HTTP_SERVER_MOCKHOSTDATA_HPP

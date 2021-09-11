@@ -17,7 +17,9 @@ ResponseGet &ResponseGet::operator=(const ResponseGet &assign) {
 	return *this;
 }
 
-ResponseGet::ResponseGet(RequestData& requestData) : Response(requestData) {
+ResponseGet::ResponseGet(RequestData &requestData, HostData *hostData)
+		: Response(requestData, NULL)
+{
 	Response::createBody(requestData.header["uri"]);
 	_leftBytesToSend = _dataToSend.length();//TODO set in one place
 }

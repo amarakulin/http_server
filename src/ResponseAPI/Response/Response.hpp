@@ -2,6 +2,7 @@
 # define RESPONSE
 
 # include <iostream>
+#include <HostTypes.hpp>
 # include "Request.hpp"
 
 # include "ResponseTypes.hpp"
@@ -60,7 +61,7 @@ protected:
 public:
 	Response();
 	Response(const Response& other);
-	Response(RequestData& requestData);
+	Response(RequestData &requestData, HostData *hostData);
 	Response& operator=(const Response &assign);
 	virtual ~Response();
 

@@ -47,7 +47,7 @@ class Server {
 	private:
 		void				startMainProcess();
 
-		void				createNewClient(int hostSocket);
+		void createNewClient(int hostSocket, HostData *hostData);
 		void				closeClientConnection(int clientSocket);
 
 		void				createListeners();

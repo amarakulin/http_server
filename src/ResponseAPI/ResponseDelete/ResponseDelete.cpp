@@ -17,7 +17,10 @@ ResponseDelete &ResponseDelete::operator=(const ResponseDelete &assign) {
 	return *this;
 }
 
-ResponseDelete::ResponseDelete(RequestData& requestData) : Response(requestData) {
+ResponseDelete::ResponseDelete(RequestData &requestData, HostData *hostData)
+		: Response(requestData,
+				   NULL)
+{
 	ResponseDelete::createBody(requestData.header["uri"]);
 	_leftBytesToSend = _dataToSend.length();//TODO set in one place
 }

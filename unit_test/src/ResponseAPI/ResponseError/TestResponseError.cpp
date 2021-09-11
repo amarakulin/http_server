@@ -17,6 +17,7 @@
 #include "../../../src/ResponseAPI/Response/Response.hpp"
 #include "../../../src/ResponseAPI/ResponseError/ResponseError.hpp"
 #include "../../../src/Types/HostTypes.hpp"
+#include "../../../test_utils/MockHostData.hpp"
 #include <iostream>
 
 void
@@ -29,11 +30,13 @@ testResponseErrorBadRequest400(void){
 	ErrorPage errorPage;
 	errorPage.errorNbr = codeError;
 	errorPage.errorPagePath = filename;
-	ResponseError *response = new ResponseError(errorPage);
+	HostData *hostData = MockHostData::createDefaultHostData();
+	ResponseError *response = new ResponseError(errorPage, hostData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
+	delete hostData;
 }
 
 void
@@ -46,11 +49,13 @@ testResponseErrorForbidden403(void){
 	ErrorPage errorPage;
 	errorPage.errorNbr = codeError;
 	errorPage.errorPagePath = filename;
-	ResponseError *response = new ResponseError(errorPage);
+	HostData *hostData = MockHostData::createDefaultHostData();
+	ResponseError *response = new ResponseError(errorPage, hostData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
+	delete hostData;
 }
 
 void
@@ -63,11 +68,13 @@ testResponseErrorNotFound404(void){
 	ErrorPage errorPage;
 	errorPage.errorNbr = codeError;
 	errorPage.errorPagePath = filename;
-	ResponseError *response = new ResponseError(errorPage);
+	HostData *hostData = MockHostData::createDefaultHostData();
+	ResponseError *response = new ResponseError(errorPage, hostData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
+	delete hostData;
 }
 
 void
@@ -80,11 +87,13 @@ testResponseErrorMethodNotAllowed405(void){
 	ErrorPage errorPage;
 	errorPage.errorNbr = codeError;
 	errorPage.errorPagePath = filename;
-	ResponseError *response = new ResponseError(errorPage);
+	HostData *hostData = MockHostData::createDefaultHostData();
+	ResponseError *response = new ResponseError(errorPage, hostData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
+	delete hostData;
 }
 
 void
@@ -97,11 +106,13 @@ testResponseErrorInternalServerError500(void){
 	ErrorPage errorPage;
 	errorPage.errorNbr = codeError;
 	errorPage.errorPagePath = filename;
-	ResponseError *response = new ResponseError(errorPage);
+	HostData *hostData = MockHostData::createDefaultHostData();
+	ResponseError *response = new ResponseError(errorPage, hostData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
+	delete hostData;
 }
 
 void
@@ -114,11 +125,13 @@ testResponseErrorNotImplemented501(void){
 	ErrorPage errorPage;
 	errorPage.errorNbr = codeError;
 	errorPage.errorPagePath = filename;
-	ResponseError *response = new ResponseError(errorPage);
+	HostData *hostData = MockHostData::createDefaultHostData();
+	ResponseError *response = new ResponseError(errorPage, hostData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
+	delete hostData;
 }
 
 void
@@ -131,11 +144,13 @@ testResponseErrorBadGateway502(void){
 	ErrorPage errorPage;
 	errorPage.errorNbr = codeError;
 	errorPage.errorPagePath = filename;
-	ResponseError *response = new ResponseError(errorPage);
+	HostData *hostData = MockHostData::createDefaultHostData();
+	ResponseError *response = new ResponseError(errorPage, hostData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
+	delete hostData;
 }
 
 void
@@ -149,11 +164,13 @@ testResponseErrorHTTPVersionNotSupported505(void){
 	ErrorPage errorPage;
 	errorPage.errorNbr = codeError;
 	errorPage.errorPagePath = filename;
-	ResponseError *response = new ResponseError(errorPage);
+	HostData *hostData = MockHostData::createDefaultHostData();
+	ResponseError *response = new ResponseError(errorPage, hostData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
 	delete response;
+	delete hostData;
 }
 TEST_LIST = {
 		{ "ResponseError: Bad Request [404]", testResponseErrorBadRequest400 },

@@ -275,7 +275,7 @@ void	ParserConfig::setClientMaxBodySizeData(std::string data, HostData *hostData
 }
 
 void	ParserConfig::setRedirectToLocation(std::string data, HostData *hostData, int currentLocation) {
-	Redirect *redirect = new Redirect;
+	Redirect *redirect;
 	int delim;
 	const char *tmp;
 	size_t statusCode;

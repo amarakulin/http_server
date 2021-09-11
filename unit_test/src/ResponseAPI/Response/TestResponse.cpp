@@ -15,9 +15,7 @@
 #include "../../../include/acutest.hpp"
 #include "../../../src/ResponseAPI/Response/Response.hpp"
 #include "../../../src/ResponseAPI/ResponseGet/ResponseGet.hpp"
-#include "../../../src/Request/Request.hpp"
-#include "../../../../src/ResponseAPI/ResponseCreator/ResponseCreator.hpp"
-#include "../../../src/Types/ResponseTypes.hpp"
+#include "../../../test_utils/MockHostData.hpp"
 #include <iostream>
 
 void testResponseIsDoneWhenStatusSended(void){
@@ -26,13 +24,14 @@ void testResponseIsDoneWhenStatusSended(void){
 	header.insert(std::pair<std::string, std::string>("uri", filename));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	RequestData requestData = {.header = header, .body = ""};
-
-	ResponseGet *response = new ResponseGet(requestData);
+	HostData *hostData = MockHostData::createDefaultHostData();
+	ResponseGet *response = new ResponseGet(requestData, hostData);
 	response->countSendedData(response->getDataToSend().length());
 
 	TEST_CHECK(response->isDone());
 
 	delete response;
+	delete hostData;
 }
 
 void testResponseIsDoneWhenStatusNoResponse(void){
@@ -47,13 +46,14 @@ void testResponseIsDoneWhenStatusSening(void){
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	RequestData requestData = {.header = header, .body = ""};
 
-	ResponseGet *response = new ResponseGet(requestData);
+	HostData *hostData = MockHostData::createDefaultHostData();
+	ResponseGet *response = new ResponseGet(requestData, hostData);
 	response->countSendedData(response->getDataToSend().length() / 2);
 
 	TEST_CHECK(!response->isDone());
 
 	delete response;
-
+	delete hostData;
 }
 
 TEST_LIST = {

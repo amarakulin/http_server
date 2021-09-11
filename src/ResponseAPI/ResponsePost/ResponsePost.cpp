@@ -16,7 +16,10 @@ ResponsePost &ResponsePost::operator=(const ResponsePost &assign) {
 	return *this;
 }
 
-ResponsePost::ResponsePost(RequestData& requestData) : Response(requestData) {
+ResponsePost::ResponsePost(RequestData &requestData, HostData *hostData)
+		: Response(requestData,
+				   NULL)
+{
 	ResponsePost::createBody(requestData.header["uri"]);
 	_leftBytesToSend = _dataToSend.length();//TODO set in one place
 }
