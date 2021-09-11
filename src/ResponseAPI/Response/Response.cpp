@@ -131,7 +131,7 @@ Response::getContentLengthHeader(std::string uri, HostData *hostData)
 	std::string filename = getFilePathFromHostData(uri, hostData);
 	long sizeFile = getSizeFile(filename);
 	if (sizeFile == -1){
-		std::cout << "[-] Error can't count size file" << std::endl;
+		std::cout << "[-] Error can't count size file: " << filename << std::endl;
 		//TODO throw exception may be
 	}
 	processedStr += std::to_string(sizeFile);
