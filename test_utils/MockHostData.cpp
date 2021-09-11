@@ -26,7 +26,7 @@ HostData *MockHostData::createDefaultHostDataRootTestFiles(){
 	HostData *hostData = new HostData ();
 	ErrorPage *errorPage = new ErrorPage();
 	Location *location = new Location();
-	location->root = "/";
+	location->root = "/test_files";
 	location->autoindex = false;
 	location->cgi = nullptr;
 	location->httpMethods = std::vector<std::string>();
@@ -35,7 +35,7 @@ HostData *MockHostData::createDefaultHostDataRootTestFiles(){
 	location->index.push_back("index.js");
 	location->uploadEnable = false;
 	location->uploadPath = "";
-	location->way = "/";
+	location->way = "/should_get_root_from_host";
 
 	errorPage->errorPagePath = "/www/404error.html";//TODO may be fix
 	errorPage->errorNbr = 404;
@@ -70,36 +70,40 @@ HostData *MockHostData::createDefaultHostDataNestedDir(){
 }
 
 HostData *MockHostData::createDefaultHostDataForDelete(){
-	std::vector<ErrorPage*> vectorErrorPage;
-	std::vector<Location*> vectorLocation;
-	HostData *hostData = new HostData ();
-	ErrorPage *errorPage = new ErrorPage();
-	Location *location = new Location();
-	location->root = "/";
-	location->autoindex = false;
-	location->cgi = nullptr;
-	location->httpMethods = std::vector<std::string>();
-	location->index.push_back("index.html");
-	location->index.push_back("index.css");
-	location->index.push_back("index.js");
-	location->index.push_back("text_3MB.txt");
-	location->uploadEnable = false;
-	location->uploadPath = "";
-	location->way = "/";
-
-	errorPage->errorPagePath = "/www/404error.html";//TODO may be fix
-	errorPage->errorNbr = 404;
-	vectorErrorPage.push_back(errorPage);
-	vectorLocation.push_back(location);
-
-	hostData->ip = "127.0.0.1";
-	hostData->host = "127.0.0.1";
-	hostData->serverName = "localhost";
-	hostData->port = 8000;
+	HostData *hostData = createDefaultHostDataRootTestFiles();
 	hostData->root = "/test_files/forResponseDelete";
-	hostData->errorPage = vectorErrorPage;
-	hostData->clientMaxBodySize = "214"; //FIXME Change to size_t
-	hostData->location = vectorLocation;
+	hostData->location[0]->index.push_back("text_3MB.txt");
 	return hostData;
+//	std::vector<ErrorPage*> vectorErrorPage;
+//	std::vector<Location*> vectorLocation;
+//	HostData *hostData = new HostData ();
+//	ErrorPage *errorPage = new ErrorPage();
+//	Location *location = new Location();
+//	location->root = "/";
+//	location->autoindex = false;
+//	location->cgi = nullptr;
+//	location->httpMethods = std::vector<std::string>();
+//	location->index.push_back("index.html");
+//	location->index.push_back("index.css");
+//	location->index.push_back("index.js");
+//	location->index.push_back("text_3MB.txt");
+//	location->uploadEnable = false;
+//	location->uploadPath = "";
+//	location->way = "/should_work_";
+//
+//	errorPage->errorPagePath = "/www/404error.html";//TODO may be fix
+//	errorPage->errorNbr = 404;
+//	vectorErrorPage.push_back(errorPage);
+//	vectorLocation.push_back(location);
+//
+//	hostData->ip = "127.0.0.1";
+//	hostData->host = "127.0.0.1";
+//	hostData->serverName = "localhost";
+//	hostData->port = 8000;
+//	hostData->root = "/test_files/forResponseDelete";
+//	hostData->errorPage = vectorErrorPage;
+//	hostData->clientMaxBodySize = "214"; //FIXME Change to size_t
+//	hostData->location = vectorLocation;
+//	return hostData;
 }
 
