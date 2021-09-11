@@ -460,7 +460,11 @@ void	ParserConfig::setCgiPathToLocation(std::string data, HostData *hostData, in
 }
 
 void	ParserConfig::setCgiRootToLocation(HostData *hostData, int currentLocation) {
-	std::string serverRoot = hostData->root;
-	std::string hostRoot = hostData->location[currentLocation]->root;
-	hostData->location[currentLocation]->cgi->setRoot(serverRoot + hostRoot);
+	if (hostData->location[currentLocation]->root.length() > 0) {
+		hostData->location[currentLocation]->cgi->setRoot(hostData->location[currentLocation]->root);
+	} else if (hostData->root.length() > 0) {
+		hostData->location[currentLocation]->cgi->setRoot(hostData->root);
+	} else {
+		hostData->location[currentLocation]->cgi->setRoot("/");
+	}
 }
