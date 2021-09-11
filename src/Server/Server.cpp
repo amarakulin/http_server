@@ -69,14 +69,15 @@ int					Server::createListenerSocket(struct sockaddr_in addr) {
 ** Processing client connection
 */
 
-void				Server::createNewClient(int hostSocket) {
+void Server::createNewClient(int hostSocket, HostData *hostData)
+{
 	int sock = accept(hostSocket, NULL, NULL); // создаем нового клиента
 	if (sock < 0)
 		std::cout << "Accept error" << std::endl;//TODO
 	
 	fcntl(sock, F_SETFL, O_NONBLOCK);
 
-	Client client(sock);
+	Client client(sock, hostData);
 
 	_sockets.addClientSocket(sock);
 	_clients.push_back(client); //TODO add method addClient
@@ -124,7 +125,7 @@ void				Server::handleListenerEvents() {
 		struct pollfd host = _sockets.getSocketByFD(_listeners[i].getSocket()); //TODO optimize!!!!!!!!!!!
 
 		if (host.revents & POLLIN)
-			createNewClient(host.fd);
+			createNewClient(host.fd, _config->getHosts()[i]->getData());
 	}
 }
 
@@ -184,7 +185,8 @@ void				Server::processingRequest(int clientSocket, Client& client) {
 }
 
 void				Server::createResponse(Client& client) {
-	client.setResponse(_responseCreator.createResponse(client.getRequest()->getData()));
+	client.setResponse(_responseCreator.createResponse(
+			client.getRequest()->getData(), client.getHostData()));
 	client.resetRequest();
 }
 

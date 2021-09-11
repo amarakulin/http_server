@@ -8,7 +8,7 @@ public:
 	ResponseDelete();
 	ResponseDelete(const ResponseDelete& other);
 	ResponseDelete& operator=(const ResponseDelete &assign);
-	ResponseDelete(RequestData& requestData);
+	ResponseDelete(RequestData &requestData, HostData *hostData);
 	~ResponseDelete();
 
 private:
