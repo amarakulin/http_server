@@ -161,24 +161,34 @@ void Response::changeContentLength(size_t valueContentLength){
 	}
 	_dataToSend.replace(pos, oldValueContentLength.length(), std::to_string(valueContentLength));
 }
+
+bool compareLocations(Location* loc1, Location* loc2){
+	return loc1->way.size() < loc2->way.size();
+}
+
 std::string
 Response::getFilePathFromHostData(const std::string &uri, HostData *hostData){
-	Location *tmpLocation;
-	std::string filePath = hostData->root + uri;
-	std::string filename = uri.substr(uri.find_last_of("/\\") + 1);
-	if ( filename.find('.') != std::string::npos){
-		return "." + filePath;//TODO refactor
-	}
-	for(size_t i = 0; i < hostData->location.size(); ++i){
-		tmpLocation = hostData->location[i];
-		if ((tmpLocation->root + tmpLocation->way) == filePath){
-			break;
+	std::string filePath;
+	std::vector<std::string> index;
+	std::string root = "";
+	std::string matchStr;
+
+	std::vector<Location*> vectorLocations = hostData->location;
+	std::sort(vectorLocations.begin(), vectorLocations.end(), compareLocations);
+	for (size_t i = 0; i < vectorLocations.size(); ++i){
+		matchStr = uri.substr(0, vectorLocations[i]->way.size());
+		if (vectorLocations[i]->way.find(matchStr) != std::string::npos && root.size() < matchStr.size()){
+			root = vectorLocations[i]->root;
+			index = vectorLocations[i]->index;
 		}
 	}
-	filePath = "." + filePath;//TODO refactor
-	for (size_t i = 0; i < tmpLocation->index.size(); ++i){
-		if (isFileExist(filePath + tmpLocation->index[i])){
-			filePath += tmpLocation->index[i];
+	if (root.empty()){
+		root = hostData->root;
+	}
+	filePath = "." + root + uri;
+	for (size_t i = 0; i < index.size(); ++i){
+		if (isFileExist(filePath + "/" + index[i])){
+			filePath += "/" + index[i];
 			break;
 		}
 	}
