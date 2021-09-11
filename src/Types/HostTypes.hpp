@@ -6,13 +6,17 @@
 
 class CGI;
 
+/*
+**	Структура-дополнение с HostData. Описывает redirect. Нет обязательных полей.
+*/
+
 typedef struct {
 	size_t						statusCode;
 	std::string					path;
 } Redirect;
 
 /*
-*	Структура-дополнение с HostData. Описывает location. Нет обязательных полей.
+**	Структура-дополнение с HostData. Описывает location. Нет обязательных полей.
 */
 
 typedef struct {
@@ -24,14 +28,12 @@ typedef struct {
 	bool						autoindex;
 	bool						uploadEnable;
 	std::string					uploadPath;
-	// std::string					cgiExtension; //TODO
-	// std::string					cgiPath; // TODO
 	CGI*						cgi;
 	//TODO добавить редирект
 } Location;
 
 /*
-*	Структура-дополнение к HostData. Описывает ErrorPage.
+**	Структура-дополнение к HostData. Описывает ErrorPage.
 */
 
 typedef struct {
@@ -40,9 +42,9 @@ typedef struct {
 } ErrorPage;
 
 /*
-*	Структура со всеми возможными данными из конфигурационного файла. Обязательные поля:
-*	- host;
-*	- port;
+**	Структура со всеми возможными данными из конфигурационного файла. Обязательные поля:
+**	- ip;
+**	- port;
 */
 
 typedef struct {

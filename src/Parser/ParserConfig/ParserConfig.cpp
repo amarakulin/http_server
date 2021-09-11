@@ -55,7 +55,7 @@ std::vector<HostData*>	ParserConfig::devideConfigToComponents(std::list<std::str
 
 	hostData = new HostData;
 	it = config.begin();
-	// setDefaultHostValues(hostData);
+	setDefaultHostValues(hostData);
 	try {
 		for (; it != config.end(); it++) {
 			splitFirstArgiment(*it, &key, &value);
@@ -64,10 +64,10 @@ std::vector<HostData*>	ParserConfig::devideConfigToComponents(std::list<std::str
 				throw ParserConfigException("devideConfigToComponents error");
 			}
 			if (key == "***") {
-				if (hostData->ip.size() > 0 && hostData->port > 0) {
+				if (hostData->ip.size() > 0 && hostData->port > 1023 && hostData->port < 65536) {
 					hosts.push_back(hostData);
 					hostData = new HostData;
-					// setDefaultHostValues(hostData);
+					setDefaultHostValues(hostData);
 				} else {
 					throw ParserConfigException("devideConfigToComponents error");
 				}
@@ -84,12 +84,28 @@ std::vector<HostData*>	ParserConfig::devideConfigToComponents(std::list<std::str
 }
 
 void	ParserConfig::setDefaultHostValues(HostData *hostData) {
+	
 	hostData->ip = "";
 	hostData->serverName = "";
 	hostData->port = 0;
 	hostData->root = "";
 	hostData->errorPage.clear();
 	hostData->clientMaxBodySize = 0;
+	std::vector<Location*>::iterator it = hostData->location.begin();
+	for (; it != hostData->location.end(); it++) {
+		(*it)->way = "";
+		(*it)->root = "";
+		(*it)->redirect->statusCode = 0;
+		(*it)->redirect->path = "";
+		(*it)->httpMethods.clear();
+		(*it)->index.clear();
+		(*it)->autoindex = false;
+		(*it)->uploadEnable = false;
+		(*it)->uploadPath = "";
+		(*it)->cgi->setPath("");
+		(*it)->cgi->setRoot("");
+		(*it)->cgi->setExtension("");
+	}
 	hostData->location.clear();
 }
 
@@ -178,12 +194,14 @@ void	ParserConfig::setListenData(std::string data, HostData *hostData) {
 	char		*remainder;
 
 	delim = data.find_first_of(':');
+	
 	if (delim == std::string::npos) {
 		throw ParserConfigException("setListenData error");
 	} else {
 		ip = data.substr(0, delim);
 		tmp = data.substr(delim + 1, data.length()).c_str();
 		port = std::strtoll(tmp, &remainder, 0);
+
 		if (!remainder[0]) {
 			hostData->ip = ip;
 			hostData->port = port;
@@ -227,19 +245,20 @@ void	ParserConfig::setErrorPageData(std::string data, HostData *hostData) {
 
 	currentErrorPage = hostData->errorPage.size();
 	delim = data.find_first_of(' ');
+
 	if (delim != std::string::npos) {
+		
 		port = data.substr(0, delim).c_str();
 		errorNbr = std::strtoll(port, NULL, 0);
 		errorPagePath = data.substr(delim + 1, data.length() - delim - 1);
-		if (errorPagePath.find_first_of(' ') == std::string::npos) {
-			if (errorPagePath.find_first_of("/") == 0 && errorNbr != 0) {
-				errorPage = new ErrorPage();
-				errorPage->errorNbr = errorNbr;
-				errorPage->errorPagePath = errorPagePath;
-				hostData->errorPage.push_back(errorPage);
-			} else {
-				throw ParserConfigException("setErrorPageData error");
-			}
+
+		if (errorPagePath.find_first_of(' ') == std::string::npos &&
+			errorPagePath.find_first_of("/") == 0 && errorNbr != 0) {
+	
+			errorPage = new ErrorPage();
+			errorPage->errorNbr = errorNbr;
+			errorPage->errorPagePath = errorPagePath;
+			hostData->errorPage.push_back(errorPage);
 		} else {
 			throw ParserConfigException("setErrorPageData error");
 		}
@@ -253,7 +272,6 @@ void	ParserConfig::setErrorPageData(std::string data, HostData *hostData) {
 */
 
 void	ParserConfig::setClientMaxBodySizeData(std::string data, HostData *hostData) {
-	hostData->clientMaxBodySize = 0;
 	for (int i = 0; i < data.length() - 1; i++) {
 		if (data[i] >= '0' && data[i] <= '9') {
 			continue;
@@ -278,19 +296,20 @@ void	ParserConfig::setRedirectToLocation(std::string data, HostData *hostData, i
 	std::string redirectPath;
 
 	delim = data.find_first_of(' ');
+
 	if (delim != std::string::npos) {
+
 		tmp = data.substr(0, delim).c_str();
 		statusCode = std::strtoll(tmp, NULL, 0);
 		redirectPath = data.substr(delim + 1, data.length() - delim - 1);
-		if (redirectPath.find_first_of(' ') == std::string::npos) {
-			if (redirectPath.find_first_of("/") == 0 && statusCode != 0) {
-				Redirect *redirect = new Redirect;
-				redirect->statusCode = statusCode;
-				redirect->path = redirectPath;
-				hostData->location[currentLocation]->redirect = redirect;
-			} else {
-				throw ParserConfigException("setErrorPageData error");
-			}
+
+		if (redirectPath.find_first_of(' ') == std::string::npos &&
+			redirectPath.find_first_of("/") == 0 && statusCode != 0) {
+
+			Redirect *redirect = new Redirect;
+			redirect->statusCode = statusCode;
+			redirect->path = redirectPath;
+			hostData->location[currentLocation]->redirect = redirect;
 		} else {
 			throw ParserConfigException("setErrorPageData error");
 		}
