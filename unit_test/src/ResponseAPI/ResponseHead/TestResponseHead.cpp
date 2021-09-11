@@ -22,15 +22,16 @@
 void
 testResponseHeadHTMLFileInRootLocation(void){
 	requestHeaderStruct header;
-	std::string filename = "./index.html";
+	HostData *hostData = MockHostData::createDefaultHostDataRootTestFiles();
+	std::string uri = "/index.html";
+	std::string filename = "." + hostData->root + uri;
 	std::string body = "";
 	long sizeFile = getSizeFile(filename);
-	header.insert(std::pair<std::string, std::string>("uri", filename));
+	header.insert(std::pair<std::string, std::string>("uri", uri));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	HostData *hostData = MockHostData::createDefaultHostData();
 	ResponseHead *response = new ResponseHead(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
@@ -40,15 +41,16 @@ testResponseHeadHTMLFileInRootLocation(void){
 
 void testResponseHeadCSSFileInRootLocation(void){
 	requestHeaderStruct header;
-	std::string filename = "./index.css";
+	HostData *hostData = MockHostData::createDefaultHostDataRootTestFiles();
+	std::string uri = "/index.css";
+	std::string filename = "." + hostData->root + uri;
 	std::string body = "";
 	long sizeFile = getSizeFile(filename);
-	header.insert(std::pair<std::string, std::string>("uri", filename));
+	header.insert(std::pair<std::string, std::string>("uri", uri));
 	header.insert(std::pair<std::string, std::string>("accept", "text/css,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/css\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	HostData *hostData = MockHostData::createDefaultHostData();
 	ResponseHead *response = new ResponseHead(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
@@ -59,15 +61,16 @@ void testResponseHeadCSSFileInRootLocation(void){
 void
 testResponseHeadEmptyFileInRootLocation(void){
 	requestHeaderStruct header;
-	std::string filename = "./index.js";
+	HostData *hostData = MockHostData::createDefaultHostDataRootTestFiles();
+	std::string uri = "/index.js";
+	std::string filename = "." + hostData->root + uri;
 	std::string body = "";
 	long sizeFile = getSizeFile(filename);
-	header.insert(std::pair<std::string, std::string>("uri", filename));
+	header.insert(std::pair<std::string, std::string>("uri", uri));
 	header.insert(std::pair<std::string, std::string>("accept", "*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: */*\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	HostData *hostData = MockHostData::createDefaultHostData();
 	ResponseHead *response = new ResponseHead(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
@@ -78,15 +81,16 @@ testResponseHeadEmptyFileInRootLocation(void){
 void
 testResponseHeadWithFile3MB(void){
 	requestHeaderStruct header;
-	std::string filename = "./test_files/text_3MB.txt";
+	HostData *hostData = MockHostData::createDefaultHostDataRootTestFiles();
+	std::string uri = "/text_3MB.txt";
+	std::string filename = "." + hostData->root + uri;
 	std::string body = "";
 	long sizeFile = getSizeFile(filename);
-	header.insert(std::pair<std::string, std::string>("uri", filename));
+	header.insert(std::pair<std::string, std::string>("uri", uri));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	HostData *hostData = MockHostData::createDefaultHostData();
 	ResponseHead *response = new ResponseHead(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
@@ -97,15 +101,16 @@ testResponseHeadWithFile3MB(void){
 void
 testResponseHeadWithRootLocation(void){
 	requestHeaderStruct header;
-	std::string filename = "./";
-	std::string body = "";//TODO Search for default file
-	long sizeFile = getSizeFile(filename + "index.html");//TODO Search for default file
-	header.insert(std::pair<std::string, std::string>("uri", filename));
+	HostData *hostData = MockHostData::createDefaultHostDataRoot();
+	std::string uri = "/";
+	std::string filename = "." + hostData->root + uri;
+	std::string body = "";
+	long sizeFile = getSizeFile(filename + "root_file.html");
+	header.insert(std::pair<std::string, std::string>("uri", uri));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	HostData *hostData = MockHostData::createDefaultHostData();
 	ResponseHead *response = new ResponseHead(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
@@ -117,34 +122,16 @@ testResponseHeadWithRootLocation(void){
 void
 testResponseHeadWithFileInNestedLocation_1(void){
 	requestHeaderStruct header;
-	std::string filename = "./test_files/testIndex.html";
+	HostData *hostData = MockHostData::createDefaultHostDataNestedDir();
+	std::string uri = "/test_files/nestedDir";
+	std::string filename = "." + hostData->root + uri;
 	std::string body = "";
 	long sizeFile = getSizeFile(filename);
-	header.insert(std::pair<std::string, std::string>("uri", filename));
+	header.insert(std::pair<std::string, std::string>("uri", uri));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	HostData *hostData = MockHostData::createDefaultHostData();
-	ResponseHead *response = new ResponseHead(requestData, hostData);
-	TEST_CHECK(response->getDataToSend() == expectedResponseData);
-
-	delete response;
-	delete hostData;
-}
-
-void
-testResponseHeadWithFileInNestedLocation_2(void){
-	requestHeaderStruct header;
-	std::string filename = "./test_files/nestedDir/testNestesdIndex.html";
-	std::string body = "";
-	long sizeFile = getSizeFile(filename);
-	header.insert(std::pair<std::string, std::string>("uri", filename));
-	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
-	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
-	RequestData requestData = {.header = header, .body = ""};
-
-	HostData *hostData = MockHostData::createDefaultHostData();
 	ResponseHead *response = new ResponseHead(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
@@ -155,15 +142,16 @@ testResponseHeadWithFileInNestedLocation_2(void){
 void
 testResponseHeadWithOneTypeFile(void){
 	requestHeaderStruct header;
-	std::string filename = "./index.html";
+	HostData *hostData = MockHostData::createDefaultHostDataRootTestFiles();
+	std::string uri = "/index.html";
+	std::string filename = "." + hostData->root + uri;
 	std::string body = "";
 	long sizeFile = getSizeFile(filename);
-	header.insert(std::pair<std::string, std::string>("uri", filename));
+	header.insert(std::pair<std::string, std::string>("uri", uri));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	HostData *hostData = MockHostData::createDefaultHostData();
 	ResponseHead *response = new ResponseHead(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
@@ -174,15 +162,16 @@ testResponseHeadWithOneTypeFile(void){
 void
 testResponseHeadWithSeveralTypesFile(void){
 	requestHeaderStruct header;
-	std::string filename = "./index.html";
+	HostData *hostData = MockHostData::createDefaultHostDataRootTestFiles();
+	std::string uri = "/index.html";
+	std::string filename = "." + hostData->root + uri;
 	std::string body = "";
 	long sizeFile = getSizeFile(filename);
-	header.insert(std::pair<std::string, std::string>("uri", filename));
+	header.insert(std::pair<std::string, std::string>("uri", uri));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	HostData *hostData = MockHostData::createDefaultHostData();
 	ResponseHead *response = new ResponseHead(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
@@ -193,15 +182,16 @@ testResponseHeadWithSeveralTypesFile(void){
 void
 testResponseHeadWithEmptyTypeFile(void){
 	requestHeaderStruct header;
-	std::string filename = "./index.html";
+	HostData *hostData = MockHostData::createDefaultHostDataRootTestFiles();
+	std::string uri = "/index.html";
+	std::string filename = "." + hostData->root + uri;
 	std::string body = "";
 	long sizeFile = getSizeFile(filename);
-	header.insert(std::pair<std::string, std::string>("uri", filename));
+	header.insert(std::pair<std::string, std::string>("uri", uri));
 	header.insert(std::pair<std::string, std::string>("accept", ""));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: \r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	HostData *hostData = MockHostData::createDefaultHostData();
 	ResponseHead *response = new ResponseHead(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
@@ -212,14 +202,15 @@ testResponseHeadWithEmptyTypeFile(void){
 void
 testResponseHeadWithoutTypeFile(void){
 	requestHeaderStruct header;
-	std::string filename = "./index.html";
+	HostData *hostData = MockHostData::createDefaultHostDataRootTestFiles();
+	std::string uri = "/index.html";
+	std::string filename = "." + hostData->root + uri;
 	std::string body = "";
 	long sizeFile = getSizeFile(filename);
-	header.insert(std::pair<std::string, std::string>("uri", filename));
+	header.insert(std::pair<std::string, std::string>("uri", uri));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	HostData *hostData = MockHostData::createDefaultHostData();
 	ResponseHead *response = new ResponseHead(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
@@ -239,8 +230,7 @@ TEST_LIST = {
 
 		{ "ResponseHead with 3 MB file", testResponseHeadWithFile3MB },
 		{ "ResponseHead with ROOT LOCATION file", testResponseHeadWithRootLocation },
-		{ "ResponseHead with NESTED LOCATION 1 file", testResponseHeadWithFileInNestedLocation_1 },
-		{ "ResponseHead with NESTED LOCATION 2 file", testResponseHeadWithFileInNestedLocation_2 },
+		{ "ResponseHead with NESTED LOCATION file", testResponseHeadWithFileInNestedLocation_1 },
 		{ "ResponseHead with ONE TYPE FILE file", testResponseHeadWithOneTypeFile },
 		{ "ResponseHead with SEVERAL TYPE FILE file", testResponseHeadWithSeveralTypesFile },
 		{ "ResponseHead with EMPTY TYPE FILE file", testResponseHeadWithEmptyTypeFile },

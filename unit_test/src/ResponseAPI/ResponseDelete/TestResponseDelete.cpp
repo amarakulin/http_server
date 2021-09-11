@@ -26,20 +26,21 @@
 void
 testResponseDeleteHTMLFile(void){
 	requestHeaderStruct header;
-	std::string filename = "./test_files/forResponseDelete/index.html";
+	HostData *hostData = MockHostData::createDefaultHostDataForDelete();
+	std::string uri = "/index.html";
+	std::string filename = "." + hostData->root + uri;
 	std::string body = "OK";
 
 	std::ofstream outfile (filename);
-	outfile << getDataFileAsString("./index.html") << std::endl;
+	outfile << getDataFileAsString("./test_files/index.html") << std::endl;
 	outfile.close();
 
 	long sizeFile = body.length();
-	header.insert(std::pair<std::string, std::string>("uri", filename));
+	header.insert(std::pair<std::string, std::string>("uri", uri));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	HostData *hostData = MockHostData::createDefaultHostData();
 	ResponseDelete *response = new ResponseDelete(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
@@ -50,20 +51,21 @@ testResponseDeleteHTMLFile(void){
 
 void testResponseDeleteCSSFile(void){
 	requestHeaderStruct header;
-	std::string filename = "./test_files/forResponseDelete/index.css";
+	HostData *hostData = MockHostData::createDefaultHostDataForDelete();
+	std::string uri = "/index.css";
+	std::string filename = "." + hostData->root + uri;
 	std::string body = "OK";
 
 	std::ofstream outfile (filename);
-	outfile << getDataFileAsString("./index.css") << std::endl;
+	outfile << getDataFileAsString("./test_files/index.css") << std::endl;
 	outfile.close();
 
 	long sizeFile = body.length();
-	header.insert(std::pair<std::string, std::string>("uri", filename));
+	header.insert(std::pair<std::string, std::string>("uri", uri));
 	header.insert(std::pair<std::string, std::string>("accept", "text/css,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/css\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	HostData *hostData = MockHostData::createDefaultHostData();
 	ResponseDelete *response = new ResponseDelete(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
@@ -74,20 +76,21 @@ void testResponseDeleteCSSFile(void){
 void
 testResponseDeleteEmptyFile(void){
 	requestHeaderStruct header;
-	std::string filename = "./test_files/forResponseDelete/index.js";
+	HostData *hostData = MockHostData::createDefaultHostDataForDelete();
+	std::string uri = "/index.js";
+	std::string filename = "." + hostData->root + uri;
 	std::string body = "OK";
 
 	std::ofstream outfile (filename);
-	outfile << getDataFileAsString("./index.js") << std::endl;
+	outfile << getDataFileAsString("./test_files/index.js") << std::endl;
 	outfile.close();
 
 	long sizeFile = body.length();
-	header.insert(std::pair<std::string, std::string>("uri", filename));
+	header.insert(std::pair<std::string, std::string>("uri", uri));
 	header.insert(std::pair<std::string, std::string>("accept", "*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: */*\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	HostData *hostData = MockHostData::createDefaultHostData();
 	ResponseDelete *response = new ResponseDelete(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
@@ -98,7 +101,9 @@ testResponseDeleteEmptyFile(void){
 void
 testResponseDeleteWithFile3MB(void){
 	requestHeaderStruct header;
-	std::string filename = "./test_files/forResponseDelete/text_3MB.txt";
+	HostData *hostData = MockHostData::createDefaultHostDataForDelete();
+	std::string uri = "/text_3MB.txt";
+	std::string filename = "." + hostData->root + uri;
 	std::string body = "OK";
 
 	std::ofstream outfile (filename);
@@ -106,12 +111,11 @@ testResponseDeleteWithFile3MB(void){
 	outfile.close();
 
 	long sizeFile = body.length();
-	header.insert(std::pair<std::string, std::string>("uri", filename));
+	header.insert(std::pair<std::string, std::string>("uri", uri));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	HostData *hostData = MockHostData::createDefaultHostData();
 	ResponseDelete *response = new ResponseDelete(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
@@ -123,20 +127,21 @@ testResponseDeleteWithFile3MB(void){
 void
 testResponseDeleteWithOneTypeFile(void){
 	requestHeaderStruct header;
-	std::string filename = "./test_files/forResponseDelete/index.html";
+	HostData *hostData = MockHostData::createDefaultHostDataForDelete();
+	std::string uri = "/index.html";
+	std::string filename = "." + hostData->root + uri;
 	std::string body = "OK";
 
 	std::ofstream outfile (filename);
-	outfile << getDataFileAsString("./index.html") << std::endl;
+	outfile << getDataFileAsString("./test_files/index.html") << std::endl;
 	outfile.close();
 
 	long sizeFile = body.length();
-	header.insert(std::pair<std::string, std::string>("uri", filename));
+	header.insert(std::pair<std::string, std::string>("uri", uri));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	HostData *hostData = MockHostData::createDefaultHostData();
 	ResponseDelete *response = new ResponseDelete(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
@@ -147,20 +152,21 @@ testResponseDeleteWithOneTypeFile(void){
 void
 testResponseDeleteWithSeveralTypesFile(void){
 	requestHeaderStruct header;
-	std::string filename = "./test_files/forResponseDelete/index.html";
+	HostData *hostData = MockHostData::createDefaultHostDataForDelete();
+	std::string uri = "/index.html";
+	std::string filename = "." + hostData->root + uri;
 	std::string body = "OK";
 
 	std::ofstream outfile (filename);
-	outfile << getDataFileAsString("./index.html") << std::endl;
+	outfile << getDataFileAsString("./test_files/index.html") << std::endl;
 	outfile.close();
 
 	long sizeFile = body.length();
-	header.insert(std::pair<std::string, std::string>("uri", filename));
+	header.insert(std::pair<std::string, std::string>("uri", uri));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	HostData *hostData = MockHostData::createDefaultHostData();
 	ResponseDelete *response = new ResponseDelete(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
@@ -171,20 +177,21 @@ testResponseDeleteWithSeveralTypesFile(void){
 void
 testResponseDeleteWithEmptyTypeFile(void){
 	requestHeaderStruct header;
-	std::string filename = "./test_files/forResponseDelete/index.html";
+	HostData *hostData = MockHostData::createDefaultHostDataForDelete();
+	std::string uri = "/index.html";
+	std::string filename = "." + hostData->root + uri;
 	std::string body = "OK";
 
 	std::ofstream outfile (filename);
-	outfile << getDataFileAsString("./index.html") << std::endl;
+	outfile << getDataFileAsString("./test_files/index.html") << std::endl;
 	outfile.close();
 
 	long sizeFile = body.length();
-	header.insert(std::pair<std::string, std::string>("uri", filename));
+	header.insert(std::pair<std::string, std::string>("uri", uri));
 	header.insert(std::pair<std::string, std::string>("accept", ""));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-type: \r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	HostData *hostData = MockHostData::createDefaultHostData();
 	ResponseDelete *response = new ResponseDelete(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
@@ -194,20 +201,21 @@ testResponseDeleteWithEmptyTypeFile(void){
 
 void
 testResponseDeleteWithoutTypeFile(void){
+	HostData *hostData = MockHostData::createDefaultHostDataForDelete();
 	requestHeaderStruct header;
-	std::string filename = "./test_files/forResponseDelete/index.html";
+	std::string uri = "/index.html";
+	std::string filename = "." + hostData->root + uri;
 	std::string body = "OK";
 
 	std::ofstream outfile (filename);
-	outfile << getDataFileAsString("./index.html") << std::endl;
+	outfile << getDataFileAsString("./test_files/index.html") << std::endl;
 	outfile.close();
 
 	long sizeFile = body.length();
-	header.insert(std::pair<std::string, std::string>("uri", filename));
+	header.insert(std::pair<std::string, std::string>("uri", uri));
 	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	RequestData requestData = {.header = header, .body = ""};
 
-	HostData *hostData = MockHostData::createDefaultHostData();
 	ResponseDelete *response = new ResponseDelete(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
 
@@ -218,18 +226,18 @@ testResponseDeleteWithoutTypeFile(void){
 void
 testResponseDeleteWithNotExistFile(void){
 	requestHeaderStruct header;
-	std::string filename = "./test_files/forResponseDelete/NotExist.html";
-	std::string body = "File " + filename + " didn't deleted";
+	HostData *hostData = MockHostData::createDefaultHostDataForDelete();
+	std::string uri = "/NotExist.html";
+	std::string filename = "." + hostData->root + uri;
+	std::string body = "File " + uri + " didn't deleted";
 
 	long sizeFile = body.length();
-	header.insert(std::pair<std::string, std::string>("uri", filename));
-	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
+	header.insert(std::pair<std::string, std::string>("uri", uri));
+	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;//TODO not OK!!!
 	RequestData requestData = {.header = header, .body = ""};
 
-	HostData *hostData = MockHostData::createDefaultHostData();
 	ResponseDelete *response = new ResponseDelete(requestData, hostData);
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
-
 	delete response;
 	delete hostData;
 }
