@@ -19,13 +19,6 @@ Response::Response(const Response& other) {
 Response::Response(RequestData &requestData, HostData *hostData)
 {
 	_status = 0;
-	std::cout << "Response Constructor" << std::endl;
-	std::cout << "Port: "<< hostData->port << std::endl;
-	std::cout << "Root: " << hostData->root << std::endl;
-	std::cout << "Host: " <<  hostData->host << std::endl;
-	std::cout << "ServName: "<< hostData->serverName << std::endl;
-//	std::cout << hostData->location[0]->way << std::endl;
-
 	createHead(requestData, hostData);
 }
 
@@ -63,8 +56,6 @@ void Response::createHead(RequestData &requestData, HostData *hostData)
 	_state = SENDING;
 	requestHeaderStruct headers = requestData.header;
 	requestHeaderStruct::const_iterator it;
-	std::cout << "REQUEST" << std::endl;
-
 	for (it = headers.begin(); it != headers.end(); it++){
 
 		_dataToSend += processHeader(it->first, it->second, hostData);
@@ -89,7 +80,6 @@ std::string Response::processHeader(const std::string &headerName,
 
 	for (int i = 0; _arrProcessHeaders[i].getProcessedHeader; i++){
 		if (_arrProcessHeaders[i].nameHeader == headerName){
-			std::cerr << headerName << " : " << headerValue << std::endl;
 			processedStrHeader = _arrProcessHeaders[i].getProcessedHeader(headerValue, hostData);
 			break;
 		}
@@ -175,16 +165,13 @@ std::string
 Response::getFilePathFromHostData(const std::string &uri, HostData *hostData){
 	Location *tmpLocation;
 	std::string filePath = hostData->root + uri;
-	std::cerr << "Uri: " << uri << std::endl;
 	std::string filename = uri.substr(uri.find_last_of("/\\") + 1);
-	std::cerr << "Filename: " << filename << std::endl;
-	std::cerr << "FilePath: " << filePath << std::endl;
 	if ( filename.find('.') != std::string::npos){
 		return "." + filePath;//TODO refactor
 	}
 	for(size_t i = 0; i < hostData->location.size(); ++i){
 		tmpLocation = hostData->location[i];
-		if ((tmpLocation->way + tmpLocation->root) == filePath){
+		if ((tmpLocation->root + tmpLocation->way) == filePath){
 			break;
 		}
 	}
