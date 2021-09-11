@@ -22,7 +22,7 @@
 // 	Host host("127.0.0.1", 5342, "name");
 // 	TEST_CHECK(host.getIp() == "127.0.0.1");
 // 	TEST_CHECK(host.getPort() == 5342);
-// 	TEST_CHECK(host.getHostName() == "name");
+// 	TEST_CHECK(host.getserverName() == "name");
 // }
 
 // void
@@ -31,7 +31,7 @@
 // 	Host host("127.57.12.1", 8080, "some_name");
 // 	TEST_CHECK((host.getIp() != ""));
 // 	TEST_CHECK((host.getPort() != 0));
-// 	TEST_CHECK((host.getHostName() != ""));
+// 	TEST_CHECK((host.getserverName() != ""));
 // }
 
 // void
@@ -39,7 +39,7 @@
 // {
 // 	Host host;
 // 	TEST_CHECK(host.getIp().empty());
-// 	TEST_CHECK(host.getHostName().empty());
+// 	TEST_CHECK(host.getserverName().empty());
 // }
 
 // TEST_LIST = {

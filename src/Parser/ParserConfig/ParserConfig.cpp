@@ -19,7 +19,6 @@ Config* ParserConfig::parse(char* configFilePath) {
 	for (int i = 0; i < hosts.size(); i++) {
 		Host *host = new Host(hosts[i]);
 		config->addNewHost(host);
-		delete hosts[i];
 	}
 	return config;
 }
@@ -64,7 +63,7 @@ std::vector<HostData*>	ParserConfig::devideConfigToComponents(std::list<std::str
 				throw ParserConfigException("devideConfigToComponents error");
 			}
 			if (key == "***") {
-				if (hostData->host.size() > 0 && hostData->port > 0) {
+				if (hostData->ip.size() > 0 && hostData->port > 0) {
 					hosts.push_back(hostData);
 					hostData = new HostData;
 					// setDefaultHostValues(hostData);
@@ -85,7 +84,6 @@ std::vector<HostData*>	ParserConfig::devideConfigToComponents(std::list<std::str
 
 void	ParserConfig::setDefaultHostValues(HostData *hostData) {
 	hostData->ip = "";
-	hostData->host = "";
 	hostData->serverName = "";
 	hostData->port = 0;
 	hostData->root = "";
@@ -172,7 +170,7 @@ void	ParserConfig::setLocationDetailsData(std::string data, HostData *hostData) 
 */
 
 void	ParserConfig::setListenData(std::string data, HostData *hostData) {
-	std::string	host;
+	std::string	ip;
 	int			delim;
 	const char	*tmp;
 	size_t		port;
@@ -182,11 +180,11 @@ void	ParserConfig::setListenData(std::string data, HostData *hostData) {
 	if (delim == std::string::npos) {
 		throw ParserConfigException("setListenData error");
 	} else {
-		host = data.substr(0, delim);
+		ip = data.substr(0, delim);
 		tmp = data.substr(delim + 1, data.length()).c_str();
 		port = std::strtoll(tmp, &remainder, 0);
 		if (!remainder[0]) {
-			hostData->host = host;
+			hostData->ip = ip;
 			hostData->port = port;
 		} else {
 			throw ParserConfigException("setListenData error");
@@ -267,9 +265,6 @@ void	ParserConfig::setClientMaxBodySizeData(std::string data, HostData *hostData
 	} else if (data[data.length() - 1] == 'K') {
 		hostData->clientMaxBodySize = atoll(data.c_str()) * 1024;
 	} else {
-		throw ParserConfigException("setClientMaxBodySizeData error");
-	}
-	if (hostData->clientMaxBodySize < 0) {
 		throw ParserConfigException("setClientMaxBodySizeData error");
 	}
 }

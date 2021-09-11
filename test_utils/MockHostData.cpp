@@ -28,12 +28,11 @@ HostData *MockHostData::createDefaultHostData(){
 	vectorLocation.push_back(location);
 
 	hostData->ip = "127.0.0.1";
-	hostData->host = "127.0.0.1";
 	hostData->serverName = "localhost";
 	hostData->port = 8000;
 	hostData->root = "/www/";
 	hostData->errorPage = vectorErrorPage;
-	hostData->clientMaxBodySize = "214"; //FIXME Change to size_t
+	hostData->clientMaxBodySize = 214; //FIXME Change to size_t
 	hostData->location = vectorLocation;
 	return hostData;
 }
@@ -62,12 +61,11 @@ HostData *MockHostData::createDefaultHostDataNotStatic()
 	vectorLocation.push_back(location);
 
 	hostData->ip = "127.0.0.1";
-	hostData->host = "127.0.0.1";
 	hostData->serverName = "localhost";
 	hostData->port = 8000;
 	hostData->root = "/www/";
 	hostData->errorPage = vectorErrorPage;
-	hostData->clientMaxBodySize = "214"; //FIXME Change to size_t
+	hostData->clientMaxBodySize = 214; //FIXME Change to size_t
 	hostData->location = vectorLocation;
 	return hostData;
 }

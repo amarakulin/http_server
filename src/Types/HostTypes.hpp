@@ -47,7 +47,6 @@ typedef struct {
 
 typedef struct {
 	std::string					ip;
-	std::string					host;
 	std::string					serverName;
 	size_t						port;
 	std::string					root;

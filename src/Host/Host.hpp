@@ -15,12 +15,11 @@ class Host {
 	public:
 		Host(HostData *hostData);
 		Host(const Host& other);
-		Host(std::string ip, size_t port, std::string hostName);
+		Host(std::string ip, size_t port, std::string serverName);
 
-		HostData *getData() const;
 		std::string	getIp() const;
 		size_t		getPort() const;
-		std::string	getHostName() const;
+		std::string	getServerName() const;
 		std::string	getRoot() const;
 		std::string	errorPage() const;
 		std::string	getClientMaxBodySize() const;
