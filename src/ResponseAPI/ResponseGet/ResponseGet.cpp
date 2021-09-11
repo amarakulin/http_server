@@ -22,8 +22,6 @@ ResponseGet::ResponseGet(RequestData &requestData, HostData *hostData)
 {
 	Response::createBody(requestData.header["uri"], hostData);
 	_leftBytesToSend = _dataToSend.length();//TODO set in one place
-	std::cout << "SIZE: " << std::to_string(_leftBytesToSend) << std::endl;
-	std::cout << "DATA: " << std::endl << _dataToSend << std::endl;
 }
 
 ResponseGet::~ResponseGet() {}
