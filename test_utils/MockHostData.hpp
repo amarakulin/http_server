@@ -23,8 +23,11 @@ class MockHostData{
 public:
 	MockHostData();
 	~MockHostData();
-	HostData *createDefaultHostDataNotStatic();
-	static HostData *createDefaultHostData();
+	static HostData *createDefaultHostDataRootTestFiles();
+	static HostData *createDefaultHostDataRoot();
+	static HostData *createDefaultHostDataNestedDir();
+	static HostData *createDefaultHostDataForDelete();
+
 };
 
 

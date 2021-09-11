@@ -15,12 +15,27 @@
 
 #include "MockHostData.hpp"
 
-HostData *MockHostData::createDefaultHostData(){
+
+MockHostData::MockHostData(){}
+
+MockHostData::~MockHostData(){}
+
+HostData *MockHostData::createDefaultHostDataRootTestFiles(){
 	std::vector<ErrorPage*> vectorErrorPage;
 	std::vector<Location*> vectorLocation;
 	HostData *hostData = new HostData ();
 	ErrorPage *errorPage = new ErrorPage();
-	Location *location = new Location();//TODO gonna fill
+	Location *location = new Location();
+	location->root = "/";
+	location->autoindex = false;
+	location->cgi = nullptr;
+	location->httpMethods = std::vector<std::string>();
+	location->index.push_back("index.html");
+	location->index.push_back("index.css");
+	location->index.push_back("index.js");
+	location->uploadEnable = false;
+	location->uploadPath = "";
+	location->way = "/";
 
 	errorPage->errorPagePath = "/www/404error.html";//TODO may be fix
 	errorPage->errorNbr = 404;
@@ -31,30 +46,46 @@ HostData *MockHostData::createDefaultHostData(){
 	hostData->host = "127.0.0.1";
 	hostData->serverName = "localhost";
 	hostData->port = 8000;
-	hostData->root = "/www/";
+	hostData->root = "/test_files";
 	hostData->errorPage = vectorErrorPage;
 	hostData->clientMaxBodySize = "214"; //FIXME Change to size_t
 	hostData->location = vectorLocation;
 	return hostData;
 }
 
-MockHostData::MockHostData()
-{
-
+HostData *MockHostData::createDefaultHostDataRoot(){
+	HostData *hostData = createDefaultHostDataRootTestFiles();
+	hostData->root = "/";
+	hostData->location[0]->index.push_back("root_file.html");
+	return hostData;
 }
 
-MockHostData::~MockHostData()
-{
-
+HostData *MockHostData::createDefaultHostDataNestedDir(){
+	HostData *hostData = createDefaultHostDataRootTestFiles();
+	hostData->root = "/";
+	hostData->location[0]->root = "/test_files";
+	hostData->location[0]->way = "/nestedDir";
+	hostData->location[0]->index.push_back("testNestesdIndex.html");
+	return hostData;
 }
 
-HostData *MockHostData::createDefaultHostDataNotStatic()
-{
+HostData *MockHostData::createDefaultHostDataForDelete(){
 	std::vector<ErrorPage*> vectorErrorPage;
 	std::vector<Location*> vectorLocation;
 	HostData *hostData = new HostData ();
 	ErrorPage *errorPage = new ErrorPage();
-	Location *location = new Location();//TODO gonna fill
+	Location *location = new Location();
+	location->root = "/";
+	location->autoindex = false;
+	location->cgi = nullptr;
+	location->httpMethods = std::vector<std::string>();
+	location->index.push_back("index.html");
+	location->index.push_back("index.css");
+	location->index.push_back("index.js");
+	location->index.push_back("text_3MB.txt");
+	location->uploadEnable = false;
+	location->uploadPath = "";
+	location->way = "/";
 
 	errorPage->errorPagePath = "/www/404error.html";//TODO may be fix
 	errorPage->errorNbr = 404;
@@ -65,9 +96,10 @@ HostData *MockHostData::createDefaultHostDataNotStatic()
 	hostData->host = "127.0.0.1";
 	hostData->serverName = "localhost";
 	hostData->port = 8000;
-	hostData->root = "/www/";
+	hostData->root = "/test_files/forResponseDelete";
 	hostData->errorPage = vectorErrorPage;
 	hostData->clientMaxBodySize = "214"; //FIXME Change to size_t
 	hostData->location = vectorLocation;
 	return hostData;
 }
+
