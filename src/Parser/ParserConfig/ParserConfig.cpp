@@ -21,6 +21,9 @@ Config* ParserConfig::parse(char* configFilePath) {
 		config->addNewHost(host);
 		// delete hosts[i];
 	}
+	std::vector<Host*> tmp = config->getHosts();
+	std::cout << tmp[0]->getData()->location[2]->cgi->_ip << std::endl;
+	std::cout << tmp[0]->getData()->location[2]->cgi->_port << std::endl;
 	return config;
 }
 

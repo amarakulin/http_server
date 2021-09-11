@@ -33,10 +33,10 @@ class CGI {
 		std::string _pathToCGI;
 		std::string _extension;
 		std::string	_root; // ServerRoot + HostRoot
-		std::string _ip;
-		std::string	_port;
 
 	public:
+		std::string _ip;
+		std::string	_port;
 		CGI();
 		CGI(const CGI& other);
 		~CGI();
