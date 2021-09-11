@@ -29,7 +29,6 @@ typedef struct {
 	bool						uploadEnable;
 	std::string					uploadPath;
 	CGI*						cgi;
-	//TODO добавить редирект
 } Location;
 
 /*

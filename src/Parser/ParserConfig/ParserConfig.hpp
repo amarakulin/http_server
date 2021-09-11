@@ -20,14 +20,15 @@ class Config;
 class ParserConfig {
 	public:
 		ParserConfig();
-		Config*	parse(char* configFilePath);
-		void	readConfigFile(char *configFilePath, std::list<std::string> *config);
+		Config*					parse(char* configFilePath);
 		std::vector<HostData*>	devideConfigToComponents(std::list<std::string> config);
+		void	readConfigFile(char *configFilePath, std::list<std::string> *config);
 		bool	checkConfigString(std::string data);
 		void	fillHostData(HostData *host, std::list<std::string>::iterator *it);
 		void	checkHostData(HostData *host);
 		void	enterDataToHostDataStruct(std::string const &key, std::string const &value, HostData *hostData);
 		void	setDefaultHostValues(HostData *hostData);
+		void	setLocationDefaultValue(HostData *hostData, int currentLocation);
 
 		/*			SETTERS			*/
 

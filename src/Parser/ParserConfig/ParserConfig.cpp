@@ -91,22 +91,22 @@ void	ParserConfig::setDefaultHostValues(HostData *hostData) {
 	hostData->root = "";
 	hostData->errorPage.clear();
 	hostData->clientMaxBodySize = 0;
-	std::vector<Location*>::iterator it = hostData->location.begin();
-	for (; it != hostData->location.end(); it++) {
-		(*it)->way = "";
-		(*it)->root = "";
-		(*it)->redirect->statusCode = 0;
-		(*it)->redirect->path = "";
-		(*it)->httpMethods.clear();
-		(*it)->index.clear();
-		(*it)->autoindex = false;
-		(*it)->uploadEnable = false;
-		(*it)->uploadPath = "";
-		(*it)->cgi->setPath("");
-		(*it)->cgi->setRoot("");
-		(*it)->cgi->setExtension("");
-	}
 	hostData->location.clear();
+}
+
+void	ParserConfig::setLocationDefaultValue(HostData *hostData, int currentLocation) {
+	hostData->location[currentLocation]->way = "";
+	hostData->location[currentLocation]->root = "";
+	hostData->location[currentLocation]->redirect->statusCode = 0;
+	hostData->location[currentLocation]->redirect->path = "";
+	hostData->location[currentLocation]->httpMethods.clear();
+	hostData->location[currentLocation]->index.clear();
+	hostData->location[currentLocation]->autoindex = false;
+	hostData->location[currentLocation]->uploadEnable = false;
+	hostData->location[currentLocation]->uploadPath = "";
+	hostData->location[currentLocation]->cgi->setPath("");
+	hostData->location[currentLocation]->cgi->setRoot("");
+	hostData->location[currentLocation]->cgi->setExtension("");
 }
 
 /*
@@ -255,7 +255,7 @@ void	ParserConfig::setErrorPageData(std::string data, HostData *hostData) {
 		if (errorPagePath.find_first_of(' ') == std::string::npos &&
 			errorPagePath.find_first_of("/") == 0 && errorNbr != 0) {
 	
-			errorPage = new ErrorPage();
+			errorPage = new ErrorPage;
 			errorPage->errorNbr = errorNbr;
 			errorPage->errorPagePath = errorPagePath;
 			hostData->errorPage.push_back(errorPage);
@@ -327,7 +327,7 @@ void	ParserConfig::setLocationWayData(std::string data, HostData *hostData) {
 	Location	*location;
 
 	if (data.find_first_of("/") == 0) {
-		location = new Location();
+		location = new Location;
 		location->way = data;
 		hostData->location.push_back(location);
 	} else {
