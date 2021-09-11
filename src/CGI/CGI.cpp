@@ -21,3 +21,11 @@ void	CGI::setExtension(const std::string& extension) {
 void	CGI::setRoot(const std::string& root) {
 	_root = root;
 }
+
+void	CGI::setIp(const std::string& ip) {
+	_ip = ip;
+}
+
+void	CGI::setPort(const std::string& port) {
+	_port = port;
+}
