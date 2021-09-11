@@ -174,13 +174,13 @@ void Response::changeContentLength(size_t valueContentLength){
 std::string
 Response::getFilePathFromHostData(const std::string &uri, HostData *hostData){
 	Location *tmpLocation;
-	std::string filePath = "." + hostData->root + uri;//TODO may be without root
+	std::string filePath = hostData->root + uri;
 	std::cerr << "Uri: " << uri << std::endl;
 	std::string filename = uri.substr(uri.find_last_of("/\\") + 1);
 	std::cerr << "Filename: " << filename << std::endl;
 	std::cerr << "FilePath: " << filePath << std::endl;
 	if ( filename.find('.') != std::string::npos){
-		return filePath;
+		return "." + filePath;//TODO refactor
 	}
 	for(size_t i = 0; i < hostData->location.size(); ++i){
 		tmpLocation = hostData->location[i];
@@ -188,14 +188,13 @@ Response::getFilePathFromHostData(const std::string &uri, HostData *hostData){
 			break;
 		}
 	}
+	filePath = "." + filePath;//TODO refactor
 	for (size_t i = 0; i < tmpLocation->index.size(); ++i){
 		if (isFileExist(filePath + tmpLocation->index[i])){
 			filePath += tmpLocation->index[i];
+			break;
 		}
 	}
-
-	std::cout << "Filename: " << filename << std::endl;
-	std::cout << "FilePath: " << filePath << std::endl;
 	return filePath;
 }
 /*
