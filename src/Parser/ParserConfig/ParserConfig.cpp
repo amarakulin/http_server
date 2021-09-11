@@ -88,7 +88,7 @@ void	ParserConfig::setDefaultHostValues(HostData *hostData) {
 	hostData->ip = "";
 	hostData->serverName = "";
 	hostData->port = 0;
-	hostData->root = "";
+	hostData->root = "/";
 	hostData->errorPage.clear();
 	hostData->clientMaxBodySize = 0;
 	hostData->location.clear();
@@ -177,6 +177,7 @@ void	ParserConfig::setLocationDetailsData(std::string data, HostData *hostData) 
 	} else if (key == "cgi_path") {
 		setCgiPathToLocation(value, hostData, currentLocation);
 		setCgiRootToLocation(hostData, currentLocation);
+		setCgiIpAndPortData(hostData, currentLocation);
 	} else {
 		throw ParserConfigException("setLocationDetailsData error");
 	}
@@ -462,9 +463,13 @@ void	ParserConfig::setCgiPathToLocation(std::string data, HostData *hostData, in
 void	ParserConfig::setCgiRootToLocation(HostData *hostData, int currentLocation) {
 	if (hostData->location[currentLocation]->root.length() > 0) {
 		hostData->location[currentLocation]->cgi->setRoot(hostData->location[currentLocation]->root);
-	} else if (hostData->root.length() > 0) {
-		hostData->location[currentLocation]->cgi->setRoot(hostData->root);
 	} else {
-		hostData->location[currentLocation]->cgi->setRoot("/");
+		hostData->location[currentLocation]->cgi->setRoot(hostData->root);
 	}
+}
+
+void	ParserConfig::setCgiIpAndPortData(HostData *hostData, int currentLocation) {
+	std::string port = std::to_string(static_cast<int>(hostData->port));
+	hostData->location[currentLocation]->cgi->setIp(hostData->ip);
+	hostData->location[currentLocation]->cgi->setPort(port);
 }

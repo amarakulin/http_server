@@ -33,6 +33,8 @@ class CGI {
 		std::string _pathToCGI;
 		std::string _extension;
 		std::string	_root; // ServerRoot + HostRoot
+		std::string _ip;
+		std::string	_port;
 
 	public:
 		CGI();
@@ -42,6 +44,8 @@ class CGI {
 		void	setPath(const std::string& path);
 		void	setExtension(const std::string& extension);
 		void	setRoot(const std::string& root);
+		void	setIp(const std::string& ip);
+		void	setPort(const std::string& port);
 
 		void	createCGIEnv(Request* request, const HostData* hostData);
 };
