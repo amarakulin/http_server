@@ -224,25 +224,6 @@ testResponseDeleteWithoutTypeFile(void){
 }
 
 void
-testResponseDeleteWithNotExistFile(void){
-	requestHeaderStruct header;
-	HostData *hostData = MockHostData::createDefaultHostDataForDelete();
-	std::string uri = "/NotExist.html";
-	std::string filename = "." + hostData->root + uri;
-	std::string body = "File " + uri + " didn't deleted";
-
-	long sizeFile = body.length();
-	header.insert(std::pair<std::string, std::string>("uri", uri));
-	std::string expectedResponseData = "HTTP/1.1 200 OK\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;//TODO not OK!!!
-	RequestData requestData = {.header = header, .body = ""};
-
-	ResponseDelete *response = new ResponseDelete(requestData, hostData);
-	TEST_CHECK(response->getDataToSend() == expectedResponseData);
-	delete response;
-	delete hostData;
-}
-
-void
 testResponseDeleteWithPicture(void){
 	TEST_CHECK(false);
 }
@@ -256,7 +237,6 @@ TEST_LIST = {
 		{ "ResponseDelete with SEVERAL TYPE FILE file", testResponseDeleteWithSeveralTypesFile },
 		{ "ResponseDelete with EMPTY TYPE FILE file", testResponseDeleteWithEmptyTypeFile },
 		{ "ResponseDelete with WITHOUT TYPE FILE file", testResponseDeleteWithoutTypeFile },
-		{ "ResponseDelete with NOT EXIST FILE", testResponseDeleteWithNotExistFile },
 
 		{ nullptr, nullptr }
 };
