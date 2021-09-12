@@ -17,3 +17,6 @@ cmake-build-debug
 
 ### Apple files ###
 .DS_Store
+
+### Test files ###
+unit_test/test_files/forResponseDelete/**

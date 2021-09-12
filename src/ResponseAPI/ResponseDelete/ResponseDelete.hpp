@@ -12,7 +12,7 @@ public:
 	~ResponseDelete();
 
 private:
-	virtual void createBody(const std::string& uri);
+	virtual void createBody(const std::string &uri, HostData *hostData);
 };
 
 #endif

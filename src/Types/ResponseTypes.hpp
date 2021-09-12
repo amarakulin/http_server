@@ -8,7 +8,10 @@ class Request;
 
 #define CONTENT_LENGTH "Content-length: "
 #define CONTENT_TYPE "Content-type: "
+#define LOCATION "Location: "
 #define VERSION_HTTP "HTTP/1.1 "
+#define DEFAULT_ERROR_PAGE_PATH "/resources/errorPages/"
+
 /*
 ** Структура для автоматического определения наследника класса Response
 */
@@ -27,7 +30,7 @@ typedef enum { NO_RESPONSE, SENDING, SENDED } responseState;
 */
 typedef struct {
 	const char*		nameHeader;
-	std::string			(*getProcessedHeader)(std::string valueHeader);
+	std::string			(*getProcessedHeader)(std::string valueHeader, HostData *hostData);
 }		t_response_process;
 
 

@@ -19,18 +19,23 @@ ResponseDelete &ResponseDelete::operator=(const ResponseDelete &assign) {
 
 ResponseDelete::ResponseDelete(RequestData &requestData, HostData *hostData)
 		: Response(requestData,
-				   NULL)
+				   hostData)
 {
-	ResponseDelete::createBody(requestData.header["uri"]);
+	ResponseDelete::createBody(requestData.header["uri"], hostData);
 	_leftBytesToSend = _dataToSend.length();//TODO set in one place
 }
 
 ResponseDelete::~ResponseDelete() {}
 
-void ResponseDelete::createBody(const std::string& uri) {
+void ResponseDelete::createBody(const std::string &uri, HostData *hostData)
+{
 	std::string body = "";
-
-	if (!std::remove(uri.c_str())){
+	std::string filePath = "." + hostData->root + uri;
+	std::string filename = uri.substr(uri.find_last_of("/\\") + 1);
+	if (filename.find('.') == std::string::npos){
+		body += "Not a file -> " + uri;
+	}
+	else if (!std::remove(filePath.c_str())){
 		body += "OK";
 	}
 	else{

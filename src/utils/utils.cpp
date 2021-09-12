@@ -80,3 +80,13 @@ bool	isSomeSymbolInTheEnd(std::string end, char symbol) {
 		return false;
 	}
 }
+
+
+bool isFileExist (const std::string& filePath) {
+	size_t posFile = filePath.find_last_of('/');
+	if (filePath.find('.', posFile) == std::string::npos){
+		return false;
+	}
+	struct stat buffer;
+	return (stat (filePath.c_str(), &buffer) == 0);
+}

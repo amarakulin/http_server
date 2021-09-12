@@ -20,11 +20,11 @@
 
 void testResponseIsDoneWhenStatusSended(void){
 	requestHeaderStruct header;
-	std::string filename = "./index.html";
+	HostData *hostData = MockHostData::createDefaultHostDataRootTestFiles();
+	std::string filename = "/index.html";
 	header.insert(std::pair<std::string, std::string>("uri", filename));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	RequestData requestData = {.header = header, .body = ""};
-	HostData *hostData = MockHostData::createDefaultHostData();
 	ResponseGet *response = new ResponseGet(requestData, hostData);
 	response->countSendedData(response->getDataToSend().length());
 
@@ -41,12 +41,13 @@ void testResponseIsDoneWhenStatusNoResponse(void){
 
 void testResponseIsDoneWhenStatusSening(void){
 	requestHeaderStruct header;
-	std::string filename = "./index.html";
+	HostData *hostData = MockHostData::createDefaultHostDataRootTestFiles();
+
+	std::string filename = "/index.html";
 	header.insert(std::pair<std::string, std::string>("uri", filename));
 	header.insert(std::pair<std::string, std::string>("accept", "text/html,*/*"));
 	RequestData requestData = {.header = header, .body = ""};
 
-	HostData *hostData = MockHostData::createDefaultHostData();
 	ResponseGet *response = new ResponseGet(requestData, hostData);
 	response->countSendedData(response->getDataToSend().length() / 2);
 

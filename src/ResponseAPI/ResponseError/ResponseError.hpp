@@ -20,6 +20,7 @@
 #include "HostTypes.hpp"
 #include "Response.hpp"
 #include "Global.hpp"
+#include "utils.hpp"
 
 class ResponseError : public Response {
 public:
@@ -30,7 +31,10 @@ public:
 	~ResponseError();
 
 private:
-	virtual void createBody(const std::string& uri);
+	virtual void createBody(const std::string &uri, HostData *hostData);
+	RequestData fillRequestData(const ErrorPage &errorPage, HostData *hostData);
+	std::string getErrorPageFromResources(size_t statusCode);
+
 };
 
 

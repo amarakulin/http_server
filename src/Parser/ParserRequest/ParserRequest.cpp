@@ -211,7 +211,7 @@ void		ParserRequest::parseCommonHeaderData(std::string& data, requestHeaderStruc
 
 void	ParserRequest::joinUriPartOfCommonHeaderData(strVctIt start, strVctIt end, strVct& data) {
 	std::vector<std::string> uriVct(start, end);
-	std::string uri = ".";
+	std::string uri = "";
 	
 	for (std::vector<std::string>::iterator it = uriVct.begin(); it != uriVct.end(); it++) {
 		uri += (*it);

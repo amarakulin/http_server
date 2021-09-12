@@ -124,8 +124,9 @@ void				Server::handleListenerEvents() {
 	for (size_t i = 0; i < _listeners.size(); i++) {
 		struct pollfd host = _sockets.getSocketByFD(_listeners[i].getSocket()); //TODO optimize!!!!!!!!!!!
 
-		if (host.revents & POLLIN)
+		if (host.revents & POLLIN){
 			createNewClient(host.fd, _config->getHosts()[i]->getData());
+		}
 	}
 }
 
@@ -164,18 +165,20 @@ void				Server::processingRequest(int clientSocket, Client& client) {
 	//TODO delete hardcode
 	BadRequestException badRequestException;
 	ErrorPage  errorPage;
-	errorPage.errorNbr = 400;
-	errorPage.errorPagePath = "./error.html";
+	errorPage.errorNbr = 404;
+//	errorPage.errorPagePath = "/error.html";
+//	errorPage.errorPagePath = "/not_exist.html";
 	try {
 		client.getRequest()->addRequestChunk(buf);
+//		throw badRequestException;
 	} catch (BadRequestException& e) {
-		 client.setResponse(_responseCreator.createResponse(errorPage));
+		 client.setResponse(_responseCreator.createResponse(errorPage, client.getHostData()));
 		 client.resetRequest();
 	} catch (NotAllowedException& e) {
-		 client.setResponse(_responseCreator.createResponse(errorPage));
+		 client.setResponse(_responseCreator.createResponse(errorPage, client.getHostData()));
 		 client.resetRequest();
 	} catch (NotFoundException& e) {
-		client.setResponse(_responseCreator.createResponse(errorPage));
+		client.setResponse(_responseCreator.createResponse(errorPage, client.getHostData()));
 		client.resetRequest();
 	}
 
@@ -185,6 +188,10 @@ void				Server::processingRequest(int clientSocket, Client& client) {
 }
 
 void				Server::createResponse(Client& client) {
+	std::cout << "Response Constructor" << std::endl;
+	std::cout << "Port: "<< client.getHostData()->port << std::endl;
+	std::cout << "Root: " << client.getHostData()->root << std::endl;
+	std::cout << "ServName: "<< client.getHostData()->serverName << std::endl;
 	client.setResponse(_responseCreator.createResponse(
 			client.getRequest()->getData(), client.getHostData()));
 	client.resetRequest();

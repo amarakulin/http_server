@@ -33,14 +33,15 @@ ResponseHead &ResponseHead::operator=(const ResponseHead &assign) {
 
 ResponseHead::ResponseHead(RequestData &requestData, HostData *hostData)
 		: Response(requestData,
-				   NULL)
+				   hostData)
 {
-	ResponseHead::createBody(requestData.header["uri"]);
+	ResponseHead::createBody(requestData.header["uri"], hostData);
 	_leftBytesToSend = _dataToSend.length();//TODO set in one place
 }
 
 ResponseHead::~ResponseHead() {}
 
-void ResponseHead::createBody(const std::string& uri) {
+void ResponseHead::createBody(const std::string &uri, HostData *hostData)
+{
 	_dataToSend += "\r\n";
 }

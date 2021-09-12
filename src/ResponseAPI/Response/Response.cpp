@@ -19,7 +19,7 @@ Response::Response(const Response& other) {
 Response::Response(RequestData &requestData, HostData *hostData)
 {
 	_status = 0;
-	createHead(requestData);
+	createHead(requestData, hostData);
 }
 
 Response &Response::operator=(const Response &assign){
@@ -51,31 +51,36 @@ void Response::countSendedData(int byteSended){
 	_dataToSend.erase(_dataToSend.begin(), _dataToSend.begin() + byteSended);
 }
 
-void Response::createHead(RequestData& requestData){
+void Response::createHead(RequestData &requestData, HostData *hostData)
+{
 	_state = SENDING;
 	requestHeaderStruct headers = requestData.header;
 	requestHeaderStruct::const_iterator it;
 	for (it = headers.begin(); it != headers.end(); it++){
-		_dataToSend += processHeader(it->first, it->second);
+
+		_dataToSend += processHeader(it->first, it->second, hostData);
 	}
+//	_dataToSend = createRedirectHeader(hostData);
 	_dataToSend = createHeadHeader() + _dataToSend;
 }
 
-void Response::createBody(const std::string& uri){
-	std::string filename = uri;
-	if (uri == "./"){//TODO needs to know default List<file> if directory is given from config
-		filename += "index.html";
-	}
+void Response::createBody(const std::string &uri, HostData *hostData)
+{
+	std::string filename = getFilePathFromHostData(uri, hostData);
 	std::string body = getDataFileAsString(filename);
 	_dataToSend += "\r\n";
 	_dataToSend += body;
 }
 
-std::string Response::processHeader(const std::string &headerName, const std::string &headerValue){
+std::string Response::processHeader(const std::string &headerName,
+									const std::string &headerValue,
+									HostData *hostData)
+{
 	std::string processedStrHeader = "";
+
 	for (int i = 0; _arrProcessHeaders[i].getProcessedHeader; i++){
 		if (_arrProcessHeaders[i].nameHeader == headerName){
-			processedStrHeader = _arrProcessHeaders[i].getProcessedHeader(headerValue);
+			processedStrHeader = _arrProcessHeaders[i].getProcessedHeader(headerValue, hostData);
 			break;
 		}
 	}
@@ -106,7 +111,9 @@ std::string Response::createHeadHeader(){//TODO think if got a error(5xx) while 
 	return processedStr;
 }
 
-std::string Response::getContentTypeHeader(std::string accept){
+std::string
+Response::getContentTypeHeader(std::string accept, HostData *hostData)
+{
 	std::string processedStr = CONTENT_TYPE;//TODO handle Accept-Charset here
 	long found = static_cast<long> (accept.find(','));
 	if (found != std::string::npos){
@@ -116,22 +123,77 @@ std::string Response::getContentTypeHeader(std::string accept){
 	return processedStr;
 }
 
-std::string Response::getContentLengthHeader(std::string uri){
+std::string
+Response::getContentLengthHeader(std::string uri, HostData *hostData)
+{
 	std::string processedStr = CONTENT_LENGTH;
-	std::string filename = uri;
 
-	if (filename == "./"){//TODO needs to know default List<file> if directory is given from config
-		filename += "index.html";
-	}
+	std::string filename = getFilePathFromHostData(uri, hostData);
 	long sizeFile = getSizeFile(filename);
 	if (sizeFile == -1){
-		std::cout << "[-] Error can't count size file" << std::endl;
+		std::cout << "[-] Error can't count size file: " << filename << std::endl;
 		//TODO throw exception may be
 	}
 	processedStr += std::to_string(sizeFile);
 	return processedStr;
 }
 
+std::string Response::createRedirectHeader(HostData *hostData){
+	std::string processedStr = LOCATION;
+	processedStr += "";//TODO add a location form Config
+	processedStr += "\r\n";
+//	_status = 300;//TODO add a location form Config
+	return "";
+}
+
+void Response::changeContentLength(size_t valueContentLength){
+	std::string search = CONTENT_LENGTH;
+	size_t pos = _dataToSend.find(search);
+	if (pos == std::string::npos){
+		return;
+	}
+	pos += search.length();
+	std::string::iterator itStart = _dataToSend.begin() + static_cast<long>(pos);
+	std::string::iterator itEnd = itStart;
+	std::string oldValueContentLength;
+	for (; *itEnd != std::string::npos && *itEnd != '\r' ; ++itEnd ){
+		oldValueContentLength += *itEnd;
+	}
+	_dataToSend.replace(pos, oldValueContentLength.length(), std::to_string(valueContentLength));
+}
+
+bool compareLocations(Location* loc1, Location* loc2){
+	return loc1->way.size() < loc2->way.size();
+}
+
+std::string
+Response::getFilePathFromHostData(const std::string &uri, HostData *hostData){
+	std::string filePath;
+	std::vector<std::string> index;
+	std::string root = "";
+	std::string matchStr;
+
+	std::vector<Location*> vectorLocations = hostData->location;
+	std::sort(vectorLocations.begin(), vectorLocations.end(), compareLocations);
+	for (size_t i = 0; i < vectorLocations.size(); ++i){
+		matchStr = uri.substr(0, vectorLocations[i]->way.size());
+		if (vectorLocations[i]->way.find(matchStr) != std::string::npos && root.size() < matchStr.size()){
+			root = vectorLocations[i]->root;
+			index = vectorLocations[i]->index;
+		}
+	}
+	if (root.empty()){
+		root = hostData->root;
+	}
+	filePath = "." + root + uri;
+	for (size_t i = 0; i < index.size(); ++i){
+		if (isFileExist(filePath + "/" + index[i])){
+			filePath += "/" + index[i];
+			break;
+		}
+	}
+	return filePath;
+}
 /*
 ** Getters
 */
@@ -150,23 +212,6 @@ int Response::getStatus() const {
 
 int Response::getState() const{
 	return _state;
-}
-
-void Response::changeContentLength(size_t valueContentLength){
-	std::string search = CONTENT_LENGTH;
-	size_t pos = _dataToSend.find(search);
-	if (pos == std::string::npos){
-		return;
-	}
-	pos += search.length();
-	std::string::iterator itStart = _dataToSend.begin() + static_cast<long>(pos);
-	std::string::iterator itEnd = itStart;
-	std::string oldValueContentLength;
-	for (; *itEnd != std::string::npos && *itEnd != '\r' ; ++itEnd ){
-		oldValueContentLength += *itEnd;
-	}
-	_dataToSend.replace(pos, oldValueContentLength.length(), std::to_string(valueContentLength));
-
 }
 
 /*
