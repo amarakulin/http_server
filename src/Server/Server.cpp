@@ -184,10 +184,12 @@ void				Server::processingRequest(int clientSocket, Client& client) {
 	//TODO delete hardcode
 	BadRequestException badRequestException;
 	ErrorPage  errorPage;
-	errorPage.errorNbr = 400;
-	errorPage.errorPagePath = "./error.html";
+	errorPage.errorNbr = 404;
+//	errorPage.errorPagePath = "/error.html";
+//	errorPage.errorPagePath = "/not_exist.html";
 	try {
 		client.getRequest()->addRequestChunk(buf);
+//		throw badRequestException;
 	} catch (BadRequestException& e) {
 		 client.setResponse(_responseCreator.createResponse(errorPage, client.getHostData()));
 		 client.resetRequest();
