@@ -29,6 +29,7 @@ class ParserConfig {
 		void	enterDataToHostDataStruct(std::string const &key, std::string const &value, HostData *hostData);
 		void	setDefaultHostValues(HostData *hostData);
 		void	setLocationDefaultValue(HostData *hostData, int currentLocation);
+		void	cleanUpHost(HostData *hostData);
 
 		/*			SETTERS			*/
 
@@ -49,6 +50,7 @@ class ParserConfig {
 		void	setCgiExtensionToLocation(std::string data, HostData *hostData, int currentLocation);
 		void	setCgiPathToLocation(std::string data, HostData *hostData, int currentLocation);
 		void	setCgiRootToLocation(HostData *hostData, int currentLocation);
+		void	setCgiIpAndPortData(HostData *hostData, int currentLocation);
 
 		class ParserConfigException : public std::exception {
 			private:

@@ -19,9 +19,22 @@ Config* ParserConfig::parse(char* configFilePath) {
 	for (int i = 0; i < hosts.size(); i++) {
 		Host *host = new Host(hosts[i]);
 		config->addNewHost(host);
-		// delete hosts[i];
+		cleanUpHost(hosts[i]);
 	}
 	return config;
+}
+
+void	ParserConfig::cleanUpHost(HostData *hostData) {
+	std::vector<ErrorPage*>::iterator errorPageIt = hostData->errorPage.begin();
+	for (; errorPageIt != hostData->errorPage.end(); errorPageIt++) {
+		delete *errorPageIt;
+	}
+	std::vector<Location*>::iterator locationIt = hostData->location.begin();
+	for (; locationIt != hostData->location.end(); locationIt++) {
+		delete (*locationIt)->cgi;
+		delete *locationIt;
+	}
+	delete hostData;
 }
 
 /*
@@ -88,7 +101,7 @@ void	ParserConfig::setDefaultHostValues(HostData *hostData) {
 	hostData->ip = "";
 	hostData->serverName = "";
 	hostData->port = 0;
-	hostData->root = "";
+	hostData->root = "/";
 	hostData->errorPage.clear();
 	hostData->clientMaxBodySize = 0;
 	hostData->location.clear();
@@ -97,8 +110,8 @@ void	ParserConfig::setDefaultHostValues(HostData *hostData) {
 void	ParserConfig::setLocationDefaultValue(HostData *hostData, int currentLocation) {
 	hostData->location[currentLocation]->way = "";
 	hostData->location[currentLocation]->root = "";
-	hostData->location[currentLocation]->redirect->statusCode = 0;
-	hostData->location[currentLocation]->redirect->path = "";
+	hostData->location[currentLocation]->redirectStatusCode = 0;
+	hostData->location[currentLocation]->redirectPath = "";
 	hostData->location[currentLocation]->httpMethods.clear();
 	hostData->location[currentLocation]->index.clear();
 	hostData->location[currentLocation]->autoindex = false;
@@ -177,6 +190,7 @@ void	ParserConfig::setLocationDetailsData(std::string data, HostData *hostData) 
 	} else if (key == "cgi_path") {
 		setCgiPathToLocation(value, hostData, currentLocation);
 		setCgiRootToLocation(hostData, currentLocation);
+		setCgiIpAndPortData(hostData, currentLocation);
 	} else {
 		throw ParserConfigException("setLocationDetailsData error");
 	}
@@ -289,7 +303,6 @@ void	ParserConfig::setClientMaxBodySizeData(std::string data, HostData *hostData
 }
 
 void	ParserConfig::setRedirectToLocation(std::string data, HostData *hostData, int currentLocation) {
-	Redirect *redirect;
 	int delim;
 	const char *tmp;
 	size_t statusCode;
@@ -306,10 +319,8 @@ void	ParserConfig::setRedirectToLocation(std::string data, HostData *hostData, i
 		if (redirectPath.find_first_of(' ') == std::string::npos &&
 			redirectPath.find_first_of("/") == 0 && statusCode != 0) {
 
-			Redirect *redirect = new Redirect;
-			redirect->statusCode = statusCode;
-			redirect->path = redirectPath;
-			hostData->location[currentLocation]->redirect = redirect;
+			hostData->location[currentLocation]->redirectStatusCode = statusCode;
+			hostData->location[currentLocation]->redirectPath = redirectPath;
 		} else {
 			throw ParserConfigException("setErrorPageData error");
 		}
@@ -460,7 +471,15 @@ void	ParserConfig::setCgiPathToLocation(std::string data, HostData *hostData, in
 }
 
 void	ParserConfig::setCgiRootToLocation(HostData *hostData, int currentLocation) {
-	std::string serverRoot = hostData->root;
-	std::string hostRoot = hostData->location[currentLocation]->root;
-	hostData->location[currentLocation]->cgi->setRoot(serverRoot + hostRoot);
+	if (hostData->location[currentLocation]->root.length() > 0) {
+		hostData->location[currentLocation]->cgi->setRoot(hostData->location[currentLocation]->root);
+	} else {
+		hostData->location[currentLocation]->cgi->setRoot(hostData->root);
+	}
+}
+
+void	ParserConfig::setCgiIpAndPortData(HostData *hostData, int currentLocation) {
+	std::string port = std::to_string(static_cast<int>(hostData->port));
+	hostData->location[currentLocation]->cgi->setIp(hostData->ip);
+	hostData->location[currentLocation]->cgi->setPort(port);
 }

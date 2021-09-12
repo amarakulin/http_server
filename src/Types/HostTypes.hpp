@@ -7,22 +7,14 @@
 class CGI;
 
 /*
-**	Структура-дополнение с HostData. Описывает redirect. Нет обязательных полей.
-*/
-
-typedef struct {
-	size_t						statusCode;
-	std::string					path;
-} Redirect;
-
-/*
 **	Структура-дополнение с HostData. Описывает location. Нет обязательных полей.
 */
 
 typedef struct {
 	std::string					way;
 	std::string					root;
-	Redirect*					redirect;
+	size_t						redirectStatusCode;
+	std::string					redirectPath;
 	std::vector<std::string>	httpMethods;
 	std::vector<std::string>	index;
 	bool						autoindex;
