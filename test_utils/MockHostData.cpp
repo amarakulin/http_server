@@ -55,6 +55,7 @@ HostData *MockHostData::createDefaultHostDataRootTestFiles(){
 HostData *MockHostData::createDefaultHostDataRoot(){
 	HostData *hostData = createDefaultHostDataRootTestFiles();
 	hostData->root = "/";
+	hostData->location[0]->root = "/";
 	hostData->location[0]->index.push_back("root_file.html");
 	return hostData;
 }
