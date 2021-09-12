@@ -9,7 +9,7 @@ const t_response_process Response::_arrProcessHeaders[] = {
 
 Response::Response() {
 	_state = NO_RESPONSE;
-	_leftBytesToSend = 0;//TODO Think
+	_leftBytesToSend = 0;
 }
 
 Response::Response(const Response& other) {
@@ -57,10 +57,9 @@ void Response::createHead(RequestData &requestData, HostData *hostData)
 	requestHeaderStruct headers = requestData.header;
 	requestHeaderStruct::const_iterator it;
 	for (it = headers.begin(); it != headers.end(); it++){
-
 		_dataToSend += processHeader(it->first, it->second, hostData);
 	}
-//	_dataToSend = createRedirectHeader(hostData);
+	_dataToSend += createRedirectHeader(headers["uri"], hostData);
 	_dataToSend = createHeadHeader() + _dataToSend;
 }
 
@@ -138,12 +137,19 @@ Response::getContentLengthHeader(std::string uri, HostData *hostData)
 	return processedStr;
 }
 
-std::string Response::createRedirectHeader(HostData *hostData){
-	std::string processedStr = LOCATION;
-	processedStr += "";//TODO add a location form Config
-	processedStr += "\r\n";
-//	_status = 300;//TODO add a location form Config
-	return "";
+std::string
+Response::createRedirectHeader(const std::string &uri, HostData *hostData)
+{
+	std::string processedStr = "";
+	Location *location = getLocationByUri(uri, hostData->location);
+
+	if (location && !location->redirectPath.empty()){
+		_status = static_cast<int> (location->redirectStatusCode);
+		processedStr = LOCATION;
+		processedStr += location->redirectPath;
+		processedStr += "\r\n";
+	}
+	return processedStr;
 }
 
 void Response::changeContentLength(size_t valueContentLength){
@@ -171,28 +177,40 @@ Response::getFilePathFromHostData(const std::string &uri, HostData *hostData){
 	std::string filePath;
 	std::vector<std::string> index;
 	std::string root = "";
-	std::string matchStr;
+	Location *location = nullptr;
 
 	std::vector<Location*> vectorLocations = hostData->location;
-	std::sort(vectorLocations.begin(), vectorLocations.end(), compareLocations);
-	for (size_t i = 0; i < vectorLocations.size(); ++i){
-		matchStr = uri.substr(0, vectorLocations[i]->way.size());
-		if (vectorLocations[i]->way.find(matchStr) != std::string::npos && root.size() < matchStr.size()){
-			root = vectorLocations[i]->root;
-			index = vectorLocations[i]->index;
-		}
+	location = getLocationByUri(uri, hostData->location);
+	if (location){
+		root = location->root;
+		index = location->index;
 	}
-	if (root.empty()){
+	else {
 		root = hostData->root;
 	}
 	filePath = "." + root + uri;
-	for (size_t i = 0; i < index.size(); ++i){
+	for (size_t i = 0; i < index.size(); ++i){//TODO unique function
 		if (isFileExist(filePath + "/" + index[i])){
 			filePath += "/" + index[i];
 			break;
 		}
 	}
 	return filePath;
+}
+
+Location *Response::getLocationByUri(const std::string &uri, std::vector<Location*> locations){
+	Location *location = nullptr;
+	std::string matchStr;
+	std::string lastMatch = "";
+	std::sort(locations.begin(), locations.end(), compareLocations);
+	for (size_t i = 0; i < locations.size(); ++i){
+		matchStr = uri.substr(0, locations[i]->way.size());
+		if (locations[i]->way.find(matchStr) != std::string::npos && lastMatch != matchStr){
+			location = locations[i];
+		}
+		lastMatch = matchStr;//if uri is -> '/' when gets last location
+	}
+	return location;
 }
 /*
 ** Getters
