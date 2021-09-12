@@ -44,9 +44,10 @@ private:
 
 	static std::string getFilePathFromHostData(const std::string &uri, HostData *hostData);
 
-	//TODO Workout default paths
 	//TODO Workout redirection
-	//TODO Workout data for CGI
+	//TODO Workout error for CGI
+	//TODO Workout 404 status code
+	//TODO Workout 413 status code
 	//TODO Put method
 
 
