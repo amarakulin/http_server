@@ -37,16 +37,17 @@ private:
 	static const	t_response_process _arrProcessHeaders[];
 
 	std::string		createHeadHeader();
-	std::string		createRedirectHeader(HostData *hostData); //TODO handle 3xx status code
+	std::string		createRedirectHeader(const std::string &uri, HostData *hostData);
 	std::string		processHeader(const std::string &headerName, const std::string &headerValue, HostData *hostData);
 	static std::string getContentTypeHeader(std::string accept, HostData *hostData);
 	static std::string getContentLengthHeader(std::string uri, HostData *hostData);
 
 	static std::string getFilePathFromHostData(const std::string &uri, HostData *hostData);
-
-	//TODO Workout default paths
+	static Location *getLocationByUri(const std::string &uri, std::vector<Location*> locations);
 	//TODO Workout redirection
-	//TODO Workout data for CGI
+	//TODO Workout error for CGI
+	//TODO Workout 404 status code
+	//TODO Workout 413 status code
 	//TODO Put method
 
 
