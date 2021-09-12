@@ -22,15 +22,15 @@
 
 void
 testResponseErrorBadRequest400(void){
-	std::string filename = "./test_files/error.html";
+	HostData *hostData = MockHostData::createDefaultHostDataRoot();
 	size_t codeError = 400;
+	std::string filename = "./resources/errorPages/" + std::to_string(codeError) + ".html";
 	std::string body = getDataFileAsString(filename);
 	long sizeFile = getSizeFile(filename);
 	std::string expectedResponseData = "HTTP/1.1 " + std::to_string(codeError) + " Bad Request\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	ErrorPage errorPage;
 	errorPage.errorNbr = codeError;
-	errorPage.errorPagePath = filename;
-	HostData *hostData = MockHostData::createDefaultHostData();
+	errorPage.errorPagePath = "";
 	ResponseError *response = new ResponseError(errorPage, hostData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
@@ -40,16 +40,16 @@ testResponseErrorBadRequest400(void){
 }
 
 void
-testResponseErrorForbidden403(void){
+testResponseErrorWithErrorPage(void){
+	HostData *hostData = MockHostData::createDefaultHostDataRoot();
+	size_t codeError = 400;
 	std::string filename = "./test_files/error.html";
-	size_t codeError = 403;
 	std::string body = getDataFileAsString(filename);
 	long sizeFile = getSizeFile(filename);
-	std::string expectedResponseData = "HTTP/1.1 " + std::to_string(codeError) + " Forbidden\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
+	std::string expectedResponseData = "HTTP/1.1 " + std::to_string(codeError) + " Bad Request\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	ErrorPage errorPage;
 	errorPage.errorNbr = codeError;
-	errorPage.errorPagePath = filename;
-	HostData *hostData = MockHostData::createDefaultHostData();
+	errorPage.errorPagePath = "/test_files/error.html";
 	ResponseError *response = new ResponseError(errorPage, hostData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
@@ -57,18 +57,19 @@ testResponseErrorForbidden403(void){
 	delete response;
 	delete hostData;
 }
+
 
 void
 testResponseErrorNotFound404(void){
-	std::string filename = "./test_files/error.html";
+	HostData *hostData = MockHostData::createDefaultHostDataRoot();
 	size_t codeError = 404;
+	std::string filename = "./resources/errorPages/" + std::to_string(codeError) + ".html";
 	std::string body = getDataFileAsString(filename);
 	long sizeFile = getSizeFile(filename);
 	std::string expectedResponseData = "HTTP/1.1 " + std::to_string(codeError) + " Not Found\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	ErrorPage errorPage;
 	errorPage.errorNbr = codeError;
-	errorPage.errorPagePath = filename;
-	HostData *hostData = MockHostData::createDefaultHostData();
+	errorPage.errorPagePath = "";
 	ResponseError *response = new ResponseError(errorPage, hostData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
@@ -79,15 +80,15 @@ testResponseErrorNotFound404(void){
 
 void
 testResponseErrorMethodNotAllowed405(void){
-	std::string filename = "./test_files/error.html";
+	HostData *hostData = MockHostData::createDefaultHostDataRoot();
 	size_t codeError = 405;
+	std::string filename = "./resources/errorPages/" + std::to_string(codeError) + ".html";
 	std::string body = getDataFileAsString(filename);
 	long sizeFile = getSizeFile(filename);
 	std::string expectedResponseData = "HTTP/1.1 " + std::to_string(codeError) + " Method Not Allowed\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	ErrorPage errorPage;
 	errorPage.errorNbr = codeError;
-	errorPage.errorPagePath = filename;
-	HostData *hostData = MockHostData::createDefaultHostData();
+	errorPage.errorPagePath = "";
 	ResponseError *response = new ResponseError(errorPage, hostData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
@@ -98,15 +99,15 @@ testResponseErrorMethodNotAllowed405(void){
 
 void
 testResponseErrorInternalServerError500(void){
-	std::string filename = "./test_files/error.html";
+	HostData *hostData = MockHostData::createDefaultHostDataRoot();
 	size_t codeError = 500;
+	std::string filename = "./resources/errorPages/" + std::to_string(codeError) + ".html";
 	std::string body = getDataFileAsString(filename);
 	long sizeFile = getSizeFile(filename);
 	std::string expectedResponseData = "HTTP/1.1 " + std::to_string(codeError) + " Internal Server Error\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	ErrorPage errorPage;
 	errorPage.errorNbr = codeError;
-	errorPage.errorPagePath = filename;
-	HostData *hostData = MockHostData::createDefaultHostData();
+	errorPage.errorPagePath = "";
 	ResponseError *response = new ResponseError(errorPage, hostData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
@@ -117,15 +118,15 @@ testResponseErrorInternalServerError500(void){
 
 void
 testResponseErrorNotImplemented501(void){
-	std::string filename = "./test_files/error.html";
+	HostData *hostData = MockHostData::createDefaultHostDataRoot();
 	size_t codeError = 501;
+	std::string filename = "./resources/errorPages/" + std::to_string(codeError) + ".html";
 	std::string body = getDataFileAsString(filename);
 	long sizeFile = getSizeFile(filename);
 	std::string expectedResponseData = "HTTP/1.1 " + std::to_string(codeError) + " Not Implemented\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	ErrorPage errorPage;
 	errorPage.errorNbr = codeError;
-	errorPage.errorPagePath = filename;
-	HostData *hostData = MockHostData::createDefaultHostData();
+	errorPage.errorPagePath = "";
 	ResponseError *response = new ResponseError(errorPage, hostData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
@@ -136,15 +137,15 @@ testResponseErrorNotImplemented501(void){
 
 void
 testResponseErrorBadGateway502(void){
-	std::string filename = "./test_files/error.html";
+	HostData *hostData = MockHostData::createDefaultHostDataRoot();
 	size_t codeError = 502;
+	std::string filename = "./resources/errorPages/" + std::to_string(codeError) + ".html";
 	std::string body = getDataFileAsString(filename);
 	long sizeFile = getSizeFile(filename);
 	std::string expectedResponseData = "HTTP/1.1 " + std::to_string(codeError) + " Bad Gateway\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 	ErrorPage errorPage;
 	errorPage.errorNbr = codeError;
-	errorPage.errorPagePath = filename;
-	HostData *hostData = MockHostData::createDefaultHostData();
+	errorPage.errorPagePath = "";
 	ResponseError *response = new ResponseError(errorPage, hostData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
@@ -155,16 +156,16 @@ testResponseErrorBadGateway502(void){
 
 void
 testResponseErrorHTTPVersionNotSupported505(void){
-	std::string filename = "./test_files/error.html";
+	HostData *hostData = MockHostData::createDefaultHostDataRoot();
 	size_t codeError = 505;
+	std::string filename = "./resources/errorPages/" + std::to_string(codeError) + ".html";
 	std::string body = getDataFileAsString(filename);
 	long sizeFile = getSizeFile(filename);
 	std::string expectedResponseData = "HTTP/1.1 " + std::to_string(codeError) + " HTTP Version Not Supported\r\nContent-type: text/html\r\nContent-length: " + std::to_string(sizeFile) + "\r\n\r\n" + body;
 
 	ErrorPage errorPage;
 	errorPage.errorNbr = codeError;
-	errorPage.errorPagePath = filename;
-	HostData *hostData = MockHostData::createDefaultHostData();
+	errorPage.errorPagePath = "";
 	ResponseError *response = new ResponseError(errorPage, hostData);
 
 	TEST_CHECK(response->getDataToSend() == expectedResponseData);
@@ -173,8 +174,9 @@ testResponseErrorHTTPVersionNotSupported505(void){
 	delete hostData;
 }
 TEST_LIST = {
-		{ "ResponseError: Bad Request [404]", testResponseErrorBadRequest400 },
-		{ "ResponseError: Forbidden [403]", testResponseErrorForbidden403 },
+		{ "ResponseError: Bad Request [400]", testResponseErrorBadRequest400 },
+		{ "ResponseError: WITH ERROR_PAGE ", testResponseErrorWithErrorPage },
+
 		{ "ResponseError: Not Found [404]", testResponseErrorNotFound404 },
 		{ "ResponseError: Method Not Allowed [405]", testResponseErrorMethodNotAllowed405 },
 		{ "ResponseError: Internal Server Error [500]", testResponseErrorInternalServerError500 },
