@@ -29,3 +29,23 @@ void	CGI::setIp(const std::string& ip) {
 void	CGI::setPort(const std::string& port) {
 	_port = port;
 }
+
+std::string	CGI::getPath() const {
+	return _pathToCGI;
+}
+
+std::string CGI::getExtension() const {
+	return _extension;
+}
+
+std::string CGI::getRoot() const {
+	return _root;
+}
+
+std::string CGI::getIp() const {
+	return _ip;
+}
+
+std::string CGI::getPort() const {
+	return _port;
+}
