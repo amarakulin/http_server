@@ -19,12 +19,22 @@ Config* ParserConfig::parse(char* configFilePath) {
 	for (int i = 0; i < hosts.size(); i++) {
 		Host *host = new Host(hosts[i]);
 		config->addNewHost(host);
-		// delete hosts[i];
+		cleanUpHost(hosts[i]);
 	}
-	std::vector<Host*> tmp = config->getHosts();
-	std::cout << tmp[0]->getData()->location[2]->cgi->_ip << std::endl;
-	std::cout << tmp[0]->getData()->location[2]->cgi->_port << std::endl;
 	return config;
+}
+
+void	ParserConfig::cleanUpHost(HostData *hostData) {
+	std::vector<ErrorPage*>::iterator errorPageIt = hostData->errorPage.begin();
+	for (; errorPageIt != hostData->errorPage.end(); errorPageIt++) {
+		delete *errorPageIt;
+	}
+	std::vector<Location*>::iterator locationIt = hostData->location.begin();
+	for (; locationIt != hostData->location.end(); locationIt++) {
+		delete (*locationIt)->cgi;
+		delete *locationIt;
+	}
+	delete hostData;
 }
 
 /*
@@ -100,8 +110,8 @@ void	ParserConfig::setDefaultHostValues(HostData *hostData) {
 void	ParserConfig::setLocationDefaultValue(HostData *hostData, int currentLocation) {
 	hostData->location[currentLocation]->way = "";
 	hostData->location[currentLocation]->root = "";
-	hostData->location[currentLocation]->redirect->statusCode = 0;
-	hostData->location[currentLocation]->redirect->path = "";
+	hostData->location[currentLocation]->redirectStatusCode = 0;
+	hostData->location[currentLocation]->redirectPath = "";
 	hostData->location[currentLocation]->httpMethods.clear();
 	hostData->location[currentLocation]->index.clear();
 	hostData->location[currentLocation]->autoindex = false;
@@ -293,7 +303,6 @@ void	ParserConfig::setClientMaxBodySizeData(std::string data, HostData *hostData
 }
 
 void	ParserConfig::setRedirectToLocation(std::string data, HostData *hostData, int currentLocation) {
-	Redirect *redirect;
 	int delim;
 	const char *tmp;
 	size_t statusCode;
@@ -310,10 +319,8 @@ void	ParserConfig::setRedirectToLocation(std::string data, HostData *hostData, i
 		if (redirectPath.find_first_of(' ') == std::string::npos &&
 			redirectPath.find_first_of("/") == 0 && statusCode != 0) {
 
-			Redirect *redirect = new Redirect;
-			redirect->statusCode = statusCode;
-			redirect->path = redirectPath;
-			hostData->location[currentLocation]->redirect = redirect;
+			hostData->location[currentLocation]->redirectStatusCode = statusCode;
+			hostData->location[currentLocation]->redirectPath = redirectPath;
 		} else {
 			throw ParserConfigException("setErrorPageData error");
 		}

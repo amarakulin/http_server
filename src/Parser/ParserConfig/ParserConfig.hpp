@@ -29,6 +29,7 @@ class ParserConfig {
 		void	enterDataToHostDataStruct(std::string const &key, std::string const &value, HostData *hostData);
 		void	setDefaultHostValues(HostData *hostData);
 		void	setLocationDefaultValue(HostData *hostData, int currentLocation);
+		void	cleanUpHost(HostData *hostData);
 
 		/*			SETTERS			*/
 
