@@ -317,8 +317,8 @@ void	ParserConfig::setRedirectToLocation(std::string data, HostData *hostData, i
 		redirectPath = data.substr(delim + 1, data.length() - delim - 1);
 
 		if (redirectPath.find_first_of(' ') == std::string::npos &&
-			redirectPath.find_first_of("/") == 0 && statusCode != 0) {
-
+			((redirectPath.find_first_of("/") == 0 && statusCode != 0) ||
+			(redirectPath.find("http") == 0 && statusCode != 0))) {
 			hostData->location[currentLocation]->redirectStatusCode = statusCode;
 			hostData->location[currentLocation]->redirectPath = redirectPath;
 		} else {
@@ -327,7 +327,6 @@ void	ParserConfig::setRedirectToLocation(std::string data, HostData *hostData, i
 	} else {
 		throw ParserConfigException("setErrorPageData error");
 	}
-	// hostData->location[currentLocation]->redirect
 }
 
 /*
