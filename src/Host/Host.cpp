@@ -1,16 +1,76 @@
 #include "Host.hpp"
+#include "CGI.hpp"
 
 Host::Host(HostData *hostData) {
-	_data = hostData;
-	// if ((*this)._data != hostData) {
-	// 	(*this)._data = new HostData;
-	// 	(*this)._data->ip = hostData->ip;
-	// 	(*this)._data->serverName = hostData->serverName;
-	// 	(*this)._data->port = hostData->port;
-	// 	(*this)._data->errorPage = hostData->errorPage;
-	// 	(*this)._data->clientMaxBodySize = hostData->clientMaxBodySize;
-	// 	(*this)._data->location = hostData->location;
-	// }
+	if (_data != hostData) {
+		_data = new HostData;
+		_data->ip = hostData->ip;
+		_data->port = hostData->port;
+		_data->serverName = hostData->serverName;
+		_data->root = hostData->root;
+		_data->clientMaxBodySize = hostData->clientMaxBodySize;
+
+		std::vector<ErrorPage*>::iterator errorPageIt = hostData->errorPage.begin();
+		for (; errorPageIt != hostData->errorPage.end(); errorPageIt++) {
+			ErrorPage *errorPage = new ErrorPage;
+			errorPage->errorNbr = (*errorPageIt)->errorNbr;
+			errorPage->errorPagePath = (*errorPageIt)->errorPagePath;
+			_data->errorPage.push_back(errorPage);
+		}
+
+		std::vector<Location*>::iterator locationIt = hostData->location.begin();
+		for (; locationIt != hostData->location.end(); locationIt++) {
+			Location *location = new Location;
+			location->way = (*locationIt)->way;
+			location->root = (*locationIt)->root;
+			location->redirectStatusCode = (*locationIt)->redirectStatusCode;
+			location->redirectPath = (*locationIt)->redirectPath;
+
+			std::vector<std::string>::iterator methods = (*locationIt)->httpMethods.begin();
+			for (; methods != (*locationIt)->httpMethods.end(); methods++) {
+				location->httpMethods.push_back(*methods);
+			}
+
+			if (!(*locationIt)->index.empty()) {
+				std::vector<std::string>::iterator index = (*locationIt)->index.begin();
+				for (; index != (*locationIt)->index.end(); index++) {
+					location->index.push_back(*index);
+				}
+			}
+			location->autoindex = (*locationIt)->autoindex;
+			location->uploadEnable = (*locationIt)->uploadEnable;
+			location->uploadPath = (*locationIt)->uploadPath;
+
+			if ((*locationIt)->cgi) {
+				location->cgi = new CGI();
+				location->cgi->setRoot((*locationIt)->cgi->getRoot());
+				location->cgi->setExtension((*locationIt)->cgi->getExtension());
+				location->cgi->setPath((*locationIt)->cgi->getPath());
+				location->cgi->setIp((*locationIt)->cgi->getIp());
+				location->cgi->setPort((*locationIt)->cgi->getPort());
+			} else {
+				location->cgi = NULL;
+			}
+			_data->location.push_back(location);
+		} 
+	} else {
+		_data = hostData;
+	}
+}
+
+Host::~Host() {
+	std::vector<ErrorPage*>::iterator errorPageIt = _data->errorPage.begin();
+	for (; errorPageIt != _data->errorPage.end(); errorPageIt++) {
+		delete *errorPageIt;
+	}
+	std::vector<Location*>::iterator locationIt = _data->location.begin();
+	for (; locationIt != _data->location.end(); locationIt++) {
+		if ((*locationIt)->cgi != NULL) {
+			delete (*locationIt)->cgi;
+		}
+		delete *locationIt;
+	}
+	delete _data;
 }
 
 Host::Host(std::string ip, size_t port, std::string serverName) {
@@ -20,21 +80,22 @@ Host::Host(std::string ip, size_t port, std::string serverName) {
 	_data->serverName = serverName;
 }
 
-Host::Host(const Host& other) {}
+Host::Host(const Host& other) {
+}
 
 std::string		Host::getIp() const {
 	return _data->ip;
 }
 
-size_t			Host::getPort() const {
+size_t		Host::getPort() const {
 	return _data->port;
 }
 
-std::string		Host::getServerName() const {
+std::string	Host::getServerName() const {
 	return _data->serverName;
 }
 
-HostData* 	Host::getData() const {
+HostData*	Host::getData() const {
 	return _data;
 }
 
