@@ -88,3 +88,12 @@ bool isFileExist (const std::string& filePath) {
 	struct stat buffer;
 	return (stat (filePath.c_str(), &buffer) == 0);
 }
+
+bool isItemInVector(std::vector<std::string> vector, const std::string& val){
+	for (size_t i = 0; i < vector.size(); ++i){
+		if (vector[i] == val){
+			return true;
+		}
+	}
+	return false;
+}
