@@ -8,19 +8,21 @@ ResponseCreator::~ResponseCreator() {}
 Response *ResponseCreator::createResponse(RequestData &requestData,
 										  HostData *hostData)
 {
-//	int statusCode = 0;
+	std::string requestMethod = requestData.header["method"];
+	int statusCode = ResponseError::isResponseError(requestData, hostData);
+
 	//TODO workout 404 here
 	//TODO workout 413 here
-//	if (statusCode = isResponseError(requestData)){
-//		return createResponse(getErrorPageStruct(statusCode, hostData->errorPage), hostData);
+//	if (statusCode != STATUS_OK){
+//		return createResponse(ResponseError::getErrorPageStruct(statusCode, hostData->errorPage), hostData);
 //	}
-	std::string requestMethod = requestData.header["method"];
+
 	for (int i = 0; responseCreatorList[i].createResponse; i++) {
 		if (requestMethod == responseCreatorList[i].method)
 			return responseCreatorList[i].createResponse(requestData, hostData);
 	}
 	//TODO think about final return
-//	return createResponse(getErrorPageStruct(INTERNAL_SERVER_ERROR, hostData->errorPage), hostData);
+//	return createResponse(ResponseError::getErrorPageStruct(INTERNAL_SERVER_ERROR, hostData->errorPage), hostData);
 	return new Response;
 }
 

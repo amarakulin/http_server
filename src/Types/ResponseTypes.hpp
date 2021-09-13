@@ -11,8 +11,17 @@ class Request;
 #define LOCATION "Location: "
 #define VERSION_HTTP "HTTP/1.1 "
 #define DEFAULT_ERROR_PAGE_PATH "/resources/errorPages/"
-#define INTERNAL_SERVER_ERROR 500
 #define STATUS_OK 200
+#define BAD_REQUEST 400
+#define NOT_FOUND 404
+#define METHOD_NOT_ALLOWED 405
+#define PAYLOAD_TOO_LARGE 413
+
+#define INTERNAL_SERVER_ERROR 500
+#define NOT_IMPLEMENTED 501
+#define BAD_GATE_WAY 502
+#define HTTP_NOT_SUPPORTED 505
+
 
 /*
 ** Структура для автоматического определения наследника класса Response

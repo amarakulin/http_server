@@ -79,3 +79,33 @@ std::string ResponseError::getErrorPageFromResources(size_t statusCode){
 	}
 	return errorPagePath;
 }
+
+int ResponseError::isResponseError(RequestData &requestData, HostData *hostData){
+	int statusCode = STATUS_OK;
+//	if (If no can not find file){
+//		statusCode = NOT_FOUND;
+//	}
+//	else if (if size body more then required){
+//		statusCode = PAYLOAD_TOO_LARGE;
+//	}
+//	else if (method not allowed){
+//		statusCode = NOT_IMPLEMENTED;
+//	}
+//	else if (http version not supported){
+//		statusCode = HTTP_NOT_SUPPORTED;
+//	}
+	return statusCode;
+}
+
+ErrorPage ResponseError::getErrorPageStruct(int statusCode, std::vector<ErrorPage*> errorPages){
+	ErrorPage errorPage;//TODO may be allocate on the heap
+	errorPage.errorNbr = statusCode;
+	errorPage.errorPagePath = "";
+	for (size_t i = 0; i < errorPages.size(); ++i){
+		if (errorPages[i]->errorNbr == statusCode){
+			errorPage.errorPagePath = errorPages[i]->errorPagePath;
+			break;
+		}
+	}
+	return errorPage;
+}

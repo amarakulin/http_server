@@ -39,6 +39,10 @@ void ResponsePost::createBody(const std::string &uri, HostData *hostData)
 //		ResponseError responseError(getErrorPageStruct(INTERNAL_SERVER_ERROR, hostData->errorPage), hostData);
 //		_dataToSend = responseError.getDataToSend();
 //	}
+//	catch (BadGatewayException e){
+//		ResponseError responseError(getErrorPageStruct(BAD_GATE_WAY, hostData->errorPage), hostData);
+//		_dataToSend = responseError.getDataToSend();
+//	}
 }
 
 std::string ResponsePost::getDataFromCGI(const std::string &uri){
