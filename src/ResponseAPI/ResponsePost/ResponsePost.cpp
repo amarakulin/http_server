@@ -1,4 +1,5 @@
 #include "ResponsePost.hpp"
+#include "ResponseError.hpp"
 
 ResponsePost::ResponsePost() : Response() {}
 
@@ -28,10 +29,16 @@ ResponsePost::~ResponsePost() {}
 
 void ResponsePost::createBody(const std::string &uri, HostData *hostData)
 {
-	std::string dataFromCGI = getDataFromCGI(uri);
-	changeContentLength(dataFromCGI.length());
-	_dataToSend += "\r\n";
-	_dataToSend += dataFromCGI;
+//	try{
+		std::string dataFromCGI = getDataFromCGI(uri);
+		changeContentLength(dataFromCGI.length());
+		_dataToSend += "\r\n";
+		_dataToSend += dataFromCGI;
+//	}
+//	catch (InternalServerErrorException e){
+//		ResponseError responseError(getErrorPageStruct(INTERNAL_SERVER_ERROR, hostData->errorPage), hostData);
+//		_dataToSend = responseError.getDataToSend();
+//	}
 }
 
 std::string ResponsePost::getDataFromCGI(const std::string &uri){

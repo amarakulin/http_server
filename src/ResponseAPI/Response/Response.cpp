@@ -42,6 +42,7 @@ bool Response::isDone(){
 
 void Response::countSendedData(int byteSended){
 	if (byteSended < 0 || byteSended > _leftBytesToSend){
+		//TODO may be 500;
 		std::cout << "DATA SENT is negative!!!" << std::endl;
 	}
 	_leftBytesToSend -= byteSended;
@@ -90,13 +91,9 @@ std::string Response::processHeader(const std::string &headerName,
 	return processedStrHeader;
 }
 
-std::string Response::createHeadHeader(){//TODO think if got a error(5xx) while creating body. How to change 'head'?
-	//TODO if redirect 3xx
-	//TODO if client error 4xx
-	//TODO if server error 5xx
-	//TODO if ok 2xx
+std::string Response::createHeadHeader(){
 	if (!_status){
-		_status = 200;//TODO may be different 2xx
+		_status = STATUS_OK;
 	}
 	std::string processedStr = VERSION_HTTP;
 	processedStr += std::to_string(_status);
@@ -113,7 +110,7 @@ std::string Response::createHeadHeader(){//TODO think if got a error(5xx) while 
 std::string
 Response::getContentTypeHeader(std::string accept, HostData *hostData)
 {
-	std::string processedStr = CONTENT_TYPE;//TODO handle Accept-Charset here
+	std::string processedStr = CONTENT_TYPE;
 	long found = static_cast<long> (accept.find(','));
 	if (found != std::string::npos){
 		accept.erase(accept.begin() + found, accept.end());
@@ -131,7 +128,7 @@ Response::getContentLengthHeader(std::string uri, HostData *hostData)
 	long sizeFile = getSizeFile(filename);
 	if (sizeFile == -1){
 		std::cout << "[-] Error can't count size file: " << filename << std::endl;
-		//TODO throw exception may be
+		//TODO gonna 404 worked out before
 	}
 	processedStr += std::to_string(sizeFile);
 	return processedStr;
@@ -168,10 +165,6 @@ void Response::changeContentLength(size_t valueContentLength){
 	_dataToSend.replace(pos, oldValueContentLength.length(), std::to_string(valueContentLength));
 }
 
-bool compareLocations(Location* loc1, Location* loc2){
-	return loc1->way.size() < loc2->way.size();
-}
-
 std::string
 Response::getFilePathFromHostData(const std::string &uri, HostData *hostData){
 	std::string filePath;
@@ -196,6 +189,10 @@ Response::getFilePathFromHostData(const std::string &uri, HostData *hostData){
 		}
 	}
 	return filePath;
+}
+
+bool compareLocations(Location* loc1, Location* loc2){
+	return loc1->way.size() < loc2->way.size();
 }
 
 Location *Response::getLocationByUri(const std::string &uri, std::vector<Location*> locations){

@@ -44,11 +44,17 @@ private:
 
 	static std::string getFilePathFromHostData(const std::string &uri, HostData *hostData);
 	static Location *getLocationByUri(const std::string &uri, std::vector<Location*> locations);
-	//TODO Workout redirection
-	//TODO Workout error for CGI
+
 	//TODO Workout 404 status code
 	//TODO Workout 413 status code
+	//TODO Workout 500 status code
+	//TODO Workout 501 status code
+	//TODO Workout 502 status code
+	//TODO Workout 505 status code
+
+	//TODO create file with POST method
 	//TODO Put method
+	//TODO Workout error for CGI
 
 
 protected:

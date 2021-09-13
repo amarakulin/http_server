@@ -75,7 +75,7 @@ ResponseError::fillRequestData(const ErrorPage &errorPage, HostData *hostData)
 std::string ResponseError::getErrorPageFromResources(size_t statusCode){
 	std::string errorPagePath = DEFAULT_ERROR_PAGE_PATH + std::to_string(statusCode) + ".html";
 	if (!isFileExist("." + errorPagePath)){
-		errorPagePath = DEFAULT_ERROR_PAGE_PATH + std::to_string(500) + ".html";
+		errorPagePath = DEFAULT_ERROR_PAGE_PATH + std::to_string(INTERNAL_SERVER_ERROR) + ".html";
 	}
 	return errorPagePath;
 }
