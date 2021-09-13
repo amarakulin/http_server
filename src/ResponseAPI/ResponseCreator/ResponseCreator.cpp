@@ -11,19 +11,14 @@ Response *ResponseCreator::createResponse(RequestData &requestData,
 	std::string requestMethod = requestData.header["method"];
 	int statusCode = ResponseError::isResponseError(requestData, hostData);
 
-	//TODO workout 404 here
-	//TODO workout 413 here
-//	if (statusCode != STATUS_OK){
-//		return createResponse(ResponseError::getErrorPageStruct(statusCode, hostData->errorPage), hostData);
-//	}
-
+	if (statusCode != STATUS_OK){
+		return createResponse(ResponseError::getErrorPageStruct(statusCode, hostData->errorPage), hostData);
+	}
 	for (int i = 0; responseCreatorList[i].createResponse; i++) {
 		if (requestMethod == responseCreatorList[i].method)
 			return responseCreatorList[i].createResponse(requestData, hostData);
 	}
-	//TODO think about final return
-//	return createResponse(ResponseError::getErrorPageStruct(INTERNAL_SERVER_ERROR, hostData->errorPage), hostData);
-	return new Response;
+	return createResponse(ResponseError::getErrorPageStruct(INTERNAL_SERVER_ERROR, hostData->errorPage), hostData);
 }
 
 Response *ResponseCreator::createResponse(const ErrorPage &errorPage, HostData *hostData)

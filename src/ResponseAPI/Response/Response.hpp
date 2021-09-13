@@ -42,15 +42,9 @@ private:
 	static std::string getContentTypeHeader(std::string accept, HostData *hostData);
 	static std::string getContentLengthHeader(std::string uri, HostData *hostData);
 
-	static std::string getFilePathFromHostData(const std::string &uri, HostData *hostData);
-	static Location *getLocationByUri(const std::string &uri, std::vector<Location*> locations);
-
-	//TODO Workout 404 status code
-	//TODO Workout 413 status code
-	//TODO Workout 500 status code
-	//TODO Workout 501 status code
-	//TODO Workout 502 status code
-	//TODO Workout 505 status code
+	//TODO Workout 500 status code CGI
+	//TODO Workout 502 status code CGI
+	//TODO Workout 505 status code Ask Ilya
 
 	//TODO create file with POST method
 	//TODO Put method
@@ -66,6 +60,9 @@ protected:
 	void createHead(RequestData &requestData, HostData *hostData);
 	virtual void createBody(const std::string &uri, HostData *hostData);
 	void			changeContentLength(size_t valueContentLength);
+
+	static std::string getFilePathFromHostData(const std::string &uri, HostData *hostData);
+	static Location *getLocationByUri(const std::string &uri, std::vector<Location*> locations);
 
 public:
 	Response();

@@ -196,7 +196,7 @@ bool compareLocations(Location* loc1, Location* loc2){
 }
 
 Location *Response::getLocationByUri(const std::string &uri, std::vector<Location*> locations){
-	Location *location = nullptr;
+	Location *location = nullptr;// DANGER GONNA MAKE A BEHAVIOR IF NOT FIND A LOCATION!!!
 	std::string matchStr;
 	std::string lastMatch = "";
 	std::sort(locations.begin(), locations.end(), compareLocations);

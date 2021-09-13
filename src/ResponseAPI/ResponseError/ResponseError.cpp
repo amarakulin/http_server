@@ -82,16 +82,18 @@ std::string ResponseError::getErrorPageFromResources(size_t statusCode){
 
 int ResponseError::isResponseError(RequestData &requestData, HostData *hostData){
 	int statusCode = STATUS_OK;
-//	if (If no can not find file){
-//		statusCode = NOT_FOUND;
-//	}
-//	else if (if size body more then required){
-//		statusCode = PAYLOAD_TOO_LARGE;
-//	}
-//	else if (method not allowed){
-//		statusCode = NOT_IMPLEMENTED;
-//	}
-//	else if (http version not supported){
+	Location *location = getLocationByUri(requestData.header["uri"], hostData->location);
+
+	if (!isFileExist(getFilePathFromHostData(requestData.header["uri"], hostData))){
+		statusCode = NOT_FOUND;
+	}
+	else if (requestData.body.size() > hostData->clientMaxBodySize){
+		statusCode = PAYLOAD_TOO_LARGE;
+	}
+	else if (location && !isItemInVector(location->httpMethods, requestData.header["method"])){//FIXME if no location found ??? all methods???
+		statusCode = NOT_IMPLEMENTED;
+	}
+//	else if (requestData.header[""] != VERSION_HTTP){//TODO Ask Ilya
 //		statusCode = HTTP_NOT_SUPPORTED;
 //	}
 	return statusCode;
