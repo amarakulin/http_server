@@ -23,6 +23,7 @@ std::string		getDataFileAsString(const std::string &filename);
 void	splitFirstArgiment(std::string s, std::string *key, std::string *value);
 bool	isSomeSymbolInTheEnd(std::string end, char symbol);
 bool	isFileExist (const std::string& filePath);
+bool	isFileInPath (const std::string& filePath);
 bool	isItemInVector(std::vector<std::string> vector, const std::string& val);
 
 #endif

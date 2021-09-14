@@ -21,19 +21,27 @@ ResponsePost::ResponsePost(RequestData &requestData, HostData *hostData)
 		: Response(requestData,
 				   hostData)
 {
-	ResponsePost::createBody(requestData.header["uri"], hostData);
+	ResponsePost::createBody(requestData, hostData);
 	_leftBytesToSend = _dataToSend.length();//TODO set in one place
 }
 
 ResponsePost::~ResponsePost() {}
 
-void ResponsePost::createBody(const std::string &uri, HostData *hostData)
-{
+
+void ResponsePost::createBody(RequestData &requestData, HostData *hostData){
+	std::string filePath = getFilePathFromHostData(requestData.header["uri"], hostData);
+	if (isFileInPath(filePath)){
+		//todo image some filename
+	}
+	std::ofstream outfile (filePath);
+	outfile << requestData.body << std::endl;
+	outfile.close();
 //	try{
-		std::string dataFromCGI = getDataFromCGI(uri);
-		changeContentLength(dataFromCGI.length());
-		_dataToSend += "\r\n";
-		_dataToSend += dataFromCGI;
+//	std::string dataFromCGI = getDataFromCGI(uri);
+	std::string dataFromCGI = "";
+	changeContentLength(dataFromCGI.length());
+	_dataToSend += "\r\n";
+	_dataToSend += dataFromCGI;
 //	}
 //	catch (InternalServerErrorException e){
 //		ResponseError responseError(getErrorPageStruct(INTERNAL_SERVER_ERROR, hostData->errorPage), hostData);
@@ -45,6 +53,6 @@ void ResponsePost::createBody(const std::string &uri, HostData *hostData)
 //	}
 }
 
-std::string ResponsePost::getDataFromCGI(const std::string &uri){
-	return "Here should be CGI";
+void ResponsePost::createBody(const std::string &uri, HostData *hostData){
+	Response::createBody(uri, hostData);
 }
