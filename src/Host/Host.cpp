@@ -1,5 +1,4 @@
 #include "Host.hpp"
-#include "CGI.hpp"
 
 Host::Host(HostData *hostData) {
 	if (_data != hostData) {
@@ -41,16 +40,6 @@ Host::Host(HostData *hostData) {
 			location->uploadEnable = (*locationIt)->uploadEnable;
 			location->uploadPath = (*locationIt)->uploadPath;
 
-			if ((*locationIt)->cgi) {
-				location->cgi = new CGI();
-				location->cgi->setRoot((*locationIt)->cgi->getRoot());
-				location->cgi->setExtension((*locationIt)->cgi->getExtension());
-				location->cgi->setPath((*locationIt)->cgi->getPath());
-				location->cgi->setIp((*locationIt)->cgi->getIp());
-				location->cgi->setPort((*locationIt)->cgi->getPort());
-			} else {
-				location->cgi = NULL;
-			}
 			_data->location.push_back(location);
 		} 
 	} else {
@@ -65,9 +54,6 @@ Host::~Host() {
 	}
 	std::vector<Location*>::iterator locationIt = _data->location.begin();
 	for (; locationIt != _data->location.end(); locationIt++) {
-		if ((*locationIt)->cgi != NULL) {
-			delete (*locationIt)->cgi;
-		}
 		delete *locationIt;
 	}
 	delete _data;

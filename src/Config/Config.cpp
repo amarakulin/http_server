@@ -1,5 +1,4 @@
 #include "Config.hpp"
-#include "CGI.hpp"
 
 Config::Config() : _hosts() {}
 

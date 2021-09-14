@@ -4,7 +4,6 @@
 # include <iostream>
 # include <vector>
 
-class CGI;
 
 /*
 **	Структура-дополнение с HostData. Описывает location. Нет обязательных полей.
@@ -20,7 +19,11 @@ typedef struct {
 	bool						autoindex;
 	bool						uploadEnable;
 	std::string					uploadPath;
-	CGI*						cgi;
+	std::string 				cgiPath;
+	std::string 				cgiExtension;
+	std::string 				cgiRoot;
+	std::string 				cgiIp;
+	std::string 				cgiPort;
 } Location;
 
 /*

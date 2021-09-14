@@ -28,7 +28,7 @@ class ParserConfig {
 		void	checkHostData(HostData *host);
 		void	enterDataToHostDataStruct(std::string const &key, std::string const &value, HostData *hostData);
 		void	setDefaultHostValues(HostData *hostData);
-		void	setLocationDefaultValue(HostData *hostData, int currentLocation);
+		void	setLocationDefaultValue(Location *location);
 		void	cleanUpHost(HostData *hostData);
 
 		/*			SETTERS			*/
@@ -40,17 +40,17 @@ class ParserConfig {
 		void	setClientMaxBodySizeData(std::string data, HostData *hostData);
 		void	setLocationWayData(std::string data, HostData *hostData);
 		void	setLocationDetailsData(std::string data, HostData *hostData);
-		void	setRedirectToLocation(std::string data, HostData *hostData, int currentLocation);
-		void	setRootDataToLocation(std::string data, HostData *hostData, int	currentLocation);
-		void	setMethodsToLocation(std::string data, HostData *hostData, int currentLocation);
-		void	setAutoindexToLocation(std::string data, HostData *hostData, int currentLocation);
-		void	setIndexToLocation(std::string data, HostData *hostData, int currentLocation);
-		void	setUploadEnableToLocation(std::string data, HostData *hostData, int	currentLocation);
-		void	setUploadPathToLocation(std::string data, HostData *hostData, int currentLocation);
-		void	setCgiExtensionToLocation(std::string data, HostData *hostData, int currentLocation);
-		void	setCgiPathToLocation(std::string data, HostData *hostData, int currentLocation);
-		void	setCgiRootToLocation(HostData *hostData, int currentLocation);
-		void	setCgiIpAndPortData(HostData *hostData, int currentLocation);
+		void	setRedirectToLocation(std::string data, Location *location);
+		void	setRootDataToLocation(std::string data, Location *location);
+		void	setMethodsToLocation(std::string data, Location *location);
+		void	setAutoindexToLocation(std::string data, Location *location);
+		void	setIndexToLocation(std::string data, Location *location);
+		void	setUploadEnableToLocation(std::string data, Location *location);
+		void	setUploadPathToLocation(std::string data, Location *location);
+		void	setCgiExtensionToLocation(std::string data, Location *location);
+		void	setCgiPathToLocation(std::string data, Location *location);
+		void	setCgiRootToLocation(Location *location, std::string root);
+		void	setCgiIpAndPortData(Location *location, size_t port, std::string ip);
 
 		class ParserConfigException : public std::exception {
 			private:

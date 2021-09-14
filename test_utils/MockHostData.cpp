@@ -28,7 +28,6 @@ HostData *MockHostData::createDefaultHostDataRootTestFiles(){
 	Location *location = new Location();
 	location->root = "/test_files";
 	location->autoindex = false;
-	location->cgi = nullptr;
 	location->httpMethods = std::vector<std::string>();
 	location->index.push_back("index.html");
 	location->index.push_back("index.css");
