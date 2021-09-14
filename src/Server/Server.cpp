@@ -12,6 +12,16 @@ Server::Server(const Config* config) : _config(config) {
 	for (int i = 0; i < hosts.size(); ++i) {
 		std::cout << "Port: " << hosts[i]->getPort() << std::endl;
 	}
+	//TODO set the into config with default pages also
+	for (size_t i = 0; i < _config->getHosts().size(); ++i){
+		for (size_t j = 0; j < _config->getHosts()[i]->getData()->errorPage.size(); j++){
+			Location *newLocation = new Location ;
+			newLocation->root = "/";
+			newLocation->way = _config->getHosts()[i]->getData()->errorPage[j]->errorPagePath;
+			_config->getHosts()[i]->getData()->location.push_back(newLocation);
+			std::cout << "way: " << newLocation->way << std::endl;
+		}
+	}
 	createListeners();
 }
 

@@ -178,9 +178,6 @@ Response::getFilePathFromHostData(const std::string &uri, HostData *hostData){
 		root = location->root;
 		index = location->index;
 	}
-	else {
-		root = hostData->root;
-	}
 	if (root.empty()){
 		root = hostData->root;
 	}
@@ -203,12 +200,14 @@ Location *Response::getLocationByUri(const std::string &uri, std::vector<Locatio
 	std::string matchStr;
 	std::string lastMatch = "";
 	std::sort(locations.begin(), locations.end(), compareLocations);
+	size_t matchPos = std::string::npos;
 	for (size_t i = 0; i < locations.size(); ++i){
 		matchStr = uri.substr(0, locations[i]->way.size());
-		if (locations[i]->way.find(matchStr) != std::string::npos && lastMatch != matchStr){
+		matchPos = locations[i]->way.find(matchStr);
+		if (matchPos != std::string::npos && lastMatch != matchStr){//TODO may be needs a condition on length of uri if matched size
 			location = locations[i];
+			lastMatch = matchStr;//if uri is -> '/' when gets last location
 		}
-		lastMatch = matchStr;//if uri is -> '/' when gets last location
 	}
 	return location;
 }

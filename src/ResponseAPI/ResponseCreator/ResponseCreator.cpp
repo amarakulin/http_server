@@ -11,7 +11,7 @@ Response *ResponseCreator::createResponse(RequestData &requestData,
 	std::string requestMethod = requestData.header["method"];
 	int statusCode = ResponseError::isResponseError(requestData, hostData);
 
-	if (statusCode != STATUS_OK){
+	if (statusCode != STATUS_OK && statusCode != REDIRECT){
 		return createResponse(ResponseError::getErrorPageStruct(statusCode, hostData->errorPage), hostData);
 	}
 	for (int i = 0; responseCreatorList[i].createResponse; i++) {
