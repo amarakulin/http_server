@@ -56,7 +56,9 @@ ResponseError::fillRequestData(const ErrorPage &errorPage, HostData *hostData)
 	requestHeaderStruct headerStruct;
 	std::string errorPagePath = "";
 	if (isFileExist("." + hostData->root +  errorPage.errorPagePath) && !errorPage.errorPagePath.empty()){
-		errorPagePath = errorPage.errorPagePath;
+		errorPagePath = errorPage.errorPagePath;//TODO wrong if root equals to some location will set the root of the location and got ugly url . Resolve by ignore the default error page.
+//		errorPagePath = hostData->root + errorPage.errorPagePath;//TODO wrong -> will add the str to filePath
+//		errorPagePath = "." + hostData->root + errorPage.errorPagePath;//TODO wrong -> will add the str to filePath
 	}
 	else{
 		errorPagePath = getErrorPageFromResources(errorPage.errorNbr);
@@ -83,7 +85,7 @@ std::string ResponseError::getErrorPageFromResources(size_t statusCode){
 int ResponseError::isResponseError(RequestData &requestData, HostData *hostData){
 	int statusCode = STATUS_OK;
 	Location *location = getLocationByUri(requestData.header["uri"], hostData->location);
-
+//FIXME handle if 301 status!!!
 	if (!isFileExist(getFilePathFromHostData(requestData.header["uri"], hostData))){
 		statusCode = NOT_FOUND;
 	}
