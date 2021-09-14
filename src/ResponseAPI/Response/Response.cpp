@@ -174,11 +174,14 @@ Response::getFilePathFromHostData(const std::string &uri, HostData *hostData){
 
 	std::vector<Location*> vectorLocations = hostData->location;
 	location = getLocationByUri(uri, hostData->location);
-	if (location){
+	if (location){//TODO refactor
 		root = location->root;
 		index = location->index;
 	}
 	else {
+		root = hostData->root;
+	}
+	if (root.empty()){
 		root = hostData->root;
 	}
 	filePath = "." + root + uri;
