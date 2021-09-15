@@ -273,6 +273,10 @@ void	ParserConfig::setErrorPageData(std::string data, HostData *hostData) {
 			errorPage->errorNbr = errorNbr;
 			errorPage->errorPagePath = errorPagePath;
 			hostData->errorPage.push_back(errorPage);
+			Location *location = new Location;
+			location->root = hostData->root;
+			location->way = errorPagePath;
+			hostData->location.push_back(location);
 		} else {
 			throw ParserConfigException("setErrorPageData error");
 		}
