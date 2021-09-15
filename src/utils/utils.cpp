@@ -79,12 +79,24 @@ bool	isSomeSymbolInTheEnd(std::string end, char symbol) {
 	}
 }
 
+bool	isFileInPath (const std::string& filePath){
+	size_t posFile = filePath.find_last_of('/');
+	return (filePath.find('.', posFile) != std::string::npos);
+}
 
 bool isFileExist (const std::string& filePath) {
-	size_t posFile = filePath.find_last_of('/');
-	if (filePath.find('.', posFile) == std::string::npos){
+	if (!isFileInPath(filePath)){
 		return false;
 	}
 	struct stat buffer;
 	return (stat (filePath.c_str(), &buffer) == 0);
+}
+
+bool isItemInVector(std::vector<std::string> vector, const std::string& val){
+	for (size_t i = 0; i < vector.size(); ++i){
+		if (vector[i] == val){
+			return true;
+		}
+	}
+	return false;
 }

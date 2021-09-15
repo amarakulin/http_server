@@ -174,11 +174,11 @@ Response::getFilePathFromHostData(const std::string &uri, HostData *hostData){
 
 	std::vector<Location*> vectorLocations = hostData->location;
 	location = getLocationByUri(uri, hostData->location);
-	if (location){
+	if (location){//TODO refactor
 		root = location->root;
 		index = location->index;
 	}
-	else {
+	if (root.empty()){
 		root = hostData->root;
 	}
 	filePath = "." + root + uri;
@@ -196,16 +196,18 @@ bool compareLocations(Location* loc1, Location* loc2){
 }
 
 Location *Response::getLocationByUri(const std::string &uri, std::vector<Location*> locations){
-	Location *location = nullptr;
+	Location *location = nullptr;// DANGER GONNA MAKE A BEHAVIOR IF NOT FIND A LOCATION!!!
 	std::string matchStr;
 	std::string lastMatch = "";
 	std::sort(locations.begin(), locations.end(), compareLocations);
+	size_t matchPos = std::string::npos;
 	for (size_t i = 0; i < locations.size(); ++i){
 		matchStr = uri.substr(0, locations[i]->way.size());
-		if (locations[i]->way.find(matchStr) != std::string::npos && lastMatch != matchStr){
+		matchPos = locations[i]->way.find(matchStr);
+		if (matchPos != std::string::npos && lastMatch != matchStr){//TODO may be needs a condition on length of uri if matched size
 			location = locations[i];
+			lastMatch = matchStr;//if uri is -> '/' when gets last location
 		}
-		lastMatch = matchStr;//if uri is -> '/' when gets last location
 	}
 	return location;
 }

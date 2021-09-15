@@ -10,27 +10,21 @@
 
 // Здесь понадобиться fork и excve???
 
-static const std::pair<int, std::string> arrResponseStatuses [] = {
-		std::pair<int, std::string>(200, "OK"),
-		std::pair<int, std::string>(201, "Created"),
-		std::pair<int, std::string>(204, "No Content"),
-		std::pair<int, std::string>(300, "Multiple Choice"),
-		std::pair<int, std::string>(301, "Moved Permanently"),
-		std::pair<int, std::string>(302, "Found"),
-		std::pair<int, std::string>(303, "See Other"),
-		std::pair<int, std::string>(304, "Not Modified"),
-		std::pair<int, std::string>(400, "Bad Request"),
-		std::pair<int, std::string>(404, "Not Found"),
-		std::pair<int, std::string>(405, "Method Not Allowed"),
-		std::pair<int, std::string>(413, "Payload Too Large"),
-		std::pair<int, std::string>(500, "Internal Server Error"),
-		std::pair<int, std::string>(501, "Not Implemented"),
-		std::pair<int, std::string>(502, "Bad Gateway"),
-		std::pair<int, std::string>(505, "HTTP Version Not Supported"),
-
-
-		std::pair<int, std::string>(0, ""),
-};
+//static const std::pair<int, std::string> arrResponseStatuses [] = {
+//		std::pair<int, std::string>(200, "OK"),
+//		std::pair<int, std::string>(301, "Moved Permanently"),
+//		std::pair<int, std::string>(400, "Bad Request"),
+//		std::pair<int, std::string>(404, "Not Found"),
+//		std::pair<int, std::string>(405, "Method Not Allowed"),
+//		std::pair<int, std::string>(413, "Payload Too Large"),
+//		std::pair<int, std::string>(500, "Internal Server Error"),
+//		std::pair<int, std::string>(501, "Not Implemented"),
+//		std::pair<int, std::string>(502, "Bad Gateway"),
+//		std::pair<int, std::string>(505, "HTTP Version Not Supported"),
+//
+//
+//		std::pair<int, std::string>(0, ""),
+//};
 
 class Response {
 private:
@@ -42,15 +36,9 @@ private:
 	static std::string getContentTypeHeader(std::string accept, HostData *hostData);
 	static std::string getContentLengthHeader(std::string uri, HostData *hostData);
 
-	static std::string getFilePathFromHostData(const std::string &uri, HostData *hostData);
-	static Location *getLocationByUri(const std::string &uri, std::vector<Location*> locations);
-
-	//TODO Workout 404 status code
-	//TODO Workout 413 status code
-	//TODO Workout 500 status code
-	//TODO Workout 501 status code
-	//TODO Workout 502 status code
-	//TODO Workout 505 status code
+	//TODO Workout 500 status code CGI
+	//TODO Workout 502 status code CGI
+	//TODO Workout 505 status code Ask Ilya header["protocol"] ("http/1.1")
 
 	//TODO create file with POST method
 	//TODO Put method
@@ -66,6 +54,9 @@ protected:
 	void createHead(RequestData &requestData, HostData *hostData);
 	virtual void createBody(const std::string &uri, HostData *hostData);
 	void			changeContentLength(size_t valueContentLength);
+
+	static std::string getFilePathFromHostData(const std::string &uri, HostData *hostData);
+	static Location *getLocationByUri(const std::string &uri, std::vector<Location*> locations);
 
 public:
 	Response();

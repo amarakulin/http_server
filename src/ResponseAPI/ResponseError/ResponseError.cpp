@@ -57,14 +57,24 @@ ResponseError::fillRequestData(const ErrorPage &errorPage, HostData *hostData)
 	std::string errorPagePath = "";
 	if (isFileExist("." + hostData->root +  errorPage.errorPagePath) && !errorPage.errorPagePath.empty()){
 		errorPagePath = errorPage.errorPagePath;
+		//TODO set location to config!!!
+		//TODO wrong if root equals to some location will set the root of the location and got ugly url . Resolve by ignore the default error page.
+//		errorPagePath = hostData->root + errorPage.errorPagePath;//TODO wrong -> will add the str to filePath
+//		errorPagePath = "." + hostData->root + errorPage.errorPagePath;//TODO wrong -> will add the str to filePath
 	}
 	else{
 		errorPagePath = getErrorPageFromResources(errorPage.errorNbr);
-		Location *location = new Location();
-		location->root = "/";
-		location->way = errorPagePath;
-		hostData->location.push_back(location);
+//		Location *location = new Location();
+//		location->root = "/";
+//		location->way = errorPagePath;
+//		hostData->location.push_back(location);
 	}
+//TODO to fix this needs add all the errors path when creating config
+//	Location *location = new Location();
+//	location->root = "/";
+//	location->way = errorPagePath;
+//	hostData->location.push_back(location);
+
 	headerStruct.insert(std::make_pair("accept", "text/html"));
 	headerStruct.insert(std::make_pair("uri", errorPagePath));
 	requestData.header = headerStruct;
@@ -78,4 +88,43 @@ std::string ResponseError::getErrorPageFromResources(size_t statusCode){
 		errorPagePath = DEFAULT_ERROR_PAGE_PATH + std::to_string(INTERNAL_SERVER_ERROR) + ".html";
 	}
 	return errorPagePath;
+}
+
+int ResponseError::isResponseError(RequestData &requestData, HostData *hostData){
+	int statusCode = STATUS_OK;
+	std::string filePath = getFilePathFromHostData(requestData.header["uri"], hostData);
+	Location *location = getLocationByUri(requestData.header["uri"], hostData->location);
+
+	if (location && location->redirectStatusCode == REDIRECT){
+		statusCode = REDIRECT;
+	}
+	else if (!isFileExist(filePath) && (requestData.header["method"] != "post")){
+		statusCode = NOT_FOUND;
+	}
+	else if (!isFileInPath(filePath) && requestData.header["method"] == "post"){
+		statusCode = NOT_FOUND;
+	}
+	else if (requestData.body.size() > hostData->clientMaxBodySize){
+		statusCode = PAYLOAD_TOO_LARGE;
+	}
+	else if (location && !isItemInVector(location->httpMethods, requestData.header["method"])){//FIXME if no location found ??? all methods???
+		statusCode = NOT_IMPLEMENTED;
+	}
+//	else if (requestData.header[""] != VERSION_HTTP){//TODO Ask Ilya
+//		statusCode = HTTP_NOT_SUPPORTED;
+//	}
+	return statusCode;
+}
+
+ErrorPage ResponseError::getErrorPageStruct(int statusCode, std::vector<ErrorPage*> errorPages){
+	ErrorPage errorPage;//TODO may be allocate on the heap
+	errorPage.errorNbr = statusCode;
+	errorPage.errorPagePath = "";
+	for (size_t i = 0; i < errorPages.size(); ++i){
+		if (errorPages[i]->errorNbr == statusCode){
+			errorPage.errorPagePath = errorPages[i]->errorPagePath;
+			break;
+		}
+	}
+	return errorPage;
 }

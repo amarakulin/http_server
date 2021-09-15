@@ -23,6 +23,11 @@
 #include "utils.hpp"
 
 class ResponseError : public Response {
+
+public:
+	static int isResponseError(RequestData &requestData, HostData *hostData);
+	static ErrorPage getErrorPageStruct(int statusCode, std::vector<ErrorPage*> errorPages);
+
 public:
 	ResponseError();
 	ResponseError(const ErrorPage &errorPage, HostData *hostData);//TODO add ErrorPage
