@@ -30,15 +30,12 @@ ResponsePost::~ResponsePost() {}
 
 void ResponsePost::createBody(RequestData &requestData, HostData *hostData){
 	std::string filePath = getFilePathFromHostData(requestData.header["uri"], hostData);
-	if (isFileInPath(filePath)){
-		//todo image some filename
-	}
 	std::ofstream outfile (filePath);
 	outfile << requestData.body << std::endl;
 	outfile.close();
 //	try{
 //	std::string dataFromCGI = getDataFromCGI(uri);
-	std::string dataFromCGI = "";
+	std::string dataFromCGI = "The body of post!!!";
 	changeContentLength(dataFromCGI.length());
 	_dataToSend += "\r\n";
 	_dataToSend += dataFromCGI;

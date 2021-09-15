@@ -92,12 +92,16 @@ std::string ResponseError::getErrorPageFromResources(size_t statusCode){
 
 int ResponseError::isResponseError(RequestData &requestData, HostData *hostData){
 	int statusCode = STATUS_OK;
+	std::string filePath = getFilePathFromHostData(requestData.header["uri"], hostData);
 	Location *location = getLocationByUri(requestData.header["uri"], hostData->location);
 
 	if (location && location->redirectStatusCode == REDIRECT){
 		statusCode = REDIRECT;
 	}
-	else if (!isFileExist(getFilePathFromHostData(requestData.header["uri"], hostData))){
+	else if (!isFileExist(filePath) && (requestData.header["method"] != "post")){
+		statusCode = NOT_FOUND;
+	}
+	else if (!isFileInPath(filePath) && requestData.header["method"] == "post"){
 		statusCode = NOT_FOUND;
 	}
 	else if (requestData.body.size() > hostData->clientMaxBodySize){
