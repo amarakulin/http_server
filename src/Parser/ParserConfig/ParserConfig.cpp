@@ -1,4 +1,5 @@
 #include "ParserConfig.hpp"
+#include "ResponseTypes.hpp"
 // #include <CGI.hpp>
 
 ParserConfig::ParserConfig() {}
@@ -67,7 +68,7 @@ std::vector<HostData*>	ParserConfig::devideConfigToComponents(std::list<std::str
 
 	hostData = new HostData;
 	it = config.begin();
-	// setDefaultHostValues(hostData);
+	setDefaultHostValues(hostData);
 	try {
 		for (; it != config.end(); it++) {
 			splitFirstArgiment(*it, &key, &value);
@@ -104,6 +105,14 @@ void	ParserConfig::setDefaultHostValues(HostData *hostData) {
 	hostData->errorPage.clear();
 	hostData->clientMaxBodySize = 0;
 	hostData->location.clear();
+	for (int i = 0; arrResponseStatuses[i].first ; i++){
+		if (arrResponseStatuses[i].first >= 400) {
+			Location *newLocation = new Location;
+			newLocation->root = "/";
+			newLocation->way = DEFAULT_ERROR_PAGE_PATH + std::to_string(arrResponseStatuses[i].first) + ".html";
+			hostData->location.push_back(newLocation);
+		}
+	}
 }
 
 void	ParserConfig::setLocationDefaultValue(Location *location) {
