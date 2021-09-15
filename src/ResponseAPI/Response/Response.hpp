@@ -38,7 +38,7 @@ private:
 
 	//TODO Workout 500 status code CGI
 	//TODO Workout 502 status code CGI
-	//TODO Workout 505 status code Ask Ilya
+	//TODO Workout 505 status code Ask Ilya header["protocol"] ("http/1.1")
 
 	//TODO create file with POST method
 	//TODO Put method
