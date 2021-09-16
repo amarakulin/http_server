@@ -1,4 +1,5 @@
 #include "ParserRequest.hpp"
+#include "algorithm"
 
 ParserRequest::ParserRequest() {}
 
@@ -128,6 +129,13 @@ std::string ParserRequest::parseBody(std::string &data, int contentLengt) {
 	return body;
 }
 
+bool fu(int a, int b){
+	if (std::tolower(a) == std::tolower(a)){
+		return true;
+	}
+	return false;
+}
+
 std::string ParserRequest::parseBody(std::string &data, int contentLengt, std::string boundary) {
 	std::string body;
 	std::string firstKeySeporator = "filename=\"";
@@ -138,10 +146,19 @@ std::string ParserRequest::parseBody(std::string &data, int contentLengt, std::s
 
 	std::string chunk;
 	size_t pos = 0;
+//	std::string::iterator it_with_func = std::search(data.begin(), data.end(), boundary.begin(), boundary.end(), fu);
+//	std::string::iterator it_without_func = std::search(data.begin(), data.end(), boundary.begin(), boundary.end());
 
-	while ((pos = data.find(boundary)) != std::string::npos) {
+//	if (*it_with_func != std::string::npos){
+//		std::cout << "True: it_with_func" << std::endl;
+//	}
+//	if (*it_without_func != std::string::npos){
+//		std::cout << "True: it_without_func" << std::endl;
+//	}
+	while ((pos = ci_find_substr(data, boundary)) != std::string::npos) {//Find in case insensetive
 		chunk = data.substr(0, pos);
-
+	//Add only filename=
+	//But not a body of the file
 		if ((start = chunk.find(firstKeySeporator, end)) != std::string::npos)
 			body += parseBoundaryChunk(chunk);
 
