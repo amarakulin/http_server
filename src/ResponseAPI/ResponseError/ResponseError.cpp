@@ -107,6 +107,9 @@ int ResponseError::isResponseError(RequestData &requestData, HostData *hostData)
 	else if (requestData.body.size() > hostData->clientMaxBodySize){
 		statusCode = PAYLOAD_TOO_LARGE;
 	}
+	else if (requestData.header["protocol"] != "http/1.1"){//TODO TEST with telnet
+		statusCode = HTTP_NOT_SUPPORTED;
+	}
 	else if (location && !isItemInVector(location->httpMethods, requestData.header["method"])){//FIXME if no location found ??? all methods???
 		statusCode = NOT_IMPLEMENTED;
 	}
