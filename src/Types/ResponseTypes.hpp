@@ -11,6 +11,8 @@ class Request;
 #define LOCATION "Location: "
 #define VERSION_HTTP "HTTP/1.1 "
 #define DEFAULT_ERROR_PAGE_PATH "/resources/errorPages/"
+#define DEFAULT_UPLOAD_PATH "/resources/upload"
+
 #define STATUS_OK 200
 #define BAD_REQUEST 400
 #define NOT_FOUND 404

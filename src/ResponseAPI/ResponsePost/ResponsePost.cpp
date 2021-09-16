@@ -27,11 +27,53 @@ ResponsePost::ResponsePost(RequestData &requestData, HostData *hostData)
 
 ResponsePost::~ResponsePost() {}
 
+std::pair<std::string, std::string> ResponsePost::parseBody(std::string body){
+	size_t filenameOffset;
+	std::pair<std::string, std::string> bodyStruct;
+	std::string filenameSeporator = FILENAME_SEPORATOR;
+
+	size_t file_end = body.find(filenameSeporator, 0);
+	if (file_end != std::string::npos){
+		filenameOffset = file_end + filenameSeporator.length();
+		bodyStruct.first = body.substr(0, file_end);
+		bodyStruct.second = body.substr(filenameOffset, body.length() - filenameOffset);
+	}
+	else{
+		bodyStruct.first = "";
+		bodyStruct.second = body;
+	}
+	return bodyStruct;
+}
+
+std::string getUploadFilePath(Location *location){
+	std::string uploadPath;
+	if (location && location->uploadEnable){
+		uploadPath = location->root + location->uploadPath;
+	}
+	if (uploadPath.empty()) {
+		uploadPath = DEFAULT_UPLOAD_PATH;
+	}
+	uploadPath += "/";
+	return uploadPath;
+}
+
 
 void ResponsePost::createBody(RequestData &requestData, HostData *hostData){
-	std::string filePath = getFilePathFromHostData(requestData.header["uri"], hostData);
+	std::pair<std::string, std::string> bodyStruct;
+	std::string filePath;
+	Location *location;
+
+	//TODO create a behavior if file gets from uri
+	bodyStruct = parseBody(requestData.body);//TODO may be needs a constuctor with size
+	location = getLocationByUri(requestData.header["uri"], hostData->location);
+	filePath = "." + getUploadFilePath(location) + bodyStruct.first;
+
+
+
+	//TODO maybe check if file created or throw 404
 	std::ofstream outfile (filePath);
-	outfile << requestData.body << std::endl;
+
+	outfile << bodyStruct.second << std::endl;
 	outfile.close();
 	try{
 	//	std::string dataFromCGI = getDataFromCGI(uri);
