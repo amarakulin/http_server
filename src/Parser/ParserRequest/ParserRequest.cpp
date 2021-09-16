@@ -1,5 +1,4 @@
 #include "ParserRequest.hpp"
-#include "algorithm"
 
 ParserRequest::ParserRequest() {}
 
@@ -178,11 +177,11 @@ std::string ParserRequest::parseBoundaryChunk(std::string& chunk) {
 
 	start = chunk.find(firstKeySeporator, end) + firstKeySeporator.length();
 	end = chunk.find(secondKeySeporator, start);
-	parsedData += chunk.substr(start, end - start) + "=";
+	//TODO save a filename for response
+	parsedData += chunk.substr(start, end - start) + FILENAME_SEPORATOR;
 
 	start = chunk.find(END_OF_HEADER, end) + END_OF_HEADER.length();
-	end = chunk.find("\r\n", start);
-	parsedData += chunk.substr(start, end - start) + " ";
+	parsedData += chunk.substr(start, chunk.length() - 4 - start) + " "; //TODO разобраться с пробелом
 
 	return parsedData;
 }
