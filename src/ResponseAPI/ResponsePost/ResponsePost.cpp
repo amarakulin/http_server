@@ -45,7 +45,7 @@ std::pair<std::string, std::string> ResponsePost::parseBody(std::string body){
 	return bodyStruct;
 }
 
-std::string getUploadFilePath(Location *location){
+std::string getUploadFilePath(Location *location){//TODO move up to Response
 	std::string uploadPath;
 	if (location && location->uploadEnable){
 		uploadPath = location->root + location->uploadPath;
