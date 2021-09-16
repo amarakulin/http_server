@@ -14,6 +14,8 @@
 #define BLUE    "\033[34m"                 /* Blue */
 #define BOLDRED     "\033[1m\033[31m"      /* Bold Red */
 
+#define FILENAME_SEPORATOR "==filename=="
+
 void	toLowerCase(std::string& str);
 void	printRequest(RequestData request);
 std::vector<std::string>	split(std::string value, std::string delim);
