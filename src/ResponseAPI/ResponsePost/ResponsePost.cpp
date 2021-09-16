@@ -33,21 +33,21 @@ void ResponsePost::createBody(RequestData &requestData, HostData *hostData){
 	std::ofstream outfile (filePath);
 	outfile << requestData.body << std::endl;
 	outfile.close();
-//	try{
-//	std::string dataFromCGI = getDataFromCGI(uri);
-	std::string dataFromCGI = "The body of post!!!";
-	changeContentLength(dataFromCGI.length());
-	_dataToSend += "\r\n";
-	_dataToSend += dataFromCGI;
-//	}
-//	catch (InternalServerErrorException e){
-//		ResponseError responseError(getErrorPageStruct(INTERNAL_SERVER_ERROR, hostData->errorPage), hostData);
-//		_dataToSend = responseError.getDataToSend();
-//	}
-//	catch (BadGatewayException e){
-//		ResponseError responseError(getErrorPageStruct(BAD_GATE_WAY, hostData->errorPage), hostData);
-//		_dataToSend = responseError.getDataToSend();
-//	}
+	try{
+	//	std::string dataFromCGI = getDataFromCGI(uri);
+		std::string dataFromCGI = "The body of post!!!";
+		changeContentLength(dataFromCGI.length());
+		_dataToSend += "\r\n";
+		_dataToSend += dataFromCGI;
+	}
+	catch (InternalServerErrorException& e){
+		ResponseError responseError(ResponseError::getErrorPageStruct(INTERNAL_SERVER_ERROR, hostData->errorPage), hostData);
+		_dataToSend = responseError.getDataToSend();
+	}
+	catch (BadGatewayException& e){
+		ResponseError responseError(ResponseError::getErrorPageStruct(BAD_GATE_WAY, hostData->errorPage), hostData);
+		_dataToSend = responseError.getDataToSend();
+	}
 }
 
 void ResponsePost::createBody(const std::string &uri, HostData *hostData){
