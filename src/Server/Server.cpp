@@ -169,7 +169,7 @@ void				Server::processingRequest(int clientSocket, Client& client) {
 //	errorPage.errorPagePath = "/error.html";
 //	errorPage.errorPagePath = "/not_exist.html";
 	try {
-		client.getRequest()->addRequestChunk(buf);
+		client.getRequest()->addRequestChunk(std::string(buf, s));
 //		throw badRequestException;
 	} catch (BadRequestException& e) {
 		 client.setResponse(_responseCreator.createResponse(errorPage, client.getHostData()));
