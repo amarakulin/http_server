@@ -41,7 +41,7 @@ bool		ParserRequest::handleEndOfBody(RequestData& data, std::string& buffer) {
 
 		} else if (hasContentLength) {
 			return handleEndOfBodyWithContentLengt(data, buffer);
-		}  else if (data.header.find("transfer-encoding") != end) {
+		}  else if (data.header.find("transfer-encoding") != end && buffer.find(END_OF_CHUNKED_BODY) != std::string::npos) {
 			return handleEndOfChunkedBody(data, buffer);
 		}
 		else {
