@@ -6,7 +6,6 @@ ParserConfig::ParserConfig() {
 }
 
 ParserConfig::~ParserConfig() {
-	// delete _cgi;
 }
 
 Config* ParserConfig::parse(char* configFilePath) {
@@ -24,6 +23,9 @@ Config* ParserConfig::parse(char* configFilePath) {
 	config = new Config();
 	for (int i = 0; i < hosts.size(); i++) {
 		Host *host = new Host(hosts[i]);
+		for (int j = 0; j < hosts[i]->location.size(); j++) {
+			std::cout << hosts[i]->location[j]->way << std::endl;
+		}
 		config->addNewHost(host);
 		cleanUpHost(hosts[i]);
 	}
@@ -31,19 +33,22 @@ Config* ParserConfig::parse(char* configFilePath) {
 }
 
 void	ParserConfig::cleanUpHost(HostData *hostData) {
-	// std::vector<ErrorPage*>::iterator errorPageIt = hostData->errorPage.begin();
-	// for (; errorPageIt != hostData->errorPage.end(); errorPageIt++) {
-	// 	delete *errorPageIt;
-	// }
-	// std::vector<Location*>::iterator locationIt = hostData->location.begin();
-	// for (; locationIt != hostData->location.end(); locationIt++) {
-	// 	std::cout << "delete location in parser" << std::endl;
-	// 	if ((*locationIt)->cgi) {
-	// 		delete (*locationIt)->cgi;
-	// 	}
-	// 	delete *locationIt;
-	// }
-	// delete hostData;
+	std::vector<ErrorPage*>::iterator errorPageIt = hostData->errorPage.begin();
+	for (; errorPageIt != hostData->errorPage.end(); errorPageIt++) {
+		std::cout << "delete error page" << std::endl;
+		delete *errorPageIt;
+	}
+	std::vector<Location*>::iterator locationIt = hostData->location.begin();
+	for (; locationIt != hostData->location.end(); locationIt++) {
+		std::cout << "PARSER: delete location" << std::endl;
+		if ((*locationIt)->cgi) {
+			std::cout << "PARSER: delete location cgi" << std::endl;
+			delete (*locationIt)->cgi;
+		}
+		delete *locationIt;
+	}
+	std::cout << "PARSER: delete hostData" << std::endl;
+	delete hostData;
 }
 
 /*
@@ -114,14 +119,14 @@ void	ParserConfig::setDefaultHostValues(HostData *hostData) {
 	hostData->clientMaxBodySize = 0;
 	hostData->location.clear();
 
-	// for (int i = 0; arrResponseStatuses[i].first ; i++){
-	// 	if (arrResponseStatuses[i].first >= 400) {
-	// 		Location *newLocation = new Location;
-	// 		newLocation->root = "/";
-	// 		newLocation->way = DEFAULT_ERROR_PAGE_PATH + std::to_string(arrResponseStatuses[i].first) + ".html";
-	// 		hostData->location.push_back(newLocation);
-	// 	}
-	// }
+	for (int i = 0; arrResponseStatuses[i].first ; i++){
+		if (arrResponseStatuses[i].first >= 400) {
+			Location *newLocation = new Location;
+			newLocation->root = "/";
+			newLocation->way = DEFAULT_ERROR_PAGE_PATH + std::to_string(arrResponseStatuses[i].first) + ".html";
+			hostData->location.push_back(newLocation);
+		}
+	}
 }
 
 void	ParserConfig::setLocationDefaultValue(Location *location) {
@@ -132,7 +137,6 @@ void	ParserConfig::setLocationDefaultValue(Location *location) {
 	_cgi->root = "";
 	_cgi->path = "";
 
-	location->way = "";
 	location->root = "";
 	location->redirectStatusCode = 0;
 	location->redirectPath = "";
@@ -167,8 +171,8 @@ void	ParserConfig::enterDataToHostDataStruct(std::string const &key, std::string
 			}
 		} else if (isSomeSymbolInTheEnd(value, ':')) {
 			if (key == "location") {
-				setLocationDefaultValue(hostData->location[hostData->location.size() - 1]);
 				setLocationWayData(value.substr(0, value.length() - 1), hostData);
+				setLocationDefaultValue(hostData->location[hostData->location.size() - 1]);
 			} else {
 				throw ParserConfigException("enterDataToHostDataStruct error");
 			}
@@ -221,6 +225,7 @@ void	ParserConfig::setLocationDetailsData(std::string data, HostData *hostData) 
 		!hostData->location[hostData->location.size() - 1]->cgi) {
 		CGI* cgi = new CGI(_cgi->path, _cgi->extension, _cgi->root, _cgi->ip, _cgi->port);
 		hostData->location[hostData->location.size() - 1]->cgi = cgi;
+		delete _cgi;
 	}
 }
 

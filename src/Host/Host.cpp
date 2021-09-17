@@ -56,18 +56,22 @@ Host::Host(HostData *hostData) {
 }
 
 Host::~Host() {
-	// std::vector<ErrorPage*>::iterator errorPageIt = _data->errorPage.begin();
-	// for (; errorPageIt != _data->errorPage.end(); errorPageIt++) {
-	// 	delete *errorPageIt;
-	// }
-	// std::vector<Location*>::iterator locationIt = _data->location.begin();
-	// for (; locationIt != _data->location.end(); locationIt++) {
-	// 	if ((*locationIt)->cgi) {
-	// 		delete (*locationIt)->cgi;
-	// 	}
-	// 	delete *locationIt;
-	// }
-	// delete _data;
+	std::vector<ErrorPage*>::iterator errorPageIt = _data->errorPage.begin();
+	for (; errorPageIt != _data->errorPage.end(); errorPageIt++) {
+		std::cout << "HOST: delete error page" << std::endl;
+		delete *errorPageIt;
+	}
+	std::vector<Location*>::iterator locationIt = _data->location.begin();
+	for (; locationIt != _data->location.end(); locationIt++) {
+		std::cout << "HOST: delete location" << std::endl;
+		if ((*locationIt)->cgi) {
+			std::cout << "HOST: delete location cgi " << std::endl;
+			delete (*locationIt)->cgi;
+		}
+		delete *locationIt;
+	}
+	std::cout << "HOST: delete hostData" << std::endl;
+	delete _data;
 }
 
 Host::Host(std::string ip, size_t port, std::string serverName) {

@@ -20,7 +20,7 @@ Server::Server(const Config* config) : _config(config) {
 */
 
 Server::~Server() {
-	// delete _config;
+	delete _config;
 }
 
 /*
