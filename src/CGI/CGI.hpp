@@ -38,6 +38,7 @@ class CGI {
 
 	public:
 		CGI();
+		CGI(const std::string& pathToCGI, const std::string& extension, const std::string& root, const std::string& ip, const std::string& port);
 		CGI(const CGI& other);
 		~CGI();
 
