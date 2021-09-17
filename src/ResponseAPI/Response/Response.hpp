@@ -8,23 +8,6 @@
 # include "ResponseTypes.hpp"
 # include "utils.hpp"
 
-// Здесь понадобиться fork и excve???
-
-//static const std::pair<int, std::string> arrResponseStatuses [] = {
-//		std::pair<int, std::string>(200, "OK"),
-//		std::pair<int, std::string>(301, "Moved Permanently"),
-//		std::pair<int, std::string>(400, "Bad Request"),
-//		std::pair<int, std::string>(404, "Not Found"),
-//		std::pair<int, std::string>(405, "Method Not Allowed"),
-//		std::pair<int, std::string>(413, "Payload Too Large"),
-//		std::pair<int, std::string>(500, "Internal Server Error"),
-//		std::pair<int, std::string>(501, "Not Implemented"),
-//		std::pair<int, std::string>(502, "Bad Gateway"),
-//		std::pair<int, std::string>(505, "HTTP Version Not Supported"),
-//
-//
-//		std::pair<int, std::string>(0, ""),
-//};
 
 class Response {
 private:
@@ -36,12 +19,7 @@ private:
 	static std::string getContentTypeHeader(std::string accept, HostData *hostData);
 	static std::string getContentLengthHeader(std::string uri, HostData *hostData);
 
-	//TODO Workout 500 status code CGI
-	//TODO Workout 502 status code CGI
-
-	//TODO create file with POST method
 	//TODO Put method
-	//TODO Workout error for CGI
 
 
 protected:
