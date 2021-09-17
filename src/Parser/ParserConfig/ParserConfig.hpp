@@ -13,20 +13,33 @@
 
 class Config;
 
+typedef struct {
+	std::string 				path;
+	std::string 				extension;
+	std::string 				root;
+	std::string 				ip;
+	std::string 				port;
+} CgiParser;
+
 /*
 ** Класс читает данные из конфигурационного файла и парсит их
 */
 
 class ParserConfig {
+	private:
+		CgiParser	*_cgi;
+
 	public:
 		ParserConfig();
+		~ParserConfig();
 		Config*					parse(char* configFilePath);
 		std::vector<HostData*>	devideConfigToComponents(std::list<std::string> config);
 		void	readConfigFile(char *configFilePath, std::list<std::string> *config);
 		bool	checkConfigString(std::string data);
 		void	fillHostData(HostData *host, std::list<std::string>::iterator *it);
 		void	checkHostData(HostData *host);
-		void	enterDataToHostDataStruct(std::string const &key, std::string const &value, HostData *hostData);
+		void	enterDataToHostDataStruct(std::string const &key,
+					std::string const &value, HostData *hostData);
 		void	setDefaultHostValues(HostData *hostData);
 		void	setLocationDefaultValue(Location *location);
 		void	cleanUpHost(HostData *hostData);
@@ -47,10 +60,6 @@ class ParserConfig {
 		void	setIndexToLocation(std::string data, Location *location);
 		void	setUploadEnableToLocation(std::string data, Location *location);
 		void	setUploadPathToLocation(std::string data, Location *location);
-		void	setCgiExtensionToLocation(std::string data, Location *location);
-		void	setCgiPathToLocation(std::string data, Location *location);
-		void	setCgiRootToLocation(Location *location, std::string root);
-		void	setCgiIpAndPortData(Location *location, size_t port, std::string ip);
 
 		class ParserConfigException : public std::exception {
 			private:
@@ -64,6 +73,9 @@ class ParserConfig {
 					return msg;
 				}
 		};
+
+		void	setCgiParserData(std::string data, std::string type,
+					HostData *hostData, Location *location);
 };
 
 #endif
