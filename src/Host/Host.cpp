@@ -12,6 +12,7 @@ Host::Host(HostData *hostData) {
 
 		std::vector<ErrorPage*>::iterator errorPageIt = hostData->errorPage.begin();
 		for (; errorPageIt != hostData->errorPage.end(); errorPageIt++) {
+			// std::cout << "HOST: add error page" << std::endl;
 			ErrorPage *errorPage = new ErrorPage;
 			errorPage->errorNbr = (*errorPageIt)->errorNbr;
 			errorPage->errorPagePath = (*errorPageIt)->errorPagePath;
@@ -19,7 +20,9 @@ Host::Host(HostData *hostData) {
 		}
 
 		std::vector<Location*>::iterator locationIt = hostData->location.begin();
-		for (; locationIt != hostData->location.end(); locationIt++) {
+		int i = 0;
+		for (; locationIt != hostData->location.end(); locationIt++, i++) {
+			// std::cout << "HOST: add location " << i << " --- " << (*locationIt)->way << std::endl;
 			Location *location = new Location;
 			location->way = (*locationIt)->way;
 			location->root = (*locationIt)->root;
@@ -28,17 +31,21 @@ Host::Host(HostData *hostData) {
 
 			std::vector<std::string>::iterator methods = (*locationIt)->httpMethods.begin();
 			for (; methods != (*locationIt)->httpMethods.end(); methods++) {
+				// std::cout << "HOST: add methods" << std::endl;
 				location->httpMethods.push_back(*methods);
 			}
 
 			if (!(*locationIt)->index.empty()) {
+				// std::cout << "HOST: add index" << std::endl;
 				std::vector<std::string>::iterator index = (*locationIt)->index.begin();
 				for (; index != (*locationIt)->index.end(); index++) {
+					// std::cout << "HOST: push pack index" << std::endl;
 					location->index.push_back(*index);
 				}
 			}
 
 			if ((*locationIt)->cgi) {
+				// std::cout << "HOST: add CGI" << std::endl;
 				location->cgi = new CGI(*(*locationIt)->cgi);
 			} else {
 				location->cgi = NULL;
@@ -48,6 +55,7 @@ Host::Host(HostData *hostData) {
 			location->uploadEnable = (*locationIt)->uploadEnable;
 			location->uploadPath = (*locationIt)->uploadPath;
 
+			// std::cout << "HOST: push location" << std::endl;
 			_data->location.push_back(location);
 		} 
 	} else {
@@ -58,20 +66,22 @@ Host::Host(HostData *hostData) {
 Host::~Host() {
 	std::vector<ErrorPage*>::iterator errorPageIt = _data->errorPage.begin();
 	for (; errorPageIt != _data->errorPage.end(); errorPageIt++) {
-		std::cout << "HOST: delete error page" << std::endl;
 		delete *errorPageIt;
+		// std::cout << "HOST: delete error page" << std::endl;
 	}
 	std::vector<Location*>::iterator locationIt = _data->location.begin();
-	for (; locationIt != _data->location.end(); locationIt++) {
-		std::cout << "HOST: delete location" << std::endl;
+	int i = 0;
+	for (; locationIt != _data->location.end(); locationIt++, i++) {
 		if ((*locationIt)->cgi) {
-			std::cout << "HOST: delete location cgi " << std::endl;
+			// std::cout << (*locationIt)->cgi << std::endl;
 			delete (*locationIt)->cgi;
+			// std::cout << "HOST: delete location cgi " << std::endl;
 		}
+		// std::cout << "HOST: delete location " << i << " --- " << (*locationIt)->way << std::endl;
 		delete *locationIt;
 	}
-	std::cout << "HOST: delete hostData" << std::endl;
 	delete _data;
+	// std::cout << "HOST: delete hostData" << std::endl;
 }
 
 Host::Host(std::string ip, size_t port, std::string serverName) {

@@ -20,6 +20,7 @@ Server::Server(const Config* config) : _config(config) {
 */
 
 Server::~Server() {
+	// std::cout << "SERVER: delete config" << std::endl;
 	delete _config;
 }
 
