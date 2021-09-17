@@ -1,5 +1,4 @@
 #include "ResponsePost.hpp"
-#include "ResponseError.hpp"
 
 ResponsePost::ResponsePost() : Response() {}
 
