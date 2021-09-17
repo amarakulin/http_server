@@ -110,8 +110,11 @@ int ResponseError::isResponseError(RequestData &requestData, HostData *hostData)
 	else if (requestData.header["protocol"] != "http/1.1"){//TODO TEST with telnet
 		statusCode = HTTP_NOT_SUPPORTED;
 	}
-	else if (location && !isItemInVector(location->httpMethods, requestData.header["method"])){//FIXME if no location found ??? all methods???
+	else if (location && !isItemInVector(split(PROCESSED_REQUESTS_LOWER, " "), requestData.header["method"])){
 		statusCode = NOT_IMPLEMENTED;
+	}
+	else if (location && !isItemInVector(location->httpMethods, requestData.header["method"])){
+		statusCode = METHOD_NOT_ALLOWED;
 	}
 //	else if (requestData.header[""] != VERSION_HTTP){//TODO Ask Ilya
 //		statusCode = HTTP_NOT_SUPPORTED;
