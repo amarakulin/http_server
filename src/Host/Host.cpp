@@ -1,4 +1,5 @@
 #include "Host.hpp"
+#include "CGI.hpp"
 
 Host::Host(HostData *hostData) {
 	if (_data != hostData) {
@@ -36,6 +37,13 @@ Host::Host(HostData *hostData) {
 					location->index.push_back(*index);
 				}
 			}
+
+			if ((*locationIt)->cgi) {
+				location->cgi = new CGI(*(*locationIt)->cgi);
+			} else {
+				location->cgi = NULL;
+			}
+
 			location->autoindex = (*locationIt)->autoindex;
 			location->uploadEnable = (*locationIt)->uploadEnable;
 			location->uploadPath = (*locationIt)->uploadPath;
@@ -48,15 +56,18 @@ Host::Host(HostData *hostData) {
 }
 
 Host::~Host() {
-	std::vector<ErrorPage*>::iterator errorPageIt = _data->errorPage.begin();
-	for (; errorPageIt != _data->errorPage.end(); errorPageIt++) {
-		delete *errorPageIt;
-	}
-	std::vector<Location*>::iterator locationIt = _data->location.begin();
-	for (; locationIt != _data->location.end(); locationIt++) {
-		delete *locationIt;
-	}
-	delete _data;
+	// std::vector<ErrorPage*>::iterator errorPageIt = _data->errorPage.begin();
+	// for (; errorPageIt != _data->errorPage.end(); errorPageIt++) {
+	// 	delete *errorPageIt;
+	// }
+	// std::vector<Location*>::iterator locationIt = _data->location.begin();
+	// for (; locationIt != _data->location.end(); locationIt++) {
+	// 	if ((*locationIt)->cgi) {
+	// 		delete (*locationIt)->cgi;
+	// 	}
+	// 	delete *locationIt;
+	// }
+	// delete _data;
 }
 
 Host::Host(std::string ip, size_t port, std::string serverName) {

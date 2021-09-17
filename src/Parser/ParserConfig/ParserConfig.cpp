@@ -6,7 +6,7 @@ ParserConfig::ParserConfig() {
 }
 
 ParserConfig::~ParserConfig() {
-	delete _cgi;
+	// delete _cgi;
 }
 
 Config* ParserConfig::parse(char* configFilePath) {
@@ -31,15 +31,19 @@ Config* ParserConfig::parse(char* configFilePath) {
 }
 
 void	ParserConfig::cleanUpHost(HostData *hostData) {
-	std::vector<ErrorPage*>::iterator errorPageIt = hostData->errorPage.begin();
-	for (; errorPageIt != hostData->errorPage.end(); errorPageIt++) {
-		delete *errorPageIt;
-	}
-	std::vector<Location*>::iterator locationIt = hostData->location.begin();
-	for (; locationIt != hostData->location.end(); locationIt++) {
-		delete *locationIt;
-	}
-	delete hostData;
+	// std::vector<ErrorPage*>::iterator errorPageIt = hostData->errorPage.begin();
+	// for (; errorPageIt != hostData->errorPage.end(); errorPageIt++) {
+	// 	delete *errorPageIt;
+	// }
+	// std::vector<Location*>::iterator locationIt = hostData->location.begin();
+	// for (; locationIt != hostData->location.end(); locationIt++) {
+	// 	std::cout << "delete location in parser" << std::endl;
+	// 	if ((*locationIt)->cgi) {
+	// 		delete (*locationIt)->cgi;
+	// 	}
+	// 	delete *locationIt;
+	// }
+	// delete hostData;
 }
 
 /*
@@ -82,7 +86,7 @@ std::vector<HostData*>	ParserConfig::devideConfigToComponents(std::list<std::str
 				throw ParserConfigException("devideConfigToComponents error");
 			}
 			if (key == "***") {
-				if (hostData->ip.size() > 0 && hostData->port > 1023 && hostData->port < 65536) {
+				if (hostData->ip.size() > 0 && hostData->port > 0) {
 					hosts.push_back(hostData);
 					hostData = new HostData;
 					setDefaultHostValues(hostData);
@@ -110,14 +114,14 @@ void	ParserConfig::setDefaultHostValues(HostData *hostData) {
 	hostData->clientMaxBodySize = 0;
 	hostData->location.clear();
 
-	for (int i = 0; arrResponseStatuses[i].first ; i++){
-		if (arrResponseStatuses[i].first >= 400) {
-			Location *newLocation = new Location;
-			newLocation->root = "/";
-			newLocation->way = DEFAULT_ERROR_PAGE_PATH + std::to_string(arrResponseStatuses[i].first) + ".html";
-			hostData->location.push_back(newLocation);
-		}
-	}
+	// for (int i = 0; arrResponseStatuses[i].first ; i++){
+	// 	if (arrResponseStatuses[i].first >= 400) {
+	// 		Location *newLocation = new Location;
+	// 		newLocation->root = "/";
+	// 		newLocation->way = DEFAULT_ERROR_PAGE_PATH + std::to_string(arrResponseStatuses[i].first) + ".html";
+	// 		hostData->location.push_back(newLocation);
+	// 	}
+	// }
 }
 
 void	ParserConfig::setLocationDefaultValue(Location *location) {
