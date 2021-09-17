@@ -45,17 +45,6 @@ std::pair<std::string, std::string> ResponsePost::parseBody(std::string body){
 	return bodyStruct;
 }
 
-std::string getUploadFilePath(Location *location){//TODO move up to Response
-	std::string uploadPath;
-	if (location && location->uploadEnable){
-		uploadPath = location->root + location->uploadPath;
-	}
-	if (uploadPath.empty()) {
-		uploadPath = DEFAULT_UPLOAD_PATH;
-	}
-	uploadPath += "/";
-	return uploadPath;
-}
 
 
 void ResponsePost::createBody(RequestData &requestData, HostData *hostData){
@@ -66,6 +55,10 @@ void ResponsePost::createBody(RequestData &requestData, HostData *hostData){
 	//TODO create a behavior if file gets from uri
 	bodyStruct = parseBody(requestData.body);//TODO may be needs a constuctor with size
 	location = getLocationByUri(requestData.header["uri"], hostData->location);
+	std::cout << BLUE << "FilenameFromUri: " << getFileNameFromUri(requestData.header["uri"]) << RESET << std::endl;
+	if (bodyStruct.first.empty()){
+		bodyStruct.first = getFileNameFromUri(requestData.header["uri"]);
+	}
 	filePath = "." + getUploadFilePath(location) + bodyStruct.first;
 
 //TODO test chunked method

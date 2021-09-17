@@ -34,6 +34,8 @@ protected:
 
 	static std::string getFilePathFromHostData(const std::string &uri, HostData *hostData);
 	static Location *getLocationByUri(const std::string &uri, std::vector<Location*> locations);
+	std::string getUploadFilePath(Location *location);
+	std::string getFileNameFromUri(const std::string &uri);
 
 public:
 	Response();

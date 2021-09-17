@@ -211,6 +211,29 @@ Location *Response::getLocationByUri(const std::string &uri, std::vector<Locatio
 	}
 	return location;
 }
+
+std::string Response::getUploadFilePath(Location *location){//TODO move up to Response
+	std::string uploadPath;
+	if (location && location->uploadEnable){
+		uploadPath = location->root + location->uploadPath;
+	}
+	if (uploadPath.empty()) {
+		uploadPath = DEFAULT_UPLOAD_PATH;
+	}
+	uploadPath += "/";
+	return uploadPath;
+}
+
+std::string Response::getFileNameFromUri(const std::string &uri){
+	std::string filename = "";
+	if (isFileInPath(uri)){
+		size_t posFile = uri.find_last_of('/');
+		posFile += 1;// to delete '/'
+		filename = uri.substr(posFile, uri.size() - posFile);
+	}
+	return filename;
+}
+
 /*
 ** Getters
 */
