@@ -68,28 +68,19 @@ void ResponsePost::createBody(RequestData &requestData, HostData *hostData){
 	location = getLocationByUri(requestData.header["uri"], hostData->location);
 	filePath = "." + getUploadFilePath(location) + bodyStruct.first;
 
-
-
-	//TODO maybe check if file created or throw 404
+//TODO test chunked method
 	std::ofstream outfile (filePath);
+	if (!isFileExist(filePath)){
+		//TODO if throw exception could lose the pointer on the response
+		throw NotFoundException();
+	}
 
 	outfile << bodyStruct.second << std::endl;
 	outfile.close();
-	try{
-	//	std::string dataFromCGI = getDataFromCGI(uri);
-		std::string dataFromCGI = "The body of post!!!";
-		changeContentLength(dataFromCGI.length());
-		_dataToSend += "\r\n";
-		_dataToSend += dataFromCGI;
-	}
-	catch (InternalServerErrorException& e){
-		ResponseError responseError(ResponseError::getErrorPageStruct(INTERNAL_SERVER_ERROR, hostData->errorPage), hostData);
-		_dataToSend = responseError.getDataToSend();
-	}
-	catch (BadGatewayException& e){
-		ResponseError responseError(ResponseError::getErrorPageStruct(BAD_GATE_WAY, hostData->errorPage), hostData);
-		_dataToSend = responseError.getDataToSend();
-	}
+	std::string dataFromCGI = "The body of post!!!";
+	changeContentLength(dataFromCGI.length());
+	_dataToSend += "\r\n";
+	_dataToSend += dataFromCGI;
 }
 
 void ResponsePost::createBody(const std::string &uri, HostData *hostData){

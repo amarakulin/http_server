@@ -192,8 +192,25 @@ void				Server::createResponse(Client& client) {
 	std::cout << "Port: "<< client.getHostData()->port << std::endl;
 	std::cout << "Root: " << client.getHostData()->root << std::endl;
 	std::cout << "ServName: "<< client.getHostData()->serverName << std::endl;
-	client.setResponse(_responseCreator.createResponse(
-			client.getRequest()->getData(), client.getHostData()));
+	try{
+		client.setResponse(_responseCreator.createResponse(
+				client.getRequest()->getData(), client.getHostData()));
+	}
+	catch (BadGatewayException& e){
+		client.setResponse(_responseCreator.createResponse(
+				ResponseError::getErrorPageStruct(BAD_GATE_WAY, client.getHostData()->errorPage),
+				client.getHostData()));
+	}
+	catch (InternalServerErrorException& e){
+		client.setResponse(_responseCreator.createResponse(
+				ResponseError::getErrorPageStruct(INTERNAL_SERVER_ERROR, client.getHostData()->errorPage),
+				client.getHostData()));
+	}
+	catch (NotFoundException& e){
+		client.setResponse(_responseCreator.createResponse(
+				ResponseError::getErrorPageStruct(NOT_FOUND, client.getHostData()->errorPage),
+				client.getHostData()));
+	}
 	client.resetRequest();
 }
 
