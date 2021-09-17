@@ -135,13 +135,13 @@ void				Server::handleClientEvents() {
 		struct pollfd clientPollStruct = *(_sockets.getAllSockets() + i);
 		Client &client = getClientByFD(_clients, clientPollStruct.fd);
 
-		if ((clientPollStruct.revents & POLLIN) && !client.hasResponse()) // проверяем пришел ли запрос
+		if ((clientPollStruct.revents & POLLIN) && !client.hasResponse()) { // проверяем пришел ли запрос
 			processingRequest(clientPollStruct.fd, client);
-		
-		if (client.hasRequest() && !client.hasResponse()) //TODO pichkasik
+		}
+		if (client.hasRequest() && !client.hasResponse()) {
 			createResponse(client);
-		if ((clientPollStruct.revents & POLLOUT) && client.hasResponse()){// проверяем можем ли мы отпраивть ответ
-
+		}
+		if ((clientPollStruct.revents & POLLOUT) && client.hasResponse()) {// проверяем можем ли мы отпраивть ответ
 			sendResponse(clientPollStruct.fd, client);
 		}
 	}
@@ -154,12 +154,17 @@ void				Server::handleClientEvents() {
 void				Server::processingRequest(int clientSocket, Client& client) {
 	char buf[MB]; //TODO обработать случаи, когда за один раз не получается считать
 	int s = recv(clientSocket, buf, sizeof(buf), 0);
-	if (s == -1)
-		logger.printMessage("/* Read error */");
-	if (s == 0) {
-		closeClientConnection(clientSocket);
+	if (s == -1){
+		logger.printMessage("/* Read error */");//TODO THINK FOR TEST
+//		client.getRequest()->setStatus(READED);
 		bzero(buf, MB);
-		return ;
+//		return;
+	}
+	if (s == 0) {
+//		client.getRequest()->setStatus(READED);//TODO THINK FOR TEST
+//		closeClientConnection(clientSocket);
+//		bzero(buf, MB);
+//		return ;
 	}
 	try {
 		client.getRequest()->addRequestChunk(std::string(buf, s));
@@ -168,15 +173,15 @@ void				Server::processingRequest(int clientSocket, Client& client) {
 															client.getHostData()));
 		 client.resetRequest();
 	} catch (NotAllowedException& e) {
-		 client.setResponse(_responseCreator.createResponse(ResponseError::getErrorPageStruct(METHOD_NOT_ALLOWED, client.getHostData()->errorPage),
+//		client.getRequest()->setStatus(READED);
+		client.setResponse(_responseCreator.createResponse(ResponseError::getErrorPageStruct(METHOD_NOT_ALLOWED, client.getHostData()->errorPage),
 															client.getHostData()));
-		 client.resetRequest();
+		client.resetRequest();
 	} catch (NotFoundException& e) {
 		client.setResponse(_responseCreator.createResponse(ResponseError::getErrorPageStruct(NOT_FOUND, client.getHostData()->errorPage),
 														   client.getHostData()));
 		client.resetRequest();
 	}
-
 	bzero(buf, MB);
 
 	logger.printMessage("/* Client in */");
