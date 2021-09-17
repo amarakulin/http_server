@@ -39,7 +39,7 @@ class ParserConfig {
 		void	fillHostData(HostData *host, std::list<std::string>::iterator *it);
 		void	checkHostData(HostData *host);
 		void	enterDataToHostDataStruct(std::string const &key,
-					std::string const &value, HostData *hostData);
+				std::string const &value, HostData *hostData);
 		void	setDefaultHostValues(HostData *hostData);
 		void	setLocationDefaultValue(Location *location);
 		void	cleanUpHost(HostData *hostData);
@@ -60,6 +60,8 @@ class ParserConfig {
 		void	setIndexToLocation(std::string data, Location *location);
 		void	setUploadEnableToLocation(std::string data, Location *location);
 		void	setUploadPathToLocation(std::string data, Location *location);
+		void	setCgiParserData(std::string data, std::string type,
+				HostData *hostData, Location *location);
 
 		class ParserConfigException : public std::exception {
 			private:
@@ -74,8 +76,6 @@ class ParserConfig {
 				}
 		};
 
-		void	setCgiParserData(std::string data, std::string type,
-					HostData *hostData, Location *location);
 };
 
 #endif
