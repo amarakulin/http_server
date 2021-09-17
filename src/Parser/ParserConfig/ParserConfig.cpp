@@ -1,8 +1,13 @@
 #include "ParserConfig.hpp"
 #include "ResponseTypes.hpp"
-// #include <CGI.hpp>
+#include <CGI.hpp>
 
-ParserConfig::ParserConfig() {}
+ParserConfig::ParserConfig() {
+}
+
+ParserConfig::~ParserConfig() {
+	delete _cgi;
+}
 
 Config* ParserConfig::parse(char* configFilePath) {
 	std::list<std::string>	configFile;
@@ -97,7 +102,6 @@ std::vector<HostData*>	ParserConfig::devideConfigToComponents(std::list<std::str
 }
 
 void	ParserConfig::setDefaultHostValues(HostData *hostData) {
-	
 	hostData->ip = "";
 	hostData->serverName = "";
 	hostData->port = 0;
@@ -105,6 +109,7 @@ void	ParserConfig::setDefaultHostValues(HostData *hostData) {
 	hostData->errorPage.clear();
 	hostData->clientMaxBodySize = 0;
 	hostData->location.clear();
+
 	for (int i = 0; arrResponseStatuses[i].first ; i++){
 		if (arrResponseStatuses[i].first >= 400) {
 			Location *newLocation = new Location;
@@ -116,6 +121,13 @@ void	ParserConfig::setDefaultHostValues(HostData *hostData) {
 }
 
 void	ParserConfig::setLocationDefaultValue(Location *location) {
+	_cgi = new CgiParser;
+	_cgi->ip = "";
+	_cgi->port = "";
+	_cgi->extension = "";
+	_cgi->root = "";
+	_cgi->path = "";
+
 	location->way = "";
 	location->root = "";
 	location->redirectStatusCode = 0;
@@ -125,10 +137,6 @@ void	ParserConfig::setLocationDefaultValue(Location *location) {
 	location->autoindex = false;
 	location->uploadEnable = false;
 	location->uploadPath = "";
-	// location->cgi = new CGI;
-	// location->cgi->pathToCGI = "";
-	// location->cgi->root = "";
-	// location->cgi->extension = "";
 }
 
 /*
@@ -155,13 +163,16 @@ void	ParserConfig::enterDataToHostDataStruct(std::string const &key, std::string
 			}
 		} else if (isSomeSymbolInTheEnd(value, ':')) {
 			if (key == "location") {
+				setLocationDefaultValue(hostData->location[hostData->location.size() - 1]);
 				setLocationWayData(value.substr(0, value.length() - 1), hostData);
 			} else {
 				throw ParserConfigException("enterDataToHostDataStruct error");
 			}
+			
 		} else if (key.length() > 0) {
 			throw ParserConfigException("enterDataToHostDataStruct error");
 		}
+
 	} catch (ParserConfigException e) {
 		std::cerr << "Parser error: " << e.what() << std::endl;
 		throw e;
@@ -195,13 +206,17 @@ void	ParserConfig::setLocationDetailsData(std::string data, HostData *hostData) 
 	} else if (key == "upload_path") {
 		setUploadPathToLocation(value, hostData->location[currentLocation]);
 	} else if (key == "cgi_extension") {
-		setCgiExtensionToLocation(value, hostData->location[currentLocation]);
+		setCgiParserData(value, "extension", hostData, hostData->location[currentLocation]);
 	} else if (key == "cgi_path") {
-		setCgiPathToLocation(value, hostData->location[currentLocation]);
-		setCgiRootToLocation(hostData->location[currentLocation], hostData->root);
-		setCgiIpAndPortData(hostData->location[currentLocation], hostData->port, hostData->ip);
+		setCgiParserData(value, "path", hostData, hostData->location[currentLocation]);
 	} else {
 		throw ParserConfigException("setLocationDetailsData error");
+	}
+
+	if (_cgi->path.length() && _cgi->extension.length() &&
+		!hostData->location[hostData->location.size() - 1]->cgi) {
+		CGI* cgi = new CGI(_cgi->path, _cgi->extension, _cgi->root, _cgi->ip, _cgi->port);
+		hostData->location[hostData->location.size() - 1]->cgi = cgi;
 	}
 }
 
@@ -453,40 +468,22 @@ void	ParserConfig::setUploadPathToLocation(std::string data,
 	}
 }
 
-/*
-**	Set location->cgi_extension to HostData structure
-*/
-
-void	ParserConfig::setCgiExtensionToLocation(std::string data, Location *location) {
-	if (data == "php") {
-		location->cgiExtension = data;
-	} else {
-		throw ParserConfigException("setCgiExtensionToLocation error");
+void	ParserConfig::setCgiParserData(std::string data, std::string type, HostData *hostData, Location *location) {
+	if (type == "path" && data.find_first_of("/") == 0) {
+		_cgi->path = data;
+	} else if (type == "extension" && data == "php") {
+		_cgi->extension = data;
 	}
-}
 
-/*
-**	Set location->cgi_path to HostData structure
-*/
-
-void	ParserConfig::setCgiPathToLocation(std::string data, Location *location) {
-	if (data.find_first_of("/") == 0) {
-		location->cgiPath = data;
+	if (!_cgi->root.length() && location->root.length()) {
+		_cgi->root = location->root;
 	} else {
-		throw ParserConfigException("setCgiPathToLocation error");
+		_cgi->root = hostData->root;
 	}
-}
-
-void	ParserConfig::setCgiRootToLocation(Location *location, std::string root) {
-	if (location->root.length() > 0) {
-		location->cgiRoot = location->root;
-	} else {
-		location->cgiRoot = root;
+	
+	if (hostData->ip.length() && hostData->port && !_cgi->port.length() && !_cgi->ip.length()) {
+		std::string port_str = std::to_string(static_cast<int>(hostData->port));
+		_cgi->port = port_str;
+		_cgi->ip = hostData->ip;
 	}
-}
-
-void	ParserConfig::setCgiIpAndPortData(Location *location, size_t port, std::string ip) {
-	std::string port_str = std::to_string(static_cast<int>(port));
-	location->cgiPort = port_str;
-	location->cgiIp = ip;
 }
