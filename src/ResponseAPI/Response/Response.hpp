@@ -19,8 +19,13 @@ private:
 	static std::string getContentTypeHeader(std::string accept, HostData *hostData);
 	static std::string getContentLengthHeader(std::string uri, HostData *hostData);
 
-	//TODO Put method
-
+	//TODO CGI
+	//TODO test chunked file
+	//TODO errors from Request
+	//TODO errors from Server
+	//TODO leak if errors in creating response occurred
+	//TODO validation config
+	//TODO test cgi_tester
 
 protected:
 	size_t		_leftBytesToSend;
