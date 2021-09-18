@@ -16,6 +16,8 @@
 #define BOLDRED     "\033[1m\033[31m"      /* Bold Red */
 
 #define FILENAME_SEPORATOR "==filename=="
+#define START_AUTOINDEX "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<title>Title</title>\n<style>\nbody{\nbackground-color: #606060;\ncolor: #FFFFFF;/* Цвет фона веб-страницы */\n}\n</style>\n</head>\n<body>"
+#define END_AUTOINDEX "</body></html>"
 
 void	toLowerCase(std::string& str);
 void	toUpperCase(std::string& str);
