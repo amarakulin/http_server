@@ -31,7 +31,6 @@ char**	CGI::createCGIEnv(RequestData& req) const {
 	std::string uri = header["uri"];
 	pos = uri.find('?');
 	std::string path_info = (pos == uri.size() ? uri : uri.substr(0, pos));
-	// 127.0.0.1:8000/cgi-bin/hello.pl/index.html?a=1&b=2 => index.html
 	env["PATH_INFO"] = path_info;
 
 
@@ -60,8 +59,10 @@ char**	CGI::createCGIEnv(RequestData& req) const {
 	env["SERVER_PORT"] = _port;
 	env["SERVER_SOFTWARE"] = "http_server/1.0.0";
 
-	if (req.header.find("X-Secret-Header-For-Test") != req.header.end())
+	if (req.header.find("x-secret-header-for-test") != req.header.end()) {
+		std::cout << BOLDRED << "Set secret header env" << RESET << std::endl;
 		env["HTTP_X_SECRET_HEADER_FOR_TEST"] = "1";
+	}
 
 	return trtansformStringMapToChar(env);
 }
@@ -91,11 +92,10 @@ void	CGI::deleteEnv(char** env) const {
 std::string	CGI::execute(RequestData& request) const {
 	char**		env = createCGIEnv(request);
 	pid_t		pid;
-	std::string response;
-	int			s;
+	std::string body;
 	int			cgiOut = open("./cgi/cgi_out", O_RDWR | O_TRUNC | O_CREAT, 0777);
 	int			cgiReadFrom = open("./cgi/cgi_read_from", O_RDWR | O_TRUNC | O_CREAT, 0777);
-	int status;
+	int 		status;
 
 	char **args = new char*[2];
     args[0] = strdup(("." + _pathToCGI).c_str());
@@ -126,17 +126,9 @@ std::string	CGI::execute(RequestData& request) const {
 			std::cout << "Error: status code = " << status << std::endl;
 			//TODO 
 		}
-		std::cout << "Status: " << status << std::endl;
 
-
-		size_t size = 1500;
-		char buf[size];
-		bzero(buf, size);
-		lseek(cgiOut, 0, SEEK_SET);
-		while ((s = read(cgiOut, buf, size)) > 0) {
-			response += buf;
-			bzero(buf, size);
-		}
+		body = getDataFileAsString("./cgi/cgi_out");
+		body.erase(0, body.find("\r\n\r\n") + 4);
 		close(cgiOut);
 		close(cgiReadFrom);
 	}
@@ -144,5 +136,5 @@ std::string	CGI::execute(RequestData& request) const {
 	deleteEnv(env);
 	delete args[0];
 	delete[] args;
-	return response.substr(response.find("\r\n\r\n") + 4);
+	return body;
 }
