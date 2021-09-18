@@ -7,9 +7,13 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/wait.h>
+# include <fcntl.h>
 # include <map>
 # include "RequestTypes.hpp"
 # include "utils.hpp"
+
+# define STD_IN 0
+# define STD_OUT 1
 
 /*
 ** CONTENT_LENGTH 						// Content-length из запроса или -1, если в запросее нет body //!
@@ -38,11 +42,6 @@
 
 class CGI {
 	private:
-		std::string _pathToCGI;
-		std::string _extension;
-		std::string	_root;
-		std::string _ip;
-		std::string	_port;
 
 		char** 	trtansformStringMapToChar(std::map<std::string, std::string> envMap) const;
 		char**	createCGIEnv(RequestData& request) const;
@@ -51,6 +50,11 @@ class CGI {
 		
 
 	public:
+		std::string _pathToCGI;
+		std::string _extension;
+		std::string	_root;
+		std::string _ip;
+		std::string	_port;
 		CGI();
 		CGI(const std::string& pathToCGI, const std::string& extension,
 			const std::string& root, const std::string& ip, const std::string& port);
