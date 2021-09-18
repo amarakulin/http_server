@@ -6,6 +6,7 @@
 #include "Response.hpp"
 #include "ResponseDelete.hpp"
 #include "ResponseGet.hpp"
+#include "ResponsePut.hpp"
 #include "ResponsePost.hpp"
 #include "ResponseHead.hpp"
 #include "ResponseError.hpp"
@@ -13,12 +14,15 @@
 
 
 Response *createResponseGet(RequestData &requestData, HostData *hostData);
+Response *createResponsePut(RequestData &requestData, HostData *hostData);
 Response *createResponsePost(RequestData &requestData, HostData *hostData);
 Response *createResponseHead(RequestData &requestData, HostData *hostData);
 Response *createResponseDelete(RequestData &requestData, HostData *hostData);
 
+
 static const ResponseCreatorList responseCreatorList[] ={
-	{"get", &createResponseGet}, 
+	{"get", &createResponseGet},
+	{"put", &createResponsePut},
 	{"post", &createResponsePost},
 	{"head", &createResponseHead},
 	{"delete", &createResponseDelete},
