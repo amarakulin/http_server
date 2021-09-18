@@ -10,7 +10,8 @@
 
 class Host {
 	private:
-		HostData *_data;
+		HostData	*_data;
+		void 		_clone(HostData *hostData);
 	
 	public:
 		Host(HostData *hostData);

@@ -28,6 +28,37 @@ Config* ParserConfig::parse(char* configFilePath) {
 		config->addNewHost(host);
 		cleanUpHost(hosts[i]);
 	}
+	// for (int i = 0; i < config->getHosts().size(); i++) {
+	// 	std::cout << "IP:\t" << config->getHosts()[i]->getData()->ip << std::endl;
+	// 	std::cout << "PORT:\t" << config->getHosts()[i]->getData()->port << std::endl;
+	// 	std::cout << "ROOT:\t" << config->getHosts()[i]->getData()->root << std::endl;
+	// 	std::cout << "BODY:\t" << config->getHosts()[i]->getData()->clientMaxBodySize << std::endl;
+	// 	std::cout << "SNAME:\t" << config->getHosts()[i]->getData()->serverName << std::endl;
+	// 	std::cout << "\t---\tLOCATION\t---\t" << std::endl;
+	// 	for (int j = 0; j < config->getHosts()[i]->getData()->location.size(); j++) {
+	// 		std::cout << "WAY:\t" << config->getHosts()[i]->getData()->location[j]->way << std::endl;
+	// 		std::cout << "RPATH:\t" << config->getHosts()[i]->getData()->location[j]->redirectPath << std::endl;
+	// 		std::cout << "RCODE:\t" << config->getHosts()[i]->getData()->location[j]->redirectStatusCode << std::endl;
+
+	// 		std::cout << "---METHOD---" << std::endl;
+	// 		std::vector<std::string>::iterator methods = config->getHosts()[i]->getData()->location[j]->httpMethods.begin();
+	// 		for (; methods != config->getHosts()[i]->getData()->location[j]->httpMethods.end(); methods++) {
+	// 			std::cout << *methods << std::endl;
+	// 		}
+
+	// 		std::cout << "---INDEX---" << std::endl;
+	// 		std::vector<std::string>::iterator index = config->getHosts()[i]->getData()->location[j]->index.begin();
+	// 		for (; index != config->getHosts()[i]->getData()->location[j]->index.end(); index++) {
+	// 			std::cout << *index << std::endl;
+	// 		}
+
+	// 		std::cout << "CGI:\t" << config->getHosts()[i]->getData()->location[j]->cgi << std::endl;
+	// 		std::cout << "AUTOX:\t" << config->getHosts()[i]->getData()->location[j]->autoindex << std::endl;
+	// 		std::cout << "UPON:\t" << config->getHosts()[i]->getData()->location[j]->uploadEnable << std::endl;
+	// 		std::cout << "UPPH:\t" << config->getHosts()[i]->getData()->location[j]->uploadPath << std::endl;
+	// 	}
+	// 	std::cout << "_____________________________________________" << std::endl;
+	// }
 	return config;
 }
 
@@ -41,8 +72,7 @@ void	ParserConfig::cleanUpHost(HostData *hostData) {
 		delete *errorPageIt;
 	}
 	std::vector<Location*>::iterator locationIt = hostData->location.begin();
-	int i = 0;
-	for (; locationIt != hostData->location.end(); locationIt++, i++) {
+	for (; locationIt != hostData->location.end(); locationIt++) {
 		if ((*locationIt)->cgi) {
 			delete (*locationIt)->cgi;
 		}
@@ -93,7 +123,7 @@ std::vector<HostData*>	ParserConfig::devideConfigToComponents(std::list<std::str
 				throw ParserConfigException("devideConfigToComponents error");
 			}
 			if (key == "***") {
-				if (hostData->ip.size() > 0 && hostData->port > 0) {
+				if (hostData->ip.size() && hostData->port) {
 
 					hosts.push_back(hostData);
 					hostData = new HostData;
@@ -127,10 +157,11 @@ void	ParserConfig::setDefaultHostValues(HostData *hostData) {
 
 	for (int i = 0; arrResponseStatuses[i].first ; i++){
 		if (arrResponseStatuses[i].first >= 400) {
-			Location *newLocation = new Location;
-			newLocation->root = "/";
-			newLocation->way = DEFAULT_ERROR_PAGE_PATH + std::to_string(arrResponseStatuses[i].first) + ".html";
-			hostData->location.push_back(newLocation);
+			Location *location = new Location;
+			setLocationDefaultValue(location);
+			location->root = "/";
+			location->way = DEFAULT_ERROR_PAGE_PATH + std::to_string(arrResponseStatuses[i].first) + ".html";
+			hostData->location.push_back(location);
 		}
 	}
 }
@@ -143,6 +174,7 @@ void	ParserConfig::setLocationDefaultValue(Location *location) {
 	_cgi->path = "";
 	_cgi->extension = "";
 	
+	location->way = "";
 	location->root = "";
 	location->redirectStatusCode = 0;
 	location->redirectPath = "";
@@ -186,12 +218,11 @@ void	ParserConfig::enterDataToHostDataStruct(std::string const &key, std::string
 			if (key == "location") {
 				*isLocation = true;
 				setLocationWayData(value.substr(0, value.length() - 1), hostData);
-				setLocationDefaultValue(hostData->location[hostData->location.size() - 1]);
 			} else {
 				throw ParserConfigException("enterDataToHostDataStruct error");
 			}
 			
-		} else if (key.length() > 0) {
+		} else if (key.length()) {
 			throw ParserConfigException("enterDataToHostDataStruct error");
 		}
 
@@ -239,7 +270,6 @@ void	ParserConfig::setLocationDetailsData(std::string data, HostData *hostData) 
 		!hostData->location[hostData->location.size() - 1]->cgi) {
 		CGI* cgi = new CGI(_cgi->path, _cgi->extension, _cgi->root, _cgi->ip, _cgi->port);
 		hostData->location[hostData->location.size() - 1]->cgi = cgi;
-		// delete _cgi;
 	} else {
 	}
 }
@@ -321,7 +351,9 @@ void	ParserConfig::setErrorPageData(std::string data, HostData *hostData) {
 			errorPage->errorNbr = errorNbr;
 			errorPage->errorPagePath = errorPagePath;
 			hostData->errorPage.push_back(errorPage);
+
 			Location *location = new Location;
+			setLocationDefaultValue(location);
 			location->root = hostData->root;
 			location->way = errorPagePath;
 			hostData->location.push_back(location);
@@ -391,6 +423,7 @@ void	ParserConfig::setLocationWayData(std::string data, HostData *hostData) {
 
 	if (data.find_first_of("/") == 0) {
 		location = new Location;
+		setLocationDefaultValue(location);
 		location->way = data;
 		hostData->location.push_back(location);
 	} else {
