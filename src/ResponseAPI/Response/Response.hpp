@@ -21,10 +21,12 @@ private:
 
 	//TODO CGI
 	//TODO test chunked file
+	//TODO handle methods only allowed from list
 	//TODO errors from Request
 	//TODO errors from Server
 	//TODO leak if errors in creating response occurred
 	//TODO validation config
+	//TODO autoindex
 	//TODO test cgi_tester
 
 protected:
