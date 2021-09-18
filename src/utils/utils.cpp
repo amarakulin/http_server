@@ -79,17 +79,34 @@ bool	isSomeSymbolInTheEnd(std::string end, char symbol) {
 	}
 }
 
-bool	isFileInPath (const std::string& filePath){
-	size_t posFile = filePath.find_last_of('/');
-	return (filePath.find('.', posFile) != std::string::npos);
-}
-
 bool isFileExist (const std::string& filePath) {
-	if (!isFileInPath(filePath)){
+	DIR *dir;
+	struct dirent *ent;
+	size_t posSeparator = filePath.find_last_of('/');
+	std::string filename;
+	std::string path;
+
+	if (posSeparator == std::string::npos){
 		return false;
 	}
-	struct stat buffer;
-	return (stat (filePath.c_str(), &buffer) == 0);
+	filename = filePath.substr(posSeparator + 1, filePath.size() - posSeparator + 1);
+	path = filePath.substr(0, posSeparator);
+	if ((dir = opendir (path.c_str())) != NULL) {
+		while ((ent = readdir (dir)) != NULL) {
+			if (ent->d_type == 8 && filename == ent->d_name){// 8 is type of a file
+				return true;
+			}
+		}
+		closedir (dir);
+	} else {
+		std::cout << "Error to serch in dir: " << path << std::endl;
+	}
+//	if (!isFileInPath(filePath)){
+//		return false;
+//	}
+//	struct stat buffer;
+//	return (stat (filePath.c_str(), &buffer) == 0);
+	return false;
 }
 
 bool isItemInVector(std::vector<std::string> vector, const std::string& val){
@@ -99,4 +116,20 @@ bool isItemInVector(std::vector<std::string> vector, const std::string& val){
 		}
 	}
 	return false;
+}
+
+std::vector<std::string> listOfFiles(const std::string& pattern){
+	std::vector<std::string> listDir;
+	DIR *dir;
+	struct dirent *ent;
+
+	if ((dir = opendir (pattern.c_str())) != NULL) {
+		while ((ent = readdir (dir)) != NULL) {
+			if (ent->d_type == 8){// 8 is type of a file
+				listDir.push_back(ent->d_name);
+			}
+		}
+		closedir (dir);
+	}
+	return listDir;
 }
