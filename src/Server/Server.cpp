@@ -61,7 +61,7 @@ int					Server::createListenerSocket(struct sockaddr_in addr) {
 	if (bind(listener, (struct sockaddr *)&addr, sizeof(addr)) < 0)
 		std::cout << "Bind error" << std::endl; //TODO
 
-	listen(listener, 5);
+	listen(listener, 100);
 
 	return listener;
 }
@@ -136,13 +136,13 @@ void				Server::handleClientEvents() {
 		struct pollfd clientPollStruct = *(_sockets.getAllSockets() + i);
 		Client &client = getClientByFD(_clients, clientPollStruct.fd);
 
-		if ((clientPollStruct.revents & POLLIN) && !client.hasResponse()) // проверяем пришел ли запрос
+		if ((clientPollStruct.revents & POLLIN) && !client.hasResponse()) { // проверяем пришел ли запрос
 			processingRequest(clientPollStruct.fd, client);
-		
-		if (client.hasRequest() && !client.hasResponse()) //TODO pichkasik
+		}
+		if (client.hasRequest() && !client.hasResponse()) {
 			createResponse(client);
-		if ((clientPollStruct.revents & POLLOUT) && client.hasResponse()){// проверяем можем ли мы отпраивть ответ
-
+		}
+		if ((clientPollStruct.revents & POLLOUT) && client.hasResponse()) {// проверяем можем ли мы отпраивть ответ
 			sendResponse(clientPollStruct.fd, client);
 		}
 	}
@@ -155,44 +155,40 @@ void				Server::handleClientEvents() {
 void				Server::processingRequest(int clientSocket, Client& client) {
 	char buf[MB]; //TODO обработать случаи, когда за один раз не получается считать
 	int s = recv(clientSocket, buf, sizeof(buf), 0);
-
-	if (s == -1)
-		logger.printMessage("/* Read error */");
-
-	if (s == 0) {
-		closeClientConnection(clientSocket);
-		return ;
+	if (s == -1){
+		logger.printMessage("/* Read error */");//TODO THINK FOR TEST
+//		client.getRequest()->setStatus(READED);
+		bzero(buf, MB);
+//		return;
 	}
-	//TODO delete hardcode
-	BadRequestException badRequestException;
-	ErrorPage  errorPage;
-	errorPage.errorNbr = 404;
-//	errorPage.errorPagePath = "/error.html";
-//	errorPage.errorPagePath = "/not_exist.html";
+	if (s == 0) {
+//		client.getRequest()->setStatus(READED);//TODO THINK FOR TEST
+//		closeClientConnection(clientSocket);
+//		bzero(buf, MB);
+//		return ;
+	}
 	try {
 		client.getRequest()->addRequestChunk(std::string(buf, s));
-//		throw badRequestException;
 	} catch (BadRequestException& e) {
-		 client.setResponse(_responseCreator.createResponse(errorPage, client.getHostData()));
+		 client.setResponse(_responseCreator.createResponse(ResponseError::getErrorPageStruct(BAD_REQUEST, client.getHostData()->errorPage),
+															client.getHostData()));
 		 client.resetRequest();
 	} catch (NotAllowedException& e) {
-		 client.setResponse(_responseCreator.createResponse(errorPage, client.getHostData()));
-		 client.resetRequest();
+//		client.getRequest()->setStatus(READED);
+		client.setResponse(_responseCreator.createResponse(ResponseError::getErrorPageStruct(METHOD_NOT_ALLOWED, client.getHostData()->errorPage),
+															client.getHostData()));
+		client.resetRequest();
 	} catch (NotFoundException& e) {
-		client.setResponse(_responseCreator.createResponse(errorPage, client.getHostData()));
+		client.setResponse(_responseCreator.createResponse(ResponseError::getErrorPageStruct(NOT_FOUND, client.getHostData()->errorPage),
+														   client.getHostData()));
 		client.resetRequest();
 	}
-
 	bzero(buf, MB);
 
 	logger.printMessage("/* Client in */");
 }
 
 void				Server::createResponse(Client& client) {
-	std::cout << "Response Constructor" << std::endl;
-	std::cout << "Port: "<< client.getHostData()->port << std::endl;
-	std::cout << "Root: " << client.getHostData()->root << std::endl;
-	std::cout << "ServName: "<< client.getHostData()->serverName << std::endl;
 	try{
 		client.setResponse(_responseCreator.createResponse(
 				client.getRequest()->getData(), client.getHostData()));

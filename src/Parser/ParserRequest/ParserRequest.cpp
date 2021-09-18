@@ -41,7 +41,7 @@ bool		ParserRequest::handleEndOfBody(RequestData& data, std::string& buffer) {
 
 		} else if (hasContentLength) {
 			return handleEndOfBodyWithContentLengt(data, buffer);
-		}  else if (data.header.find("transfer-encoding") != end) {
+		}  else if (data.header.find("transfer-encoding") != end){
 			return handleEndOfChunkedBody(data, buffer);
 		}
 		else {
@@ -73,7 +73,7 @@ bool		ParserRequest::handleEndOfBoundaryBody(RequestData& data, std::string& buf
 }
 
 bool		ParserRequest::handleEndOfChunkedBody(RequestData& data, std::string& buffer) {
-	if (data.header["transfer-encoding"] == "chunked") {
+	if (data.header["transfer-encoding"] == "chunked" && buffer.find(END_OF_CHUNKED_BODY) != std::string::npos) {
 		data.body = parseBody(buffer);
 		return true;
 	}
@@ -110,7 +110,7 @@ std::string ParserRequest::parseBody(std::string &data) {
 		if (!chunk.length())
 			break ;
 
-		body += chunk + " ";
+		body += chunk + " ";//FIXME Think!!!!!!!!!
 
 		data.erase(0, data.substr(0, pos + 2).length() + len); //TODO Оптимизировать
 	}
@@ -194,7 +194,6 @@ void		ParserRequest::parseCommonHeaderData(std::string& data, requestHeaderStruc
 	std::string 				seporator = " ";
 	std::vector<std::string>	tmp = split(data.substr(0, data.find("\r\n")), seporator);
 	std::string 				str = data.substr(0, data.find(seporator));
-
 	if (!hasUpperCaseLetter(*(tmp.end() - 1)))// Если протокол представлен в виде "http/1.1"
 		joinUriPartOfCommonHeaderData(tmp.begin() + 1, tmp.end(), tmp);
 	else

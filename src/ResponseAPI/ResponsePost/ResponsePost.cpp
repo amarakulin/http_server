@@ -51,7 +51,6 @@ void ResponsePost::createBody(RequestData &requestData, HostData *hostData){
 	std::string filePath;
 	Location *location;
 
-	//TODO create a behavior if file gets from uri
 	bodyStruct = parseBody(requestData.body);//TODO may be needs a constuctor with size
 	location = getLocationByUri(requestData.header["uri"], hostData->location);
 	std::cout << BLUE << "FilenameFromUri: " << getFileNameFromUri(requestData.header["uri"]) << RESET << std::endl;
@@ -64,15 +63,16 @@ void ResponsePost::createBody(RequestData &requestData, HostData *hostData){
 	std::ofstream outfile (filePath);
 	if (!isFileExist(filePath)){
 		//TODO if throw exception could lose the pointer on the response
-		throw NotFoundException();
+//		throw NotFoundException();
 	}
 
 	outfile << bodyStruct.second << std::endl;
 	outfile.close();
 	std::string dataFromCGI = "The body of post!!!";
-	changeContentLength(dataFromCGI.length());
-	_dataToSend += "\r\n";
-	_dataToSend += dataFromCGI;
+	Response::createBody(requestData.header["uri"], hostData);
+//	changeContentLength(dataFromCGI.length());
+//	_dataToSend += "\r\n";
+//	_dataToSend += dataFromCGI;
 }
 
 void ResponsePost::createBody(const std::string &uri, HostData *hostData){
