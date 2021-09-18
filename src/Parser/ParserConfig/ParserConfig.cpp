@@ -42,7 +42,6 @@ void	ParserConfig::cleanUpHost(HostData *hostData) {
 		if ((*locationIt)->cgi) {
 			delete (*locationIt)->cgi;
 		}
-		delete (*locationIt);
 	}
 	delete hostData;
 }
@@ -78,6 +77,7 @@ std::vector<HostData*>	ParserConfig::devideConfigToComponents(std::list<std::str
 
 	try {
 		it = config.begin();
+		bool isLocation = false;
 
 		hostData = new HostData;
 		setDefaultHostValues(hostData);
@@ -98,7 +98,7 @@ std::vector<HostData*>	ParserConfig::devideConfigToComponents(std::list<std::str
 					throw ParserConfigException("devideConfigToComponents error");
 				}
 			} else {
-				enterDataToHostDataStruct(key, value, hostData);
+				enterDataToHostDataStruct(key, value, hostData, &isLocation);
 			}
 		}
 		hosts.push_back(hostData);
@@ -146,26 +146,33 @@ void	ParserConfig::setLocationDefaultValue(Location *location) {
 **	Check and enter data to HostData structure
 */
 
-void	ParserConfig::enterDataToHostDataStruct(std::string const &key, std::string const &value, HostData *hostData) {
+void	ParserConfig::enterDataToHostDataStruct(std::string const &key, std::string const &value,
+		HostData *hostData, bool *isLocation) {
 	try {
 		if (isSomeSymbolInTheEnd(value, ';')) {
 			if (key == "listen") {
+				*isLocation = false;
 				setListenData(value.substr(0, value.length() - 1), hostData);
 			} else if (key == "server_name") {
+				*isLocation = false;
 				setServerNameData(value.substr(0, value.length() - 1), hostData);
 			} else if (key == "root") {
+				*isLocation = false;
 				setRootData(value.substr(0, value.length() - 1), hostData);
 			} else if (key == "error_page") {
+				*isLocation = false;
 				setErrorPageData(value.substr(0, value.length() - 1), hostData);
 			} else if (key == "client_max_body_size") {
+				*isLocation = false;
 				setClientMaxBodySizeData(value.substr(0, value.length() - 1), hostData);
-			} else if (key == "...") {
+			} else if (key == "..." && *isLocation) {
 				setLocationDetailsData(value.substr(0, value.length() - 1), hostData);
 			} else {
 				throw ParserConfigException("enterDataToHostDataStruct error");
 			}
 		} else if (isSomeSymbolInTheEnd(value, ':')) {
 			if (key == "location") {
+				*isLocation = true;
 				setLocationWayData(value.substr(0, value.length() - 1), hostData);
 				setLocationDefaultValue(hostData->location[hostData->location.size() - 1]);
 			} else {

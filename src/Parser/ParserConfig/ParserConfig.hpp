@@ -39,7 +39,7 @@ class ParserConfig {
 		void	fillHostData(HostData *host, std::list<std::string>::iterator *it);
 		void	checkHostData(HostData *host);
 		void	enterDataToHostDataStruct(std::string const &key,
-				std::string const &value, HostData *hostData);
+				std::string const &value, HostData *hostData, bool *isLocation);
 		void	setDefaultHostValues(HostData *hostData);
 		void	setLocationDefaultValue(Location *location);
 		void	cleanUpHost(HostData *hostData);
