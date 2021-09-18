@@ -74,12 +74,7 @@ void ResponsePut::createBody(RequestData &requestData, HostData *hostData){
 	}
 	filePath = "." + getUploadFilePath(location) + bodyStruct.first;
 
-//TODO test chunked method
 	std::ofstream outfile (filePath);
-	if (!isFileExist(filePath)){
-		//TODO if throw exception could lose the pointer on the response
-		throw NotFoundException();
-	}
 
 	outfile << bodyStruct.second << std::endl;
 	outfile.close();
