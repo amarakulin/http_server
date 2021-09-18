@@ -25,6 +25,7 @@ Config* ParserConfig::parse(char* configFilePath) {
 	config = new Config();
 	for (int i = 0; i < hosts.size(); i++) {
 		Host *host = new Host(hosts[i]);
+		// std::cout << "/* message */" << std::endl;
 		config->addNewHost(host);
 		cleanUpHost(hosts[i]);
 	}
@@ -88,12 +89,13 @@ std::vector<HostData*>	ParserConfig::devideConfigToComponents(std::list<std::str
 
 		for (; it != config.end(); it++) {
 			splitFirstArgiment(*it, &key, &value);
+			// std::cout << "key: " << key << " --- " << "value: " << value << std::endl;
 			if (value.find_first_not_of(' ') != 0 && 
 				value.find_first_not_of(' ') != std::string::npos) {
 				throw ParserConfigException("devideConfigToComponents error");
 			}
 			if (key == "***") {
-				if (hostData->ip.size() > 0 && hostData->port > 0) {
+				if (hostData->ip.size() && hostData->port) {
 
 					hosts.push_back(hostData);
 					hostData = new HostData;
@@ -191,7 +193,7 @@ void	ParserConfig::enterDataToHostDataStruct(std::string const &key, std::string
 				throw ParserConfigException("enterDataToHostDataStruct error");
 			}
 			
-		} else if (key.length() > 0) {
+		} else if (key.length()) {
 			throw ParserConfigException("enterDataToHostDataStruct error");
 		}
 
@@ -239,7 +241,6 @@ void	ParserConfig::setLocationDetailsData(std::string data, HostData *hostData) 
 		!hostData->location[hostData->location.size() - 1]->cgi) {
 		CGI* cgi = new CGI(_cgi->path, _cgi->extension, _cgi->root, _cgi->ip, _cgi->port);
 		hostData->location[hostData->location.size() - 1]->cgi = cgi;
-		// delete _cgi;
 	} else {
 	}
 }
@@ -321,7 +322,9 @@ void	ParserConfig::setErrorPageData(std::string data, HostData *hostData) {
 			errorPage->errorNbr = errorNbr;
 			errorPage->errorPagePath = errorPagePath;
 			hostData->errorPage.push_back(errorPage);
+
 			Location *location = new Location;
+			setLocationDefaultValue(location);
 			location->root = hostData->root;
 			location->way = errorPagePath;
 			hostData->location.push_back(location);
