@@ -7,6 +7,7 @@
 # include <sys/stat.h>
 #include "RequestTypes.hpp"
 #include "algorithm"
+#include "dirent.h"
 
 #define RESET   "\033[0m"
 #define GREEN   "\033[32m"                 /* Green */
@@ -27,9 +28,8 @@ std::string		getDataFileAsString(const std::string &filename);
 void	splitFirstArgiment(std::string s, std::string *key, std::string *value);
 bool	isSomeSymbolInTheEnd(std::string end, char symbol);
 bool	isFileExist (const std::string& filePath);
-bool	isFileInPath (const std::string& filePath);
 bool	isItemInVector(std::vector<std::string> vector, const std::string& val);
-
+std::vector<std::string> listOfFiles(const std::string& pattern);
 
 // templated version of my_equal so it could work with both char and wchar_t
 template<typename charT>

@@ -19,7 +19,7 @@
 #include "Response.hpp"
 
 class ResponsePut :  public Response{
-
+public:
 	ResponsePut();
 	ResponsePut(RequestData &requestData, HostData *hostData);
 	ResponsePut(const ResponsePut& other);

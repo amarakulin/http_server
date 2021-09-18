@@ -98,12 +98,12 @@ int ResponseError::isResponseError(RequestData &requestData, HostData *hostData)
 	if (location && location->redirectStatusCode == REDIRECT){
 		statusCode = REDIRECT;
 	}
-	else if (!isFileExist(filePath) && (requestData.header["method"] != "post")){
+	else if (!isFileExist(filePath) && ((requestData.header["method"] != "post") && (requestData.header["method"] != "put"))){
 		statusCode = NOT_FOUND;
 	}
-	else if (!isFileInPath(filePath) && requestData.header["method"] == "post"){
-		statusCode = NOT_FOUND;
-	}
+//	else if (!isFileInPath(filePath) && (requestData.header["method"] == "post" || requestData.header["method"] == "put")){
+//		statusCode = NOT_FOUND;
+//	}// COMMENT JUST FOR TESTS!!!
 	else if (requestData.body.size() > hostData->clientMaxBodySize){
 		statusCode = PAYLOAD_TOO_LARGE;
 	}

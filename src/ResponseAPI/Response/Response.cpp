@@ -188,6 +188,13 @@ Response::getFilePathFromHostData(const std::string &uri, HostData *hostData){
 			break;
 		}
 	}
+	if (location && location->autoindex && !isFileExist(filePath)){
+		generatePageAutoindex(filePath, uri, hostData);
+		//TODO autoindex
+		// search for a childs locations and files all files form current directory
+		// back locations ? -> is parent uri location
+		filePath += "/autoindex.html";
+	}
 	return filePath;
 }
 
@@ -197,10 +204,13 @@ bool compareLocations(Location* loc1, Location* loc2){
 
 Location *Response::getLocationByUri(const std::string &uri, std::vector<Location*> locations){
 	Location *location = nullptr;// DANGER GONNA MAKE A BEHAVIOR IF NOT FIND A LOCATION!!!
-	std::string matchStr;
-	std::string lastMatch = "";
-	std::sort(locations.begin(), locations.end(), compareLocations);
 	size_t matchPos = std::string::npos;
+	std::string matchStr;
+	std::string extensionOfUriFile;
+	std::string lastMatch = "";
+
+	extensionOfUriFile = getExtensionFileFromUri(uri);
+	std::sort(locations.begin(), locations.end(), compareLocations);
 	for (size_t i = 0; i < locations.size(); ++i){
 		matchStr = uri.substr(0, locations[i]->way.size());
 		matchPos = locations[i]->way.find(matchStr);
@@ -208,6 +218,11 @@ Location *Response::getLocationByUri(const std::string &uri, std::vector<Locatio
 			location = locations[i];
 			lastMatch = matchStr;//if uri is -> '/' when gets last location
 		}
+//		else if (!extensionOfUriFile.empty() && extensionOfUriFile == getExtensionFileFromUri(locations[i]->way)){
+//			location = locations[i];
+//			location->way = uri;
+//			break;
+//		}
 	}
 	return location;
 }
@@ -226,12 +241,55 @@ std::string Response::getUploadFilePath(Location *location){//TODO move up to Re
 
 std::string Response::getFileNameFromUri(const std::string &uri){
 	std::string filename = "";
-	if (isFileInPath(uri)){
-		size_t posFile = uri.find_last_of('/');
+	size_t posFile = uri.find_last_of('/');
+	if (posFile != std::string::npos){
 		posFile += 1;// to delete '/'
 		filename = uri.substr(posFile, uri.size() - posFile);
 	}
 	return filename;
+}
+
+std::string Response::getExtensionFileFromUri(const std::string &uri){
+	std::string filename;
+	size_t posExtension;
+	std::string fileExtension = "";
+
+	filename = getFileNameFromUri(uri);
+	posExtension = filename.find('.');
+	if (posExtension != std::string::npos){
+		fileExtension = filename.substr(posExtension, filename.size() - posExtension);
+	}
+	return fileExtension;
+}
+
+
+void Response::generatePageAutoindex(std::string filePath, const std::string &uri, HostData *hostData){
+	std::string contentFile = "";
+	std::vector<std::string> listDir = listOfFiles(filePath);
+	contentFile += "<!DOCTYPE html>\n"
+				   "<html lang=\"en\">\n"
+				   "<head>\n"
+				   "    <meta charset=\"UTF-8\">\n"
+				   "    <title>Title</title>\n"
+				   "    <style>\n"
+				   "        body{\n"
+				   "            background-color: #606060;\n"
+				   "            color: #FFFFFF;/* Цвет фона веб-страницы */\n"
+				   "        }\n"
+				   "    </style>\n"
+				   "</head>\n"
+				   "<body>";
+	for (int i = 0; i < listDir.size(); ++i){
+		contentFile += "<p><a href='/Makefile'>";
+		contentFile += listDir[i];
+		contentFile += "</a></p>";
+	}
+	contentFile += "</body></html>";
+	std::cout << "Content: "<< contentFile << std::endl;
+	filePath += "/autoindex.html";
+	std::ofstream outfile (filePath);
+	outfile << contentFile << std::endl;
+	outfile.close();
 }
 
 /*
