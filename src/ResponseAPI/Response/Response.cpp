@@ -46,7 +46,7 @@ void Response::countSendedData(int byteSended){
 		std::cout << "DATA SENT is negative!!!" << std::endl;
 	}
 	_leftBytesToSend -= byteSended;
-	if (_leftBytesToSend == 0 && !_dataToSend.empty()){
+	if (_leftBytesToSend == 0){// && _dataToSend.empty()){
 		_state = SENDED;
 	}
 	_dataToSend.erase(_dataToSend.begin(), _dataToSend.begin() + byteSended);

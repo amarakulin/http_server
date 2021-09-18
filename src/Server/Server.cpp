@@ -150,7 +150,6 @@ void				Server::handleClientEvents() {
 /*
 ** Processing request/response
 */
-
 void				Server::processingRequest(int clientSocket, Client& client) {
 	char buf[MB]; //TODO обработать случаи, когда за один раз не получается считать
 	int s = recv(clientSocket, buf, sizeof(buf), 0);
@@ -218,9 +217,7 @@ void				Server::sendResponse(int clientSocket, Client& client) {
 	if (byteSended < 0){
 		logger.printMessage("Send error");
 	}
-
 	response->countSendedData(byteSended);
-
 	if (response->isDone()){
 		client.resetResponse();
 		std::cout << "/* Client out */ " << clientSocket << " Sended: " << byteSended << std::endl;

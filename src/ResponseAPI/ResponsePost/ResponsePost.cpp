@@ -17,11 +17,12 @@ ResponsePost &ResponsePost::operator=(const ResponsePost &assign) {
 }
 
 ResponsePost::ResponsePost(RequestData &requestData, HostData *hostData)
-		: Response(requestData,
-				   hostData)
-{
+	: Response(requestData, hostData) {
 	ResponsePost::createBody(requestData, hostData);
+
+	std::cout << "B LeftBytes: " << _leftBytesToSend  << std::endl;
 	_leftBytesToSend = _dataToSend.length();//TODO set in one place
+	std::cout << "A LeftBytes: " << _leftBytesToSend  << std::endl;
 }
 
 ResponsePost::~ResponsePost() {}
@@ -49,6 +50,7 @@ std::pair<std::string, std::string> ResponsePost::parseBody(std::string body){
 void ResponsePost::createBody(RequestData &requestData, HostData *hostData){
 	std::pair<std::string, std::string> bodyStruct;
 	std::string filePath;
+	std::string dataFromCGI;
 	Location *location;
 
 	bodyStruct = parseBody(requestData.body);//TODO may be needs a constuctor with size
@@ -74,18 +76,17 @@ void ResponsePost::createBody(RequestData &requestData, HostData *hostData){
 	if (!isBoundaryBody(requestData.header) && (location && location->cgi) && requestData.body != "") {
 		requestData.header["content-length"] = std::to_string(requestData.body.length());
 
-		_dataToSend = location->cgi->execute(requestData);
-		// std::cout << _dataToSend << std::endl;
+		std::cout << BOLDRED << "Before execute cgi" << RESET << std::endl;
+		dataFromCGI = location->cgi->execute(requestData);
+		dataFromCGI = getDataFileAsString("./cgi/cgi_out");
+		dataFromCGI.erase(0, dataFromCGI.find("\r\n\r\n") + 4);
+		changeContentLength(dataFromCGI.size());
 	} else {
-		std::string dataFromCGI = "The body of post!!!";
-		changeContentLength(dataFromCGI.length());
-		_dataToSend += "\r\n";
-		_dataToSend += dataFromCGI;
+		Response::createBody(requestData.header["uri"], hostData);
+		return;
 	}
-	
-//	changeContentLength(dataFromCGI.length());
-//	_dataToSend += "\r\n";
-//	_dataToSend += dataFromCGI;
+	_dataToSend += "\r\n";
+	_dataToSend += dataFromCGI;
 }
 
 void ResponsePost::createBody(const std::string &uri, HostData *hostData){

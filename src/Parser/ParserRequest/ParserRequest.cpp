@@ -110,7 +110,7 @@ std::string ParserRequest::parseBody(std::string &data) {
 		if (!chunk.length())
 			break ;
 
-		body += chunk + " ";//FIXME Think!!!!!!!!!
+		body += chunk;//FIXME Think!!!!!!!!!
 
 		data.erase(0, data.substr(0, pos + 2).length() + len); //TODO Оптимизировать
 	}

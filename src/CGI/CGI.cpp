@@ -60,6 +60,9 @@ char**	CGI::createCGIEnv(RequestData& req) const {
 	env["SERVER_PORT"] = _port;
 	env["SERVER_SOFTWARE"] = "http_server/1.0.0";
 
+	if (req.header.find("X-Secret-Header-For-Test") != req.header.end())
+		env["HTTP_X_SECRET_HEADER_FOR_TEST"] = "1";
+
 	return trtansformStringMapToChar(env);
 }
 
@@ -89,70 +92,57 @@ std::string	CGI::execute(RequestData& request) const {
 	char**		env = createCGIEnv(request);
 	pid_t		pid;
 	std::string response;
-	int			FD[2];
 	int			s;
-
-	pipe(FD);
-	fcntl(FD[0], F_SETFL, fcntl(FD[0], F_GETFL) | O_NONBLOCK);
-	fcntl(FD[1], F_SETFL, fcntl(FD[1], F_GETFL) | O_NONBLOCK);
-
+	int			cgiOut = open("./cgi/cgi_out", O_RDWR | O_TRUNC | O_CREAT, 0777);
+	int			cgiReadFrom = open("./cgi/cgi_read_from", O_RDWR | O_TRUNC | O_CREAT, 0777);
 	int status;
 
 	char **args = new char*[2];
     args[0] = strdup(("." + _pathToCGI).c_str());
     args[1] = NULL;
 
+	write(cgiReadFrom, request.body.c_str(), request.body.length());
+	lseek(cgiReadFrom, 0, SEEK_SET);
+
 	if ((pid = fork()) == -1) {
 		//TODO throw 5** error
 	}
 	else if (pid == 0)
 	{
-		dup2(FD[1], 1);
-		dup2(FD[0], 0);
+		dup2(cgiOut, 1);
+		dup2(cgiReadFrom, 0);
 		if (execve(args[0], args, env) == -1) {
+			std::cout << BOLDRED << "Execute CGI error" << RESET << std::endl;
 			// TODO throw 5** error
 		}
-		close(FD[0]);
-		close(FD[1]);
+		close(cgiOut);
+		close(cgiReadFrom);
 		exit(1);
 	}
 	else if (pid > 0) {
-		dup2(FD[0], 0);
-		std::cout << request.body << std::endl;
-		write(FD[1], request.body.c_str(), request.body.length());
 		waitpid(pid, &status, 0);
-		close(FD[1]);
 
 		if (status != 0) {
 			std::cout << "Error: status code = " << status << std::endl;
 			//TODO 
 		}
+		std::cout << "Status: " << status << std::endl;
 
 
 		size_t size = 1500;
 		char buf[size];
 		bzero(buf, size);
-		while ((s = read(FD[0], buf, size)) > 0) {
-			// std::cout << "Readed: " << s << std::endl;
-			// std::cout << "s: " << s << std::endl;
-			// std::cout << "Buff: " << strlen(buf) << std::endl;
+		lseek(cgiOut, 0, SEEK_SET);
+		while ((s = read(cgiOut, buf, size)) > 0) {
 			response += buf;
 			bzero(buf, size);
 		}
-		close(FD[0]);
+		close(cgiOut);
+		close(cgiReadFrom);
 	}
 
 	deleteEnv(env);
 	delete args[0];
 	delete[] args;
-	size_t pos = 0;
-	// pos = response.find("\r\n\r\n") + 4;
-	// std::string body = response.substr(pos);
-	// std::string header = response.substr(0, pos);
-	// // std::cout << "Body:" << body << std::endl;
-	// std::cout << "Response:" << std::endl << response;
-	// std::cout << std::endl << "Len: " << response.length() << std::endl;
-	// std::cout << std::endl << "Header len: " << header.length() << std::endl;
-	std::cout << response.substr(response.find("\r\n\r\n") + 4) << std::endl;
 	return response.substr(response.find("\r\n\r\n") + 4);
 }
