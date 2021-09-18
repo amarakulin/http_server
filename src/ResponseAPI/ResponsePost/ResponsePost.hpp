@@ -15,6 +15,7 @@ private:
 	virtual void createBody(const std::string &uri, HostData *hostData);
 	void createBody(RequestData &requestData, HostData *hostData);
 	std::pair<std::string, std::string> parseBody(std::string body);
+	bool	isBoundaryBody(requestHeaderStruct header);
 };
 
 #endif

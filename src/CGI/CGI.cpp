@@ -118,6 +118,7 @@ std::string	CGI::execute(RequestData& request) const {
 	}
 	else if (pid > 0) {
 		dup2(FD[0], 0);
+		std::cout << request.body << std::endl;
 		write(FD[1], request.body.c_str(), request.body.length());
 		waitpid(pid, &status, 0);
 		close(FD[1]);
@@ -128,7 +129,7 @@ std::string	CGI::execute(RequestData& request) const {
 		}
 
 
-		size_t size = 200;
+		size_t size = 1500;
 		char buf[size];
 		bzero(buf, size);
 		while ((s = read(FD[0], buf, size)) > 0) {
@@ -152,5 +153,6 @@ std::string	CGI::execute(RequestData& request) const {
 	// std::cout << "Response:" << std::endl << response;
 	// std::cout << std::endl << "Len: " << response.length() << std::endl;
 	// std::cout << std::endl << "Header len: " << header.length() << std::endl;
-	return response;
+	std::cout << response.substr(response.find("\r\n\r\n") + 4) << std::endl;
+	return response.substr(response.find("\r\n\r\n") + 4);
 }

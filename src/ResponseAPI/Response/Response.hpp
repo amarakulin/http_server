@@ -2,8 +2,9 @@
 # define RESPONSE
 
 # include <iostream>
-#include <HostTypes.hpp>
+# include <HostTypes.hpp>
 # include "Request.hpp"
+# include "CGI.hpp"
 
 # include "ResponseTypes.hpp"
 # include "utils.hpp"

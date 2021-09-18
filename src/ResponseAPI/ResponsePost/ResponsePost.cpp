@@ -68,8 +68,21 @@ void ResponsePost::createBody(RequestData &requestData, HostData *hostData){
 
 	outfile << bodyStruct.second << std::endl;
 	outfile.close();
-	std::string dataFromCGI = "The body of post!!!";
-	Response::createBody(requestData.header["uri"], hostData);
+	// Response::createBody(requestData.header["uri"], hostData);
+
+
+	if (!isBoundaryBody(requestData.header) && (location && location->cgi) && requestData.body != "") {
+		requestData.header["content-length"] = std::to_string(requestData.body.length());
+
+		_dataToSend = location->cgi->execute(requestData);
+		// std::cout << _dataToSend << std::endl;
+	} else {
+		std::string dataFromCGI = "The body of post!!!";
+		changeContentLength(dataFromCGI.length());
+		_dataToSend += "\r\n";
+		_dataToSend += dataFromCGI;
+	}
+	
 //	changeContentLength(dataFromCGI.length());
 //	_dataToSend += "\r\n";
 //	_dataToSend += dataFromCGI;
@@ -77,4 +90,15 @@ void ResponsePost::createBody(RequestData &requestData, HostData *hostData){
 
 void ResponsePost::createBody(const std::string &uri, HostData *hostData){
 	Response::createBody(uri, hostData);
+}
+
+bool	ResponsePost::isBoundaryBody(requestHeaderStruct header) {
+	requestHeaderStruct::iterator end = header.end();
+	std::string contentType = header["content-type"];
+
+	if (header.find("content-type") != end && contentType.find("boundary") == std::string::npos)
+		return false;
+	else if (header.find("content-type") == end)
+		return false;
+	return true;
 }
