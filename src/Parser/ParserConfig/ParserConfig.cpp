@@ -31,6 +31,10 @@ Config* ParserConfig::parse(char* configFilePath) {
 	return config;
 }
 
+/*
+** Clean leaks from data in parser after deep clone host in config
+*/
+
 void	ParserConfig::cleanUpHost(HostData *hostData) {
 	std::vector<ErrorPage*>::iterator errorPageIt = hostData->errorPage.begin();
 	for (; errorPageIt != hostData->errorPage.end(); errorPageIt++) {
@@ -108,6 +112,10 @@ std::vector<HostData*>	ParserConfig::devideConfigToComponents(std::list<std::str
 	}
 }
 
+/*
+** Set default values to structure HostData
+*/
+
 void	ParserConfig::setDefaultHostValues(HostData *hostData) {
 	hostData->ip = "";
 	hostData->serverName = "";
@@ -126,6 +134,10 @@ void	ParserConfig::setDefaultHostValues(HostData *hostData) {
 		}
 	}
 }
+
+/*
+** Set default values to structure Location for each time when config has key = "location"
+*/
 
 void	ParserConfig::setLocationDefaultValue(Location *location) {
 	_cgi->path = "";
@@ -479,6 +491,10 @@ void	ParserConfig::setUploadPathToLocation(std::string data,
 		throw ParserConfigException("setUploadPathToLocation error");
 	}
 }
+
+/*
+** Set CGI data to structure of parser.
+*/
 
 void	ParserConfig::setCgiParserData(std::string data, std::string type, HostData *hostData, Location *location) {
 	if (type == "path" && data.find_first_of("/") == 0) {
