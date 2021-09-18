@@ -271,26 +271,14 @@ void Response::generatePageAutoindex(std::string filePath, const std::string &ur
 	std::string contentFile = "";
 	std::string tmpRef;
 	std::vector<std::string> listDir = listOfFiles(filePath);
-	contentFile += "<!DOCTYPE html>\n"
-				   "<html lang=\"en\">\n"
-				   "<head>\n"
-				   "    <meta charset=\"UTF-8\">\n"
-				   "    <title>Title</title>\n"
-				   "    <style>\n"
-				   "        body{\n"
-				   "            background-color: #606060;\n"
-				   "            color: #FFFFFF;/* Цвет фона веб-страницы */\n"
-				   "        }\n"
-				   "    </style>\n"
-				   "</head>\n"
-				   "<body>";
+	contentFile += START_AUTOINDEX;
 	for (int i = 0; i < listDir.size(); ++i){
 		tmpRef = "<p><a href='" + listDir[i] + "'>";
 		contentFile += tmpRef;
 		contentFile += listDir[i];
 		contentFile += "</a></p>";
 	}
-	contentFile += "</body></html>";
+	contentFile += END_AUTOINDEX;
 	std::cout << "Content: "<< contentFile << std::endl;
 	filePath += "/autoindex.html";
 	std::ofstream outfile (filePath);
