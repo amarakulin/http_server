@@ -42,8 +42,7 @@ void	ParserConfig::cleanUpHost(HostData *hostData) {
 		delete *errorPageIt;
 	}
 	std::vector<Location*>::iterator locationIt = hostData->location.begin();
-	int i = 0;
-	for (; locationIt != hostData->location.end(); locationIt++, i++) {
+	for (; locationIt != hostData->location.end(); locationIt++) {
 		if ((*locationIt)->cgi) {
 			delete (*locationIt)->cgi;
 		}

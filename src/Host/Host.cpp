@@ -19,8 +19,7 @@ Host::Host(HostData *hostData) {
 		}
 
 		std::vector<Location*>::iterator locationIt = hostData->location.begin();
-		int i = 0;
-		for (; locationIt != hostData->location.end(); locationIt++, i++) {
+		for (; locationIt != hostData->location.end(); locationIt++) {
 			Location *location = new Location;
 			location->way = (*locationIt)->way;
 			location->root = (*locationIt)->root;
@@ -61,8 +60,7 @@ Host::~Host() {
 		delete *errorPageIt;
 	}
 	std::vector<Location*>::iterator locationIt = _data->location.begin();
-	int i = 0;
-	for (; locationIt != _data->location.end(); locationIt++, i++) {
+	for (; locationIt != _data->location.end(); locationIt++) {
 		if ((*locationIt)->cgi) {
 			delete (*locationIt)->cgi;
 		}
