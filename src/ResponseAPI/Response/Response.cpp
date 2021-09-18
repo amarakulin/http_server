@@ -226,8 +226,8 @@ std::string Response::getUploadFilePath(Location *location){//TODO move up to Re
 
 std::string Response::getFileNameFromUri(const std::string &uri){
 	std::string filename = "";
-	if (isFileInPath(uri)){
-		size_t posFile = uri.find_last_of('/');
+	size_t posFile = uri.find_last_of('/');
+	if (posFile != std::string::npos){
 		posFile += 1;// to delete '/'
 		filename = uri.substr(posFile, uri.size() - posFile);
 	}
