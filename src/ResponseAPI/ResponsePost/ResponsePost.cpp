@@ -85,8 +85,8 @@ void ResponsePost::createBody(RequestData &requestData, HostData *hostData){
 
 		std::cout << "Len of body from cgi" << dataFromCGI.length() << std::endl;
 	} else {
-		Response::createBody(requestData.header["uri"], hostData);
-		return;
+		dataFromCGI = bodyStruct.second;
+		changeContentLength(dataFromCGI.size());
 	}
 	_dataToSend += "\r\n";
 	_dataToSend += dataFromCGI;
