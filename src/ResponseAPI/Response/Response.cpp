@@ -208,21 +208,25 @@ Location *Response::getLocationByUri(const std::string &uri, std::vector<Locatio
 	std::string matchStr;
 	std::string extensionOfUriFile;
 	std::string lastMatch = "";
+	bool isExtensionLocation;
 
 	extensionOfUriFile = getExtensionFileFromUri(uri);
 	std::sort(locations.begin(), locations.end(), compareLocations);
 	for (size_t i = 0; i < locations.size(); ++i){
 		matchStr = uri.substr(0, locations[i]->way.size());
 		matchPos = locations[i]->way.find(matchStr);
-		if (matchPos != std::string::npos && lastMatch != matchStr){//TODO may be needs a condition on length of uri if matched size
+		isExtensionLocation = !extensionOfUriFile.empty()
+								&& extensionOfUriFile == getExtensionFileFromUri(locations[i]->way)
+								&& locations[i]->way.find('*') != std::string::npos;
+
+		if (matchPos != std::string::npos && lastMatch != matchStr){
 			location = locations[i];
 			lastMatch = matchStr;//if uri is -> '/' when gets last location
 		}
-//		else if (!extensionOfUriFile.empty() && extensionOfUriFile == getExtensionFileFromUri(locations[i]->way)){
-//			location = locations[i];
-//			location->way = uri;
-//			break;
-//		}
+		else if (isExtensionLocation){
+			location = locations[i];
+			break;
+		}
 	}
 	return location;
 }
