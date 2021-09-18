@@ -34,7 +34,6 @@ Config* ParserConfig::parse(char* configFilePath) {
 void	ParserConfig::cleanUpHost(HostData *hostData) {
 	std::vector<ErrorPage*>::iterator errorPageIt = hostData->errorPage.begin();
 	for (; errorPageIt != hostData->errorPage.end(); errorPageIt++) {
-		// std::cout << "delete error page" << std::endl;
 		delete *errorPageIt;
 	}
 	std::vector<Location*>::iterator locationIt = hostData->location.begin();
@@ -42,13 +41,9 @@ void	ParserConfig::cleanUpHost(HostData *hostData) {
 	for (; locationIt != hostData->location.end(); locationIt++, i++) {
 		if ((*locationIt)->cgi) {
 			delete (*locationIt)->cgi;
-			// std::cout << "PARSER: delete location cgi" << std::endl;
 		}
-		// std::cout << "PARSER: delete location" << i << " --- " << (*locationIt)->way << std::endl;
-		delete *locationIt;
 	}
 	delete hostData;
-	// std::cout << "PARSER: delete hostData" << std::endl;
 }
 
 /*
@@ -96,7 +91,6 @@ std::vector<HostData*>	ParserConfig::devideConfigToComponents(std::list<std::str
 				if (hostData->ip.size() > 0 && hostData->port > 0) {
 
 					hosts.push_back(hostData);
-					// std::cout << "push back in hosts" << std::endl;
 					hostData = new HostData;
 					setDefaultHostValues(hostData);
 				} else {
@@ -107,10 +101,8 @@ std::vector<HostData*>	ParserConfig::devideConfigToComponents(std::list<std::str
 			}
 		}
 		hosts.push_back(hostData);
-		// std::cout << "final push back in hosts" << std::endl;
 		return hosts;
 	} catch(const std::exception& e) {
-		// std::cout << e.what() << std::endl;
 		throw e;
 	}
 }
@@ -135,6 +127,9 @@ void	ParserConfig::setDefaultHostValues(HostData *hostData) {
 }
 
 void	ParserConfig::setLocationDefaultValue(Location *location) {
+	_cgi->path = "";
+	_cgi->extension = "";
+	
 	location->root = "";
 	location->redirectStatusCode = 0;
 	location->redirectPath = "";
@@ -225,6 +220,7 @@ void	ParserConfig::setLocationDetailsData(std::string data, HostData *hostData) 
 		CGI* cgi = new CGI(_cgi->path, _cgi->extension, _cgi->root, _cgi->ip, _cgi->port);
 		hostData->location[hostData->location.size() - 1]->cgi = cgi;
 		// delete _cgi;
+	} else {
 	}
 }
 
