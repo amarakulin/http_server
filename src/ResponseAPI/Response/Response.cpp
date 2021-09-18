@@ -128,6 +128,8 @@ Response::getContentLengthHeader(std::string uri, HostData *hostData)
 	long sizeFile = getSizeFile(filename);
 	if (sizeFile == -1){
 		std::cout << "[-] Error can't count size file: " << filename << std::endl;
+		// throw NotFoundException();
+		sizeFile = 0;
 		//TODO gonna 404 worked out before
 	}
 	processedStr += std::to_string(sizeFile);

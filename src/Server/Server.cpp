@@ -187,6 +187,7 @@ void				Server::processingRequest(int clientSocket, Client& client) {
 }
 
 void				Server::createResponse(Client& client) {
+	printRequest(client.getRequest()->getData());
 	try{
 		client.setResponse(_responseCreator.createResponse(
 				client.getRequest()->getData(), client.getHostData()));
@@ -214,6 +215,10 @@ void				Server::sendResponse(int clientSocket, Client& client) {
 	size_t sendByte = countBytesToSend(response->getLeftBytesToSend());
 
 	int byteSended = send(clientSocket, response->getDataToSend().c_str(), sendByte, 0);
+	if (byteSended < 50) {
+		std::cout << "Bytes sended: " << std::endl;
+		std::cout << response->getDataToSend().substr(0, byteSended) << std::endl;
+	}
 	if (byteSended < 0){
 		logger.printMessage("Send error");
 	}

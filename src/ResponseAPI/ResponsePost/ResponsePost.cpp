@@ -22,6 +22,9 @@ ResponsePost::ResponsePost(RequestData &requestData, HostData *hostData)
 
 	std::cout << "B LeftBytes: " << _leftBytesToSend  << std::endl;
 	_leftBytesToSend = _dataToSend.length();//TODO set in one place
+	if (_leftBytesToSend < 50){
+		std::cout << "Response: " << _dataToSend << std::endl;
+	}
 	std::cout << "A LeftBytes: " << _leftBytesToSend  << std::endl;
 }
 
@@ -65,7 +68,7 @@ void ResponsePost::createBody(RequestData &requestData, HostData *hostData){
 	std::ofstream outfile (filePath);
 	if (!isFileExist(filePath)){
 		//TODO if throw exception could lose the pointer on the response
-//		throw NotFoundException();
+		// throw NotFoundException();
 	}
 
 	outfile << bodyStruct.second << std::endl;
@@ -77,10 +80,12 @@ void ResponsePost::createBody(RequestData &requestData, HostData *hostData){
 		requestData.header["content-length"] = std::to_string(requestData.body.length());
 
 		std::cout << BOLDRED << "Before execute cgi" << RESET << std::endl;
-		dataFromCGI = location->cgi->execute(requestData);
+		location->cgi->execute(requestData);
 		dataFromCGI = getDataFileAsString("./cgi/cgi_out");
 		dataFromCGI.erase(0, dataFromCGI.find("\r\n\r\n") + 4);
 		changeContentLength(dataFromCGI.size());
+
+		std::cout << "Len of body from cgi" << dataFromCGI.length() << std::endl;
 	} else {
 		Response::createBody(requestData.header["uri"], hostData);
 		return;
