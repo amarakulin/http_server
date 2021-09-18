@@ -31,7 +31,6 @@ Host::Host(HostData *hostData) {
 			for (; methods != (*locationIt)->httpMethods.end(); methods++) {
 				location->httpMethods.push_back(*methods);
 			}
-
 			if (!(*locationIt)->index.empty()) {
 				std::vector<std::string>::iterator index = (*locationIt)->index.begin();
 				for (; index != (*locationIt)->index.end(); index++) {
