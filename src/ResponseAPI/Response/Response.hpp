@@ -19,7 +19,6 @@ private:
 	static std::string getContentTypeHeader(std::string accept, HostData *hostData);
 	static std::string getContentLengthHeader(std::string uri, HostData *hostData);
 
-	//TODO search path by extation of a file
 	//TODO CGI
 	//TODO errors from Server
 	//TODO leak if errors in creating response occurred
@@ -40,8 +39,9 @@ protected:
 	static std::string getFilePathFromHostData(const std::string &uri, HostData *hostData);
 	static Location *getLocationByUri(const std::string &uri, std::vector<Location*> locations);
 	static std::string getExtensionFileFromUri(const std::string &uri);
-	std::string getUploadFilePath(Location *location);
 	static std::string getFileNameFromUri(const std::string &uri);
+	static void generatePageAutoindex(std::string filePath, const std::string &uri, HostData *hostData);
+	std::string getUploadFilePath(Location *location);
 
 public:
 	Response();

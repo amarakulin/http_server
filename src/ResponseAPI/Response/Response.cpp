@@ -188,6 +188,13 @@ Response::getFilePathFromHostData(const std::string &uri, HostData *hostData){
 			break;
 		}
 	}
+	if (location && location->autoindex && !isFileExist(filePath)){
+		generatePageAutoindex(filePath, uri, hostData);
+		//TODO autoindex
+		// search for a childs locations and files all files form current directory
+		// back locations ? -> is parent uri location
+		filePath += "/autoindex.html";
+	}
 	return filePath;
 }
 
@@ -211,11 +218,11 @@ Location *Response::getLocationByUri(const std::string &uri, std::vector<Locatio
 			location = locations[i];
 			lastMatch = matchStr;//if uri is -> '/' when gets last location
 		}
-		else if (!extensionOfUriFile.empty() && extensionOfUriFile == getExtensionFileFromUri(locations[i]->way)){
-			location = locations[i];
-			location->way = uri;
-			break;
-		}
+//		else if (!extensionOfUriFile.empty() && extensionOfUriFile == getExtensionFileFromUri(locations[i]->way)){
+//			location = locations[i];
+//			location->way = uri;
+//			break;
+//		}
 	}
 	return location;
 }
@@ -253,6 +260,36 @@ std::string Response::getExtensionFileFromUri(const std::string &uri){
 		fileExtension = filename.substr(posExtension, filename.size() - posExtension);
 	}
 	return fileExtension;
+}
+
+
+void Response::generatePageAutoindex(std::string filePath, const std::string &uri, HostData *hostData){
+	std::string contentFile = "";
+	std::vector<std::string> listDir = listOfFiles(filePath);
+	contentFile += "<!DOCTYPE html>\n"
+				   "<html lang=\"en\">\n"
+				   "<head>\n"
+				   "    <meta charset=\"UTF-8\">\n"
+				   "    <title>Title</title>\n"
+				   "    <style>\n"
+				   "        body{\n"
+				   "            background-color: #606060;\n"
+				   "            color: #FFFFFF;/* Цвет фона веб-страницы */\n"
+				   "        }\n"
+				   "    </style>\n"
+				   "</head>\n"
+				   "<body>";
+	for (int i = 0; i < listDir.size(); ++i){
+		contentFile += "<p><a href='/Makefile'>";
+		contentFile += listDir[i];
+		contentFile += "</a></p>";
+	}
+	contentFile += "</body></html>";
+	std::cout << "Content: "<< contentFile << std::endl;
+	filePath += "/autoindex.html";
+	std::ofstream outfile (filePath);
+	outfile << contentFile << std::endl;
+	outfile.close();
 }
 
 /*
