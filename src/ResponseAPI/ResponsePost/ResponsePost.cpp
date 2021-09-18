@@ -80,9 +80,7 @@ void ResponsePost::createBody(RequestData &requestData, HostData *hostData){
 		requestData.header["content-length"] = std::to_string(requestData.body.length());
 
 		std::cout << BOLDRED << "Before execute cgi" << RESET << std::endl;
-		location->cgi->execute(requestData);
-		dataFromCGI = getDataFileAsString("./cgi/cgi_out");
-		dataFromCGI.erase(0, dataFromCGI.find("\r\n\r\n") + 4);
+		dataFromCGI = location->cgi->execute(requestData);
 		changeContentLength(dataFromCGI.size());
 
 		std::cout << "Len of body from cgi" << dataFromCGI.length() << std::endl;
