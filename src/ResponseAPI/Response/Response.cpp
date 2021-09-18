@@ -197,16 +197,24 @@ bool compareLocations(Location* loc1, Location* loc2){
 
 Location *Response::getLocationByUri(const std::string &uri, std::vector<Location*> locations){
 	Location *location = nullptr;// DANGER GONNA MAKE A BEHAVIOR IF NOT FIND A LOCATION!!!
-	std::string matchStr;
-	std::string lastMatch = "";
-	std::sort(locations.begin(), locations.end(), compareLocations);
 	size_t matchPos = std::string::npos;
+	std::string matchStr;
+	std::string extensionOfUriFile;
+	std::string lastMatch = "";
+
+	extensionOfUriFile = getExtensionFileFromUri(uri);
+	std::sort(locations.begin(), locations.end(), compareLocations);
 	for (size_t i = 0; i < locations.size(); ++i){
 		matchStr = uri.substr(0, locations[i]->way.size());
 		matchPos = locations[i]->way.find(matchStr);
 		if (matchPos != std::string::npos && lastMatch != matchStr){//TODO may be needs a condition on length of uri if matched size
 			location = locations[i];
 			lastMatch = matchStr;//if uri is -> '/' when gets last location
+		}
+		else if (!extensionOfUriFile.empty() && extensionOfUriFile == getExtensionFileFromUri(locations[i]->way)){
+			location = locations[i];
+			location->way = uri;
+			break;
 		}
 	}
 	return location;
@@ -232,6 +240,19 @@ std::string Response::getFileNameFromUri(const std::string &uri){
 		filename = uri.substr(posFile, uri.size() - posFile);
 	}
 	return filename;
+}
+
+std::string Response::getExtensionFileFromUri(const std::string &uri){
+	std::string filename;
+	size_t posExtension;
+	std::string fileExtension = "";
+
+	filename = getFileNameFromUri(uri);
+	posExtension = filename.find('.');
+	if (posExtension != std::string::npos){
+		fileExtension = filename.substr(posExtension, filename.size() - posExtension);
+	}
+	return fileExtension;
 }
 
 /*
