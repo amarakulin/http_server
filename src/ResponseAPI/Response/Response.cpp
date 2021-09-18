@@ -265,6 +265,7 @@ std::string Response::getExtensionFileFromUri(const std::string &uri){
 
 void Response::generatePageAutoindex(std::string filePath, const std::string &uri, HostData *hostData){
 	std::string contentFile = "";
+	std::string tmpRef;
 	std::vector<std::string> listDir = listOfFiles(filePath);
 	contentFile += "<!DOCTYPE html>\n"
 				   "<html lang=\"en\">\n"
@@ -280,7 +281,8 @@ void Response::generatePageAutoindex(std::string filePath, const std::string &ur
 				   "</head>\n"
 				   "<body>";
 	for (int i = 0; i < listDir.size(); ++i){
-		contentFile += "<p><a href='/Makefile'>";
+		tmpRef = "<p><a href='" + listDir[i] + "'>";
+		contentFile += tmpRef;
 		contentFile += listDir[i];
 		contentFile += "</a></p>";
 	}
