@@ -76,7 +76,7 @@ std::string			getDataFileAsString(const std::string &filename){
 }
 
 bool	isSomeSymbolInTheEnd(std::string end, char symbol) {
-	if (end[end.length() - 1] == symbol && !end[end.length()]) {
+	if (end[end.length() - 1] == symbol && end[end.length() - 2] != symbol && !end[end.length()]) {
 		return true;
 	} else {
 		return false;

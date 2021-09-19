@@ -230,7 +230,7 @@ void	ParserConfig::enterDataToHostDataStruct(std::string const &key, std::string
 		}
 
 	} catch (ParserConfigException e) {
-		std::cerr << "Parser error: " << e.what() << std::endl;
+		std::cerr << "Parser error " << e.what() << std::endl;
 		throw e;
 	}
 }
