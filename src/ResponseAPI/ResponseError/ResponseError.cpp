@@ -109,8 +109,6 @@ int ResponseError::isResponseError(RequestData &requestData, HostData *hostData)
 //		statusCode = NOT_FOUND;
 //	}// COMMENT JUST FOR TESTS!!!
 	else if (isBodySizeTooLarge){
-		std::cout << "isBodySizeTooLarge" << std::endl;
-
 		statusCode = PAYLOAD_TOO_LARGE;
 	}
 	else if (requestData.header["protocol"] != "http/1.1"){//TODO TEST with telnet
