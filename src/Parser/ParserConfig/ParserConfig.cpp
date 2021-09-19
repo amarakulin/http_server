@@ -77,6 +77,7 @@ void	ParserConfig::cleanUpHost(HostData *hostData) {
 		if ((*locationIt)->cgi) {
 			delete (*locationIt)->cgi;
 		}
+		delete *locationIt;
 	}
 	delete hostData;
 }
