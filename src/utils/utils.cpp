@@ -98,6 +98,7 @@ bool isFileExist (const std::string& filePath) {
 	if ((dir = opendir (path.c_str())) != NULL) {
 		while ((ent = readdir (dir)) != NULL) {
 			if (ent->d_type == 8 && filename == ent->d_name){// 8 is type of a file
+				closedir (dir);
 				return true;
 			}
 		}
