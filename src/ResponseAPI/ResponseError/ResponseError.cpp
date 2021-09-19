@@ -95,8 +95,8 @@ int ResponseError::isResponseError(RequestData &requestData, HostData *hostData)
 	std::string filePath = getFilePathFromHostData(requestData.header["uri"], hostData);
 	Location *location = getLocationByUri(requestData.header["uri"], hostData->location);
 	bool isBodySizeTooLarge = location
-								&& (requestData.body.size() > location->clientMaxBodySize
-								|| (location->clientMaxBodySize == 0 && requestData.body.size() > hostData->clientMaxBodySize));
+								&& ((location->clientMaxBodySize != 0 && requestData.body.size() > location->clientMaxBodySize)
+								|| (requestData.body.size() > hostData->clientMaxBodySize));
 //	bool isBodySizeTooLarge = requestData.body.size() > hostData->clientMaxBodySize || requestData.body.size() == 200 || requestData.body.size() == 101;
 
 	if (location && location->redirectStatusCode == REDIRECT){
@@ -109,6 +109,8 @@ int ResponseError::isResponseError(RequestData &requestData, HostData *hostData)
 //		statusCode = NOT_FOUND;
 //	}// COMMENT JUST FOR TESTS!!!
 	else if (isBodySizeTooLarge){
+		std::cout << "isBodySizeTooLarge" << std::endl;
+
 		statusCode = PAYLOAD_TOO_LARGE;
 	}
 	else if (requestData.header["protocol"] != "http/1.1"){//TODO TEST with telnet
