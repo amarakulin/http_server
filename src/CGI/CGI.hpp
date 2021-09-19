@@ -11,6 +11,7 @@
 # include <map>
 # include "RequestTypes.hpp"
 # include "utils.hpp"
+# include "Exceptions.hpp"
 
 # define STD_IN 0
 # define STD_OUT 1

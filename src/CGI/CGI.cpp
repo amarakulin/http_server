@@ -105,6 +105,7 @@ std::string	CGI::execute(RequestData& request) const {
 	lseek(cgiReadFrom, 0, SEEK_SET);
 
 	if ((pid = fork()) == -1) {
+		throw InternalServerErrorException();
 		//TODO throw 5** error
 	}
 	else if (pid == 0)
@@ -113,6 +114,7 @@ std::string	CGI::execute(RequestData& request) const {
 		dup2(cgiReadFrom, 0);
 		if (execve(args[0], args, env) == -1) {
 			std::cout << BOLDRED << "Execute CGI error" << RESET << std::endl;
+			throw InternalServerErrorException();
 			// TODO throw 5** error
 		}
 		close(cgiOut);
