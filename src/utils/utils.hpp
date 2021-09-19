@@ -1,6 +1,8 @@
 #ifndef UTILS
 # define UTILS
 
+#include <ctime>
+#include <unistd.h>
 # include <vector>
 # include <fstream>
 # include <sstream>
@@ -32,6 +34,7 @@ bool	isSomeSymbolInTheEnd(std::string end, char symbol);
 bool	isFileExist (const std::string& filePath);
 bool	isItemInVector(std::vector<std::string> vector, const std::string& val);
 std::vector<std::string> listOfFiles(const std::string& pattern);
+std::string gen_random(const int len);
 
 // templated version of my_equal so it could work with both char and wchar_t
 template<typename charT>

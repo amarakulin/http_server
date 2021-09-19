@@ -99,6 +99,9 @@ int ResponseError::isResponseError(RequestData &requestData, HostData *hostData)
 								|| (requestData.body.size() > hostData->clientMaxBodySize));
 //	bool isBodySizeTooLarge = requestData.body.size() > hostData->clientMaxBodySize || requestData.body.size() == 200 || requestData.body.size() == 101;
 
+	logger.printMessage("Uri: " + requestData.header["uri"]);
+	logger.printMessage("filePath: " + filePath);
+
 	if (location && location->redirectStatusCode == REDIRECT){
 		statusCode = REDIRECT;
 	}

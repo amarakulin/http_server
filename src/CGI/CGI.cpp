@@ -91,10 +91,13 @@ void	CGI::deleteEnv(char** env) const {
 
 std::string	CGI::execute(RequestData& request) const {
 	char**		env = createCGIEnv(request);
+	std::string uniqueHash = gen_random(8);
+	std::string filenameOut = "./cgi/cgi_out" + uniqueHash;
+	std::string filenameFrom = "./cgi/cgi_read_from" + uniqueHash;
 	pid_t		pid;
 	std::string body;
-	int			cgiOut = open("./cgi/cgi_out", O_RDWR | O_TRUNC | O_CREAT, 0777);
-	int			cgiReadFrom = open("./cgi/cgi_read_from", O_RDWR | O_TRUNC | O_CREAT, 0777);
+	int			cgiOut = open(filenameOut.c_str(), O_RDWR | O_TRUNC | O_CREAT, 0777);
+	int			cgiReadFrom = open(filenameFrom.c_str() , O_RDWR | O_TRUNC | O_CREAT, 0777);
 	int 		status;
 
 	char **args = new char*[2];
@@ -129,7 +132,7 @@ std::string	CGI::execute(RequestData& request) const {
 			//TODO 
 		}
 
-		body = getDataFileAsString("./cgi/cgi_out");
+		body = getDataFileAsString(filenameOut);
 		body.erase(0, body.find("\r\n\r\n") + 4);
 		close(cgiOut);
 		close(cgiReadFrom);
@@ -138,5 +141,7 @@ std::string	CGI::execute(RequestData& request) const {
 	deleteEnv(env);
 	delete args[0];
 	delete[] args;
+	std::remove(filenameOut.c_str());
+	std::remove(filenameFrom.c_str());
 	return body;
 }

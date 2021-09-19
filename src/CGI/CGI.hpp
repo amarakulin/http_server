@@ -12,6 +12,7 @@
 # include "RequestTypes.hpp"
 # include "utils.hpp"
 # include "Exceptions.hpp"
+# include "fstream"
 
 # define STD_IN 0
 # define STD_OUT 1

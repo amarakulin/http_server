@@ -165,6 +165,7 @@ void				Server::processingRequest(int clientSocket, Client& client) {
 //		return;
 	}
 	if (s == 0) {
+//		std::cout << "Get ziro bytes" << std::endl;
 //		client.getRequest()->setStatus(READED);//TODO THINK FOR TEST
 //		closeClientConnection(clientSocket);
 //		bzero(buf, MB);
@@ -177,7 +178,6 @@ void				Server::processingRequest(int clientSocket, Client& client) {
 															client.getHostData()));
 		 client.resetRequest();
 	} catch (NotAllowedException& e) {
-//		client.getRequest()->setStatus(READED);
 		client.setResponse(_responseCreator.createResponse(ResponseError::getErrorPageStruct(METHOD_NOT_ALLOWED, client.getHostData()->errorPage),
 															client.getHostData()));
 		client.resetRequest();
@@ -230,7 +230,7 @@ void				Server::sendResponse(int clientSocket, Client& client) {
 	response->countSendedData(byteSended);
 	if (response->isDone()){
 		client.resetResponse();
-//		std::cout << "/* Client out */ " << clientSocket << " Sended: " << byteSended << std::endl;
+		std::cout << "/* Client out */ " << clientSocket << " Sended: " << byteSended << std::endl;
 	}
 }
 
