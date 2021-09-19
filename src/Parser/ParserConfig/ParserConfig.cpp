@@ -35,9 +35,9 @@ Config* ParserConfig::parse(char* configFilePath) {
 	// 	std::cout << "BODY:\t" << config->getHosts()[i]->getData()->clientMaxBodySize << std::endl;
 	// 	std::cout << "SNAME:\t" << config->getHosts()[i]->getData()->serverName << std::endl;
 	// 	std::cout << "\t---\tLOCATION\t---\t" << std::endl;
-		// for (int j = 0; j < config->getHosts()[i]->getData()->location.size(); j++) {
+	// 	for (int j = 0; j < config->getHosts()[i]->getData()->location.size(); j++) {
 	// 		std::cout << "WAY:\t" << config->getHosts()[i]->getData()->location[j]->way << std::endl;
-			// std::cout << "BODYLOC:\t" << config->getHosts()[i]->getData()->location[j]->clientMaxBodySize << std::endl;
+	// 		std::cout << "BODYLOC:\t" << config->getHosts()[i]->getData()->location[j]->clientMaxBodySize << std::endl;
 	// 		std::cout << "RPATH:\t" << config->getHosts()[i]->getData()->location[j]->redirectPath << std::endl;
 	// 		std::cout << "RCODE:\t" << config->getHosts()[i]->getData()->location[j]->redirectStatusCode << std::endl;
 
@@ -161,7 +161,6 @@ void	ParserConfig::setDefaultHostValues(HostData *hostData) {
 			Location *location = new Location;
 			setLocationDefaultValue(location);
 			location->root = "/";
-			location->clientMaxBodySize = 0;
 			location->way = DEFAULT_ERROR_PAGE_PATH + std::to_string(arrResponseStatuses[i].first) + ".html";
 			hostData->location.push_back(location);
 		}
@@ -196,31 +195,32 @@ void	ParserConfig::setLocationDefaultValue(Location *location) {
 void	ParserConfig::enterDataToHostDataStruct(std::string const &key, std::string const &value,
 		HostData *hostData, bool *isLocation) {
 	try {
+		std::string data = value.substr(0, value.length() - 1);
 		if (isSomeSymbolInTheEnd(value, ';')) {
 			if (key == "listen") {
 				*isLocation = false;
-				setListenData(value.substr(0, value.length() - 1), hostData);
+				setListenData(data, hostData);
 			} else if (key == "server_name") {
 				*isLocation = false;
-				setServerNameData(value.substr(0, value.length() - 1), hostData);
+				setServerNameData(data, hostData);
 			} else if (key == "root") {
 				*isLocation = false;
-				setRootData(value.substr(0, value.length() - 1), hostData);
+				setRootData(data, hostData);
 			} else if (key == "error_page") {
 				*isLocation = false;
-				setErrorPageData(value.substr(0, value.length() - 1), hostData);
+				setErrorPageData(data, hostData);
 			} else if (key == "client_max_body_size") {
 				*isLocation = false;
-				setClientMaxBodySizeData(value.substr(0, value.length() - 1), hostData);
+				setClientMaxBodySizeData(data, hostData);
 			} else if (key == "..." && *isLocation) {
-				setLocationDetailsData(value.substr(0, value.length() - 1), hostData);
+				setLocationDetailsData(data, hostData);
 			} else {
 				throw ParserConfigException("enterDataToHostDataStruct error");
 			}
 		} else if (isSomeSymbolInTheEnd(value, ':')) {
 			if (key == "location") {
 				*isLocation = true;
-				setLocationWayData(value.substr(0, value.length() - 1), hostData);
+				setLocationWayData(data, hostData);
 			} else {
 				throw ParserConfigException("enterDataToHostDataStruct error");
 			}
@@ -265,6 +265,8 @@ void	ParserConfig::setLocationDetailsData(std::string data, HostData *hostData) 
 		setCgiParserData(value, "extension", hostData, hostData->location[currentLocation]);
 	} else if (key == "cgi_path") {
 		setCgiParserData(value, "path", hostData, hostData->location[currentLocation]);
+	} else if (key == "client_max_body_size") {
+		setClientMaxBodySizeData(value, hostData->location[currentLocation]);
 	} else {
 		throw ParserConfigException("setLocationDetailsData error");
 	}
@@ -392,6 +394,26 @@ void	ParserConfig::setClientMaxBodySizeData(std::string data, HostData *hostData
 	}
 }
 
+void	ParserConfig::setClientMaxBodySizeData(std::string data, Location *location) {
+	for (int i = 0; i < data.length() - 1; i++) {
+		if (data[i] >= '0' && data[i] <= '9') {
+			continue;
+		} else {
+			throw ParserConfigException("setClientMaxBodySizeData error");
+		}
+	}
+
+	if (data[data.length() - 1] == 'M') {
+		location->clientMaxBodySize = atoll(data.c_str()) * pow(1024, 2);
+	} else if (data[data.length() - 1] == 'K') {
+		location->clientMaxBodySize = atoll(data.c_str()) * 1024;
+	} else if (data[data.length() - 1] == 'B') {
+		location->clientMaxBodySize = atoll(data.c_str());
+	} else {
+		throw ParserConfigException("setClientMaxBodySizeData error");
+	}
+}
+
 void	ParserConfig::setRedirectToLocation(std::string data, Location *location) {
 	int delim;
 	const char *tmp;
@@ -431,7 +453,6 @@ void	ParserConfig::setLocationWayData(std::string data, HostData *hostData) {
 		location = new Location;
 		setLocationDefaultValue(location);
 		location->way = data;
-		location->clientMaxBodySize = hostData->clientMaxBodySize;
 		hostData->location.push_back(location);
 	} else {
 		throw ParserConfigException("setRootData error");
