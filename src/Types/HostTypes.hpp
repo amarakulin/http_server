@@ -11,6 +11,7 @@ class CGI;
 
 typedef struct {
 	std::string					way;
+	size_t						clientMaxBodySize;
 	std::string					root;
 	size_t						redirectStatusCode;
 	std::string					redirectPath;

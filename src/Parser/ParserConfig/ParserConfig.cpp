@@ -35,8 +35,9 @@ Config* ParserConfig::parse(char* configFilePath) {
 	// 	std::cout << "BODY:\t" << config->getHosts()[i]->getData()->clientMaxBodySize << std::endl;
 	// 	std::cout << "SNAME:\t" << config->getHosts()[i]->getData()->serverName << std::endl;
 	// 	std::cout << "\t---\tLOCATION\t---\t" << std::endl;
-	// 	for (int j = 0; j < config->getHosts()[i]->getData()->location.size(); j++) {
+		// for (int j = 0; j < config->getHosts()[i]->getData()->location.size(); j++) {
 	// 		std::cout << "WAY:\t" << config->getHosts()[i]->getData()->location[j]->way << std::endl;
+			// std::cout << "BODYLOC:\t" << config->getHosts()[i]->getData()->location[j]->clientMaxBodySize << std::endl;
 	// 		std::cout << "RPATH:\t" << config->getHosts()[i]->getData()->location[j]->redirectPath << std::endl;
 	// 		std::cout << "RCODE:\t" << config->getHosts()[i]->getData()->location[j]->redirectStatusCode << std::endl;
 
@@ -160,6 +161,7 @@ void	ParserConfig::setDefaultHostValues(HostData *hostData) {
 			Location *location = new Location;
 			setLocationDefaultValue(location);
 			location->root = "/";
+			location->clientMaxBodySize = 0;
 			location->way = DEFAULT_ERROR_PAGE_PATH + std::to_string(arrResponseStatuses[i].first) + ".html";
 			hostData->location.push_back(location);
 		}
@@ -175,6 +177,7 @@ void	ParserConfig::setLocationDefaultValue(Location *location) {
 	_cgi->extension = "";
 	
 	location->way = "";
+	location->clientMaxBodySize = 0;
 	location->root = "";
 	location->redirectStatusCode = 0;
 	location->redirectPath = "";
@@ -377,10 +380,13 @@ void	ParserConfig::setClientMaxBodySizeData(std::string data, HostData *hostData
 			throw ParserConfigException("setClientMaxBodySizeData error");
 		}
 	}
+
 	if (data[data.length() - 1] == 'M') {
 		hostData->clientMaxBodySize = atoll(data.c_str()) * pow(1024, 2);
 	} else if (data[data.length() - 1] == 'K') {
 		hostData->clientMaxBodySize = atoll(data.c_str()) * 1024;
+	} else if (data[data.length() - 1] == 'B') {
+		hostData->clientMaxBodySize = atoll(data.c_str());
 	} else {
 		throw ParserConfigException("setClientMaxBodySizeData error");
 	}
@@ -425,6 +431,7 @@ void	ParserConfig::setLocationWayData(std::string data, HostData *hostData) {
 		location = new Location;
 		setLocationDefaultValue(location);
 		location->way = data;
+		location->clientMaxBodySize = hostData->clientMaxBodySize;
 		hostData->location.push_back(location);
 	} else {
 		throw ParserConfigException("setRootData error");
