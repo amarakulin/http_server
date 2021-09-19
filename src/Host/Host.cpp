@@ -58,6 +58,7 @@ void Host::_clone(HostData *hostData) {
 		location->root = (*locationIt)->root;
 		location->redirectStatusCode = (*locationIt)->redirectStatusCode;
 		location->redirectPath = (*locationIt)->redirectPath;
+		location->clientMaxBodySize = (*locationIt)->clientMaxBodySize;
 
 		std::vector<std::string>::iterator methods = (*locationIt)->httpMethods.begin();
 		for (; methods != (*locationIt)->httpMethods.end(); methods++) {
