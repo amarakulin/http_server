@@ -51,6 +51,7 @@ class ParserConfig {
 		void	setRootData(std::string data, HostData *hostData);
 		void	setErrorPageData(std::string data, HostData *hostData);
 		void	setClientMaxBodySizeData(std::string data, HostData *hostData);
+		void	setClientMaxBodySizeData(std::string data, Location *location);
 		void	setLocationWayData(std::string data, HostData *hostData);
 		void	setLocationDetailsData(std::string data, HostData *hostData);
 		void	setRedirectToLocation(std::string data, Location *location);
