@@ -71,18 +71,23 @@ int					Server::createListenerSocket(struct sockaddr_in addr) {
 
 void Server::createNewClient(int hostSocket, HostData *hostData)
 {
-	int sock = accept(hostSocket, NULL, NULL); // создаем нового клиента
-	if (sock < 0)
-		std::cout << "Accept error" << std::endl;//TODO
-	
-	fcntl(sock, F_SETFL, O_NONBLOCK);
+	try{
+		int sock = accept(hostSocket, NULL, NULL); // создаем нового клиента
+		if (sock > 0){
+			fcntl(sock, F_SETFL, O_NONBLOCK);
 
-	Client client(sock, hostData);
-
-	_sockets.addClientSocket(sock);
-	_clients.push_back(client); //TODO add method addClient
-
-	std::cout << "/* Listener in */ " << sock << std::endl;
+			Client client(sock, hostData);
+			
+			_sockets.addClientSocket(sock);
+			_clients.push_back(client); //TODO add method addClient
+			logger.printMessage("Clients: " + std::to_string(_clients.size()));
+		}
+	}
+	catch (std::exception &e){
+		std::cout << "Got a exception: " << std::endl;
+		std::cout << "|" << e.what() << "|" << std::endl;
+	}
+//	std::cout << "/* Listener in */ " << sock << std::endl;
 }
 
 void				Server::closeClientConnection(int clientSocket) {
@@ -183,7 +188,7 @@ void				Server::processingRequest(int clientSocket, Client& client) {
 	}
 	bzero(buf, MB);
 
-	logger.printMessage("/* Client in */");
+//	logger.printMessage("/* Client in */");
 }
 
 void				Server::createResponse(Client& client) {
@@ -215,17 +220,17 @@ void				Server::sendResponse(int clientSocket, Client& client) {
 	size_t sendByte = countBytesToSend(response->getLeftBytesToSend());
 
 	int byteSended = send(clientSocket, response->getDataToSend().c_str(), sendByte, 0);
-	if (byteSended < 50) {
-		std::cout << "Bytes sended: " << std::endl;
-		std::cout << response->getDataToSend().substr(0, byteSended) << std::endl;
-	}
+//	if (byteSended < 50) {
+//		std::cout << "Bytes sended: " << std::endl;
+//		std::cout << response->getDataToSend().substr(0, byteSended) << std::endl;
+//	}
 	if (byteSended < 0){
 		logger.printMessage("Send error");
 	}
 	response->countSendedData(byteSended);
 	if (response->isDone()){
 		client.resetResponse();
-		std::cout << "/* Client out */ " << clientSocket << " Sended: " << byteSended << std::endl;
+//		std::cout << "/* Client out */ " << clientSocket << " Sended: " << byteSended << std::endl;
 	}
 }
 

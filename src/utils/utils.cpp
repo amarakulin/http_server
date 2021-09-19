@@ -103,7 +103,7 @@ bool isFileExist (const std::string& filePath) {
 		}
 		closedir (dir);
 	} else {
-		std::cout << "Error to serch in dir: " << path << std::endl;
+//		std::cout << "Error to serch in dir: " << path << std::endl;
 	}
 //	if (!isFileInPath(filePath)){
 //		return false;

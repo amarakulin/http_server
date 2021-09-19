@@ -60,7 +60,7 @@ char**	CGI::createCGIEnv(RequestData& req) const {
 	env["SERVER_SOFTWARE"] = "http_server/1.0.0";
 
 	if (req.header.find("x-secret-header-for-test") != req.header.end()) {
-		std::cout << BOLDRED << "Set secret header env" << RESET << std::endl;
+//		std::cout << BOLDRED << "Set secret header env" << RESET << std::endl;
 		env["HTTP_X_SECRET_HEADER_FOR_TEST"] = "1";
 	}
 

@@ -127,7 +127,7 @@ Response::getContentLengthHeader(std::string uri, HostData *hostData)
 	std::string filename = getFilePathFromHostData(uri, hostData);
 	long sizeFile = getSizeFile(filename);
 	if (sizeFile == -1){
-		std::cout << "[-] Error can't count size file: " << filename << std::endl;
+//		std::cout << "[-] Error can't count size file: " << filename << std::endl;
 		// throw NotFoundException();
 		sizeFile = 0;
 		//TODO gonna 404 worked out before
@@ -281,7 +281,6 @@ void Response::generatePageAutoindex(std::string filePath, const std::string &ur
 		contentFile += "</a></p>";
 	}
 	contentFile += END_AUTOINDEX;
-	std::cout << "Content: "<< contentFile << std::endl;
 	filePath += "/autoindex.html";
 	std::ofstream outfile (filePath);
 	outfile << contentFile << std::endl;

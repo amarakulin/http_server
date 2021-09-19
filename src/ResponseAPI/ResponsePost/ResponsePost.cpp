@@ -20,12 +20,12 @@ ResponsePost::ResponsePost(RequestData &requestData, HostData *hostData)
 	: Response(requestData, hostData) {
 	ResponsePost::createBody(requestData, hostData);
 
-	std::cout << "B LeftBytes: " << _leftBytesToSend  << std::endl;
+//	std::cout << "B LeftBytes: " << _leftBytesToSend  << std::endl;
 	_leftBytesToSend = _dataToSend.length();//TODO set in one place
-	if (_leftBytesToSend < 50){
-		std::cout << "Response: " << _dataToSend << std::endl;
-	}
-	std::cout << "A LeftBytes: " << _leftBytesToSend  << std::endl;
+//	if (_leftBytesToSend < 50){
+//		std::cout << "Response: " << _dataToSend << std::endl;
+//	}
+//	std::cout << "A LeftBytes: " << _leftBytesToSend  << std::endl;
 }
 
 ResponsePost::~ResponsePost() {}
@@ -58,7 +58,6 @@ void ResponsePost::createBody(RequestData &requestData, HostData *hostData){
 
 	bodyStruct = parseBody(requestData.body);//TODO may be needs a constuctor with size
 	location = getLocationByUri(requestData.header["uri"], hostData->location);
-	std::cout << BLUE << "FilenameFromUri: " << getFileNameFromUri(requestData.header["uri"]) << RESET << std::endl;
 	if (bodyStruct.first.empty()){
 		bodyStruct.first = getFileNameFromUri(requestData.header["uri"]);
 	}
@@ -79,11 +78,8 @@ void ResponsePost::createBody(RequestData &requestData, HostData *hostData){
 	if (!isBoundaryBody(requestData.header) && (location && location->cgi) && requestData.body != "") {
 		requestData.header["content-length"] = std::to_string(requestData.body.length());
 
-		std::cout << BOLDRED << "Before execute cgi" << RESET << std::endl;
 		dataFromCGI = location->cgi->execute(requestData);
 		changeContentLength(dataFromCGI.size());
-
-		std::cout << "Len of body from cgi" << dataFromCGI.length() << std::endl;
 	} else {
 		dataFromCGI = bodyStruct.second;
 		changeContentLength(dataFromCGI.size());
