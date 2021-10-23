@@ -28,38 +28,6 @@ Config* ParserConfig::parse(char* configFilePath) {
 		config->addNewHost(host);
 		cleanUpHost(hosts[i]);
 	}
-	// for (int i = 0; i < config->getHosts().size(); i++) {
-	// 	std::cout << "IP:\t" << config->getHosts()[i]->getData()->ip << std::endl;
-	// 	std::cout << "PORT:\t" << config->getHosts()[i]->getData()->port << std::endl;
-	// 	std::cout << "ROOT:\t" << config->getHosts()[i]->getData()->root << std::endl;
-	// 	std::cout << "BODY:\t" << config->getHosts()[i]->getData()->clientMaxBodySize << std::endl;
-	// 	std::cout << "SNAME:\t" << config->getHosts()[i]->getData()->serverName << std::endl;
-	// 	std::cout << "\t---\tLOCATION\t---\t" << std::endl;
-	// 	for (int j = 0; j < config->getHosts()[i]->getData()->location.size(); j++) {
-	// 		std::cout << "WAY:\t" << config->getHosts()[i]->getData()->location[j]->way << std::endl;
-	// 		std::cout << "BODYLOC:\t" << config->getHosts()[i]->getData()->location[j]->clientMaxBodySize << std::endl;
-	// 		std::cout << "RPATH:\t" << config->getHosts()[i]->getData()->location[j]->redirectPath << std::endl;
-	// 		std::cout << "RCODE:\t" << config->getHosts()[i]->getData()->location[j]->redirectStatusCode << std::endl;
-
-	// 		std::cout << "---METHOD---" << std::endl;
-	// 		std::vector<std::string>::iterator methods = config->getHosts()[i]->getData()->location[j]->httpMethods.begin();
-	// 		for (; methods != config->getHosts()[i]->getData()->location[j]->httpMethods.end(); methods++) {
-	// 			std::cout << *methods << std::endl;
-	// 		}
-
-	// 		std::cout << "---INDEX---" << std::endl;
-	// 		std::vector<std::string>::iterator index = config->getHosts()[i]->getData()->location[j]->index.begin();
-	// 		for (; index != config->getHosts()[i]->getData()->location[j]->index.end(); index++) {
-	// 			std::cout << *index << std::endl;
-	// 		}
-
-	// 		std::cout << "CGI:\t" << config->getHosts()[i]->getData()->location[j]->cgi << std::endl;
-	// 		std::cout << "AUTOX:\t" << config->getHosts()[i]->getData()->location[j]->autoindex << std::endl;
-	// 		std::cout << "UPON:\t" << config->getHosts()[i]->getData()->location[j]->uploadEnable << std::endl;
-	// 		std::cout << "UPPH:\t" << config->getHosts()[i]->getData()->location[j]->uploadPath << std::endl;
-	// 	}
-	// 	std::cout << "_____________________________________________" << std::endl;
-	// }
 	return config;
 }
 

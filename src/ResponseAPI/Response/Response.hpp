@@ -20,13 +20,6 @@ private:
 	static std::string getContentTypeHeader(std::string accept, HostData *hostData);
 	static std::string getContentLengthHeader(std::string uri, HostData *hostData);
 
-	//TODO CGI
-	//TODO errors from Server
-	//TODO leak if errors in creating response occurred
-	//TODO validation config
-	//TODO autoindex
-	//TODO test cgi_tester
-
 protected:
 	size_t		_leftBytesToSend;
 	std::string	_dataToSend;
@@ -62,10 +55,6 @@ public:
 	virtual int				getStatus() const;
 
 	int getState() const;
-
-/*
-** Setters
-*/
 };
 
 #endif

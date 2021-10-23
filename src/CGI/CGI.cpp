@@ -60,7 +60,6 @@ char**	CGI::createCGIEnv(RequestData& req) const {
 	env["SERVER_SOFTWARE"] = "http_server/1.0.0";
 
 	if (req.header.find("x-secret-header-for-test") != req.header.end()) {
-//		std::cout << BOLDRED << "Set secret header env" << RESET << std::endl;
 		env["HTTP_X_SECRET_HEADER_FOR_TEST"] = "1";
 	}
 
@@ -109,16 +108,13 @@ std::string	CGI::execute(RequestData& request) const {
 
 	if ((pid = fork()) == -1) {
 		throw InternalServerErrorException();
-		//TODO throw 5** error
 	}
 	else if (pid == 0)
 	{
 		dup2(cgiOut, 1);
 		dup2(cgiReadFrom, 0);
 		if (execve(args[0], args, env) == -1) {
-			std::cout << BOLDRED << "Execute CGI error" << RESET << std::endl;
 			throw InternalServerErrorException();
-			// TODO throw 5** error
 		}
 		close(cgiOut);
 		close(cgiReadFrom);
@@ -126,11 +122,6 @@ std::string	CGI::execute(RequestData& request) const {
 	}
 	else if (pid > 0) {
 		waitpid(pid, &status, 0);
-
-		if (status != 0) {
-			std::cout << "Error: status code = " << status << std::endl;
-			//TODO 
-		}
 
 		body = getDataFileAsString(filenameOut);
 		body.erase(0, body.find("\r\n\r\n") + 4);

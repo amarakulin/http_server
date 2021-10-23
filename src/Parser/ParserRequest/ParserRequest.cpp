@@ -46,7 +46,6 @@ bool		ParserRequest::handleEndOfBody(RequestData& data, std::string& buffer) {
 		}
 		else {
 			return true;
-			// TODO bad request or ???request without body???
 		}
 
 	} else {
@@ -110,9 +109,9 @@ std::string ParserRequest::parseBody(std::string &data) {
 		if (!chunk.length())
 			break ;
 
-		body += chunk;//FIXME Think!!!!!!!!!
+		body += chunk;
 
-		data.erase(0, data.substr(0, pos + 2).length() + len); //TODO Оптимизировать
+		data.erase(0, data.substr(0, pos + 2).length() + len);
 	}
 	data.erase(0, END_OF_CHUNKED_BODY.length());
 
@@ -145,19 +144,8 @@ std::string ParserRequest::parseBody(std::string &data, int contentLengt, std::s
 
 	std::string chunk;
 	size_t pos = 0;
-//	std::string::iterator it_with_func = std::search(data.begin(), data.end(), boundary.begin(), boundary.end(), fu);
-//	std::string::iterator it_without_func = std::search(data.begin(), data.end(), boundary.begin(), boundary.end());
-
-//	if (*it_with_func != std::string::npos){
-//		std::cout << "True: it_with_func" << std::endl;
-//	}
-//	if (*it_without_func != std::string::npos){
-//		std::cout << "True: it_without_func" << std::endl;
-//	}
 	while ((pos = ci_find_substr(data, boundary)) != std::string::npos) {//Find in case insensetive
 		chunk = data.substr(0, pos);
-	//Add only filename=
-	//But not a body of the file
 		if ((start = chunk.find(firstKeySeporator, end)) != std::string::npos)
 			body += parseBoundaryChunk(chunk);
 
@@ -177,11 +165,10 @@ std::string ParserRequest::parseBoundaryChunk(std::string& chunk) {
 
 	start = chunk.find(firstKeySeporator, end) + firstKeySeporator.length();
 	end = chunk.find(secondKeySeporator, start);
-	//TODO save a filename for response
 	parsedData += chunk.substr(start, end - start) + FILENAME_SEPORATOR;
 
 	start = chunk.find(END_OF_HEADER, end) + END_OF_HEADER.length();
-	parsedData += chunk.substr(start, chunk.length() - 4 - start) + " "; //TODO разобраться с пробелом
+	parsedData += chunk.substr(start, chunk.length() - 4 - start) + " ";
 
 	return parsedData;
 }

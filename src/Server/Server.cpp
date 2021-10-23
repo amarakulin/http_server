@@ -33,7 +33,7 @@ void				Server::createListeners() {
 
 	for (size_t i = 0; i < hosts.size(); i++, host++) {
 		_listeners.push_back(Listener(createListenerSocket(createSockaddrStruct(*host))));
-		_sockets.addListenerSocket(_listeners[i].getSocket()); // TODO вынести??
+		_sockets.addListenerSocket(_listeners[i].getSocket());
 	}
 }
 
@@ -55,10 +55,10 @@ int					Server::createListenerSocket(struct sockaddr_in addr) {
 	int opt = 1;
 	setsockopt(listener, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
 
-	fcntl(listener, F_SETFL, O_NONBLOCK);//TODO
+	fcntl(listener, F_SETFL, O_NONBLOCK);
 
 	if (bind(listener, (struct sockaddr *)&addr, sizeof(addr)) < 0)
-		std::cout << "Bind error" << std::endl; //TODO
+		std::cout << "Bind error" << std::endl;
 
 	listen(listener, 100);
 
@@ -79,7 +79,7 @@ void Server::createNewClient(int hostSocket, HostData *hostData)
 			Client client(sock, hostData);
 			
 			_sockets.addClientSocket(sock);
-			_clients.push_back(client); //TODO add method addClient
+			_clients.push_back(client);
 			logger.printMessage("Clients: " + std::to_string(_clients.size()));
 		}
 	}
@@ -87,13 +87,11 @@ void Server::createNewClient(int hostSocket, HostData *hostData)
 		std::cout << "Got a exception: " << std::endl;
 		std::cout << "|" << e.what() << "|" << std::endl;
 	}
-//	std::cout << "/* Listener in */ " << sock << std::endl;
 }
 
 void				Server::closeClientConnection(int clientSocket) {
 	std::vector<Client>::iterator client = _clients.begin();
 	
-	std::cout << "Close connection with: " << clientSocket <<  std::endl;
 	close(clientSocket);
 	_sockets.removeClientSocket(clientSocket);
 	for (; client != _clients.end(); client++) {
@@ -127,7 +125,7 @@ void				Server::startMainProcess() {
 
 void				Server::handleListenerEvents() {
 	for (size_t i = 0; i < _listeners.size(); i++) {
-		struct pollfd host = _sockets.getSocketByFD(_listeners[i].getSocket()); //TODO optimize!!!!!!!!!!!
+		struct pollfd host = _sockets.getSocketByFD(_listeners[i].getSocket());
 
 		if (host.revents & POLLIN){
 			createNewClient(host.fd, _config->getHosts()[i]->getData());
@@ -156,20 +154,11 @@ void				Server::handleClientEvents() {
 ** Processing request/response
 */
 void				Server::processingRequest(int clientSocket, Client& client) {
-	char buf[MB]; //TODO обработать случаи, когда за один раз не получается считать
+	char buf[MB];
 	int s = recv(clientSocket, buf, sizeof(buf), 0);
 	if (s == -1){
-		logger.printMessage("/* Read error */");//TODO THINK FOR TEST
-//		client.getRequest()->setStatus(READED);
+		logger.printMessage("/* Read error */");
 		bzero(buf, MB);
-//		return;
-	}
-	if (s == 0) {
-//		std::cout << "Get ziro bytes" << std::endl;
-//		client.getRequest()->setStatus(READED);//TODO THINK FOR TEST
-//		closeClientConnection(clientSocket);
-//		bzero(buf, MB);
-//		return ;
 	}
 	try {
 		client.getRequest()->addRequestChunk(std::string(buf, s));
@@ -187,12 +176,9 @@ void				Server::processingRequest(int clientSocket, Client& client) {
 		client.resetRequest();
 	}
 	bzero(buf, MB);
-
-//	logger.printMessage("/* Client in */");
 }
 
 void				Server::createResponse(Client& client) {
-	// printRequest(client.getRequest()->getData());
 	try{
 		client.setResponse(_responseCreator.createResponse(
 				client.getRequest()->getData(), client.getHostData()));
@@ -220,10 +206,6 @@ void				Server::sendResponse(int clientSocket, Client& client) {
 	size_t sendByte = countBytesToSend(response->getLeftBytesToSend());
 
 	int byteSended = send(clientSocket, response->getDataToSend().c_str(), sendByte, 0);
-//	if (byteSended < 50) {
-//		std::cout << "Bytes sended: " << std::endl;
-//		std::cout << response->getDataToSend().substr(0, byteSended) << std::endl;
-//	}
 	if (byteSended < 0){
 		logger.printMessage("Send error");
 	}

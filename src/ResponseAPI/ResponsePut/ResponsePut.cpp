@@ -36,7 +36,7 @@ ResponsePut::ResponsePut(RequestData &requestData, HostData *hostData)
 				   hostData)
 {
 	ResponsePut::createBody(requestData, hostData);
-	_leftBytesToSend = _dataToSend.length();//TODO set in one place
+	_leftBytesToSend = _dataToSend.length();
 }
 
 ResponsePut::~ResponsePut() {}
@@ -66,8 +66,7 @@ void ResponsePut::createBody(RequestData &requestData, HostData *hostData){
 	std::string filePath;
 	Location *location;
 
-	//TODO create a behavior if file gets from uri
-	bodyStruct = parseBody(requestData.body);//TODO may be needs a constuctor with size
+	bodyStruct = parseBody(requestData.body);
 	location = getLocationByUri(requestData.header["uri"], hostData->location);
 	if (bodyStruct.first.empty()){
 		bodyStruct.first = getFileNameFromUri(requestData.header["uri"]);

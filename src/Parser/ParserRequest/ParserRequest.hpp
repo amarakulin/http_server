@@ -12,7 +12,7 @@ typedef enum { WITH_CONTENT_LEN, CHUNKED, BOUNDARY } BodyParseType;
 
 static const std::string COMMON_HEADE_DATA[] = {
 	"method",
-	"uri",//TODO rename to uri
+	"uri",
 	"protocol",
 	""
 };

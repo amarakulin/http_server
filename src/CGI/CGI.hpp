@@ -38,10 +38,6 @@
 ** HTTP_X_SECRET_HEADER_FOR_TEST
 */
 
-// http://lemp.test/test.php/foo/bar.php?v=1
-// 'SCRIPT_FILENAME' => '/var/www/test.php',
-// 'SCRIPT_NAME' => '/test.php',
-
 class CGI {
 	private:
 

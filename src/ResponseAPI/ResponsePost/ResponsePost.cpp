@@ -20,12 +20,7 @@ ResponsePost::ResponsePost(RequestData &requestData, HostData *hostData)
 	: Response(requestData, hostData) {
 	ResponsePost::createBody(requestData, hostData);
 
-//	std::cout << "B LeftBytes: " << _leftBytesToSend  << std::endl;
-	_leftBytesToSend = _dataToSend.length();//TODO set in one place
-//	if (_leftBytesToSend < 50){
-//		std::cout << "Response: " << _dataToSend << std::endl;
-//	}
-//	std::cout << "A LeftBytes: " << _leftBytesToSend  << std::endl;
+	_leftBytesToSend = _dataToSend.length();
 }
 
 ResponsePost::~ResponsePost() {}
@@ -56,23 +51,17 @@ void ResponsePost::createBody(RequestData &requestData, HostData *hostData){
 	std::string dataFromCGI;
 	Location *location;
 
-	bodyStruct = parseBody(requestData.body);//TODO may be needs a constuctor with size
+	bodyStruct = parseBody(requestData.body);
 	location = getLocationByUri(requestData.header["uri"], hostData->location);
 	if (bodyStruct.first.empty()){
 		bodyStruct.first = getFileNameFromUri(requestData.header["uri"]);
 	}
 	filePath = "." + getUploadFilePath(location) + bodyStruct.first;
 
-//TODO test chunked method
 	std::ofstream outfile (filePath);
-	if (!isFileExist(filePath)){
-		//TODO if throw exception could lose the pointer on the response
-		// throw NotFoundException();
-	}
 
 	outfile << bodyStruct.second << std::endl;
 	outfile.close();
-	// Response::createBody(requestData.header["uri"], hostData);
 
 
 	if (!isBoundaryBody(requestData.header) && (location && location->cgi) && requestData.body != "") {

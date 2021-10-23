@@ -22,7 +22,7 @@ ResponseDelete::ResponseDelete(RequestData &requestData, HostData *hostData)
 				   hostData)
 {
 	ResponseDelete::createBody(requestData.header["uri"], hostData);
-	_leftBytesToSend = _dataToSend.length();//TODO set in one place
+	_leftBytesToSend = _dataToSend.length();
 }
 
 ResponseDelete::~ResponseDelete() {}

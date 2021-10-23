@@ -40,7 +40,7 @@ ResponseError::ResponseError(const ErrorPage &errorPage, HostData *hostData)
 	_status = static_cast<int> (errorPage.errorNbr);
 	createHead(requestData, hostData);
 	Response::createBody(requestData.header.find("uri")->second, hostData);
-	_leftBytesToSend = _dataToSend.length();//TODO set in one place
+	_leftBytesToSend = _dataToSend.length();
 }
 
 ResponseError::~ResponseError() {}
@@ -57,23 +57,10 @@ ResponseError::fillRequestData(const ErrorPage &errorPage, HostData *hostData)
 	std::string errorPagePath = "";
 	if (isFileExist("." + hostData->root +  errorPage.errorPagePath) && !errorPage.errorPagePath.empty()){
 		errorPagePath = errorPage.errorPagePath;
-		//TODO set location to config!!!
-		//TODO wrong if root equals to some location will set the root of the location and got ugly url . Resolve by ignore the default error page.
-//		errorPagePath = hostData->root + errorPage.errorPagePath;//TODO wrong -> will add the str to filePath
-//		errorPagePath = "." + hostData->root + errorPage.errorPagePath;//TODO wrong -> will add the str to filePath
 	}
 	else{
 		errorPagePath = getErrorPageFromResources(errorPage.errorNbr);
-//		Location *location = new Location();
-//		location->root = "/";
-//		location->way = errorPagePath;
-//		hostData->location.push_back(location);
 	}
-//TODO to fix this needs add all the errors path when creating config
-//	Location *location = new Location();
-//	location->root = "/";
-//	location->way = errorPagePath;
-//	hostData->location.push_back(location);
 
 	headerStruct.insert(std::make_pair("accept", "text/html"));
 	headerStruct.insert(std::make_pair("uri", errorPagePath));
@@ -97,7 +84,6 @@ int ResponseError::isResponseError(RequestData &requestData, HostData *hostData)
 	bool isBodySizeTooLarge = location
 								&& ((location->clientMaxBodySize != 0 && requestData.body.size() > location->clientMaxBodySize)
 								|| (requestData.body.size() > hostData->clientMaxBodySize));
-//	bool isBodySizeTooLarge = requestData.body.size() > hostData->clientMaxBodySize || requestData.body.size() == 200 || requestData.body.size() == 101;
 
 	logger.printMessage("Uri: " + requestData.header["uri"]);
 	logger.printMessage("filePath: " + filePath);
@@ -108,13 +94,10 @@ int ResponseError::isResponseError(RequestData &requestData, HostData *hostData)
 	else if (!isFileExist(filePath) && ((requestData.header["method"] != "post") && (requestData.header["method"] != "put"))){
 		statusCode = NOT_FOUND;
 	}
-//	else if (!isFileInPath(filePath) && (requestData.header["method"] == "post" || requestData.header["method"] == "put")){
-//		statusCode = NOT_FOUND;
-//	}// COMMENT JUST FOR TESTS!!!
 	else if (isBodySizeTooLarge){
 		statusCode = PAYLOAD_TOO_LARGE;
 	}
-	else if (requestData.header["protocol"] != "http/1.1"){//TODO TEST with telnet
+	else if (requestData.header["protocol"] != "http/1.1"){
 		statusCode = HTTP_NOT_SUPPORTED;
 	}
 	else if (location && !isItemInVector(split(PROCESSED_REQUESTS_LOWER, " "), requestData.header["method"])){
@@ -123,14 +106,11 @@ int ResponseError::isResponseError(RequestData &requestData, HostData *hostData)
 	else if (location && !isItemInVector(location->httpMethods, requestData.header["method"])){
 		statusCode = METHOD_NOT_ALLOWED;
 	}
-//	else if (requestData.header[""] != VERSION_HTTP){//TODO Ask Ilya
-//		statusCode = HTTP_NOT_SUPPORTED;
-//	}
 	return statusCode;
 }
 
 ErrorPage ResponseError::getErrorPageStruct(int statusCode, std::vector<ErrorPage*> errorPages){
-	ErrorPage errorPage;//TODO may be allocate on the heap
+	ErrorPage errorPage;
 	errorPage.errorNbr = statusCode;
 	errorPage.errorPagePath = "";
 	for (size_t i = 0; i < errorPages.size(); ++i){

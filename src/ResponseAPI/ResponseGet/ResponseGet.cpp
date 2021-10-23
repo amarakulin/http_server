@@ -21,7 +21,7 @@ ResponseGet::ResponseGet(RequestData &requestData, HostData *hostData)
 		: Response(requestData, hostData)
 {
 	Response::createBody(requestData.header["uri"], hostData);
-	_leftBytesToSend = _dataToSend.length();//TODO set in one place
+	_leftBytesToSend = _dataToSend.length();
 }
 
 ResponseGet::~ResponseGet() {}

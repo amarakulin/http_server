@@ -103,14 +103,7 @@ bool isFileExist (const std::string& filePath) {
 			}
 		}
 		closedir (dir);
-	} else {
-//		std::cout << "Error to serch in dir: " << path << std::endl;
 	}
-//	if (!isFileInPath(filePath)){
-//		return false;
-//	}
-//	struct stat buffer;
-//	return (stat (filePath.c_str(), &buffer) == 0);
 	return false;
 }
 

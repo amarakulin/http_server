@@ -41,12 +41,8 @@ bool Response::isDone(){
 }
 
 void Response::countSendedData(int byteSended){
-	if (byteSended < 0 || byteSended > _leftBytesToSend){
-		//TODO may be 500;
-		std::cout << "DATA SENT is negative!!!" << std::endl;
-	}
 	_leftBytesToSend -= byteSended;
-	if (_leftBytesToSend == 0){// && _dataToSend.empty()){
+	if (_leftBytesToSend == 0){
 		_state = SENDED;
 	}
 	_dataToSend.erase(_dataToSend.begin(), _dataToSend.begin() + byteSended);
@@ -127,10 +123,7 @@ Response::getContentLengthHeader(std::string uri, HostData *hostData)
 	std::string filename = getFilePathFromHostData(uri, hostData);
 	long sizeFile = getSizeFile(filename);
 	if (sizeFile == -1){
-//		std::cout << "[-] Error can't count size file: " << filename << std::endl;
-		// throw NotFoundException();
 		sizeFile = 0;
-		//TODO gonna 404 worked out before
 	}
 	processedStr += std::to_string(sizeFile);
 	return processedStr;
@@ -176,7 +169,7 @@ Response::getFilePathFromHostData(const std::string &uri, HostData *hostData){
 
 	std::vector<Location*> vectorLocations = hostData->location;
 	location = getLocationByUri(uri, hostData->location);
-	if (location){//TODO refactor
+	if (location){
 		root = location->root;
 		index = location->index;
 	}
@@ -184,7 +177,7 @@ Response::getFilePathFromHostData(const std::string &uri, HostData *hostData){
 		root = hostData->root;
 	}
 	filePath = "." + root + uri;
-	for (size_t i = 0; i < index.size(); ++i){//TODO unique function
+	for (size_t i = 0; i < index.size(); ++i){
 		if (isFileExist(filePath + "/" + index[i])){
 			filePath += "/" + index[i];
 			break;
@@ -192,9 +185,6 @@ Response::getFilePathFromHostData(const std::string &uri, HostData *hostData){
 	}
 	if (location && location->autoindex && !isFileExist(filePath)){
 		generatePageAutoindex(filePath, uri, hostData);
-		//TODO autoindex
-		// search for a childs locations and files all files form current directory
-		// back locations ? -> is parent uri location
 		filePath += "/autoindex.html";
 	}
 	return filePath;
@@ -205,7 +195,7 @@ bool compareLocations(Location* loc1, Location* loc2){
 }
 
 Location *Response::getLocationByUri(const std::string &uri, std::vector<Location*> locations){
-	Location *location = nullptr;// DANGER GONNA MAKE A BEHAVIOR IF NOT FIND A LOCATION!!!
+	Location *location = nullptr;
 	size_t matchPos = std::string::npos;
 	std::string matchStr;
 	std::string extensionOfUriFile;
@@ -233,7 +223,7 @@ Location *Response::getLocationByUri(const std::string &uri, std::vector<Locatio
 	return location;
 }
 
-std::string Response::getUploadFilePath(Location *location){//TODO move up to Response
+std::string Response::getUploadFilePath(Location *location){
 	std::string uploadPath;
 	if (location && location->uploadEnable){
 		uploadPath = location->root + location->uploadPath;
@@ -307,6 +297,3 @@ int Response::getState() const{
 	return _state;
 }
 
-/*
-** Setters
-*/
